@@ -25,6 +25,13 @@ defmodule DictionaryGameWeb.Router do
 
     live "/rooms/:id", RoomLive.Show, :show
     live "/rooms/:id/show/edit", RoomLive.Show, :edit
+    
+    live "/players", PlayerLive.Index, :index
+    live "/players/new", PlayerLive.Index, :new
+    live "/players/:id/edit", PlayerLive.Index, :edit
+
+    live "/players/:id", PlayerLive.Show, :show
+    live "/players/:id/show/edit", PlayerLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

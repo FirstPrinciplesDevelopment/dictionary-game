@@ -22,4 +22,19 @@ defmodule DictionaryGame.GameFixtures do
 
     room
   end
+
+  @doc """
+  Generate a player.
+  """
+  def player_fixture(attrs \\ %{}) do
+    {:ok, player} =
+      attrs
+      |> Enum.into(%{
+        is_host: true,
+        name: "some name"
+      })
+      |> DictionaryGame.Game.create_player()
+
+    player
+  end
 end
