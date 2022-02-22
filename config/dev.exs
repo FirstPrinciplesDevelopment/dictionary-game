@@ -2,12 +2,9 @@ import Config
 
 # Configure your database
 config :dictionary_game, DictionaryGame.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "dictionary_game_dev",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  database: Path.expand("../dictionary_game_dev.db", Path.dirname(__ENV__.file)),
+  pool_size: 5,
+  show_sensitive_data_on_connection_error: true
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
@@ -22,7 +19,7 @@ config :dictionary_game, DictionaryGameWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "qWrSJSBmCdzqsSraOL6eQASd+IWn1u7QZSkI2uJ5MxdA4W+GMx4ZK5xCp/7+OqfI",
+  secret_key_base: "XhJGcnxydz1M5HKIn79Lk367DsXiHX7M1W9s4TdUzVh53j72aNsjmixZSg0FAo51",
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}

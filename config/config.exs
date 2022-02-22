@@ -15,7 +15,7 @@ config :dictionary_game, DictionaryGameWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: DictionaryGameWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: DictionaryGame.PubSub,
-  live_view: [signing_salt: "g6OgjyjO"]
+  live_view: [signing_salt: "4cu9bDaC"]
 
 # Configures the mailer
 #

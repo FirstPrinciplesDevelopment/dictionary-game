@@ -1,0 +1,32 @@
+<h1>Listing Rooms</h1>
+
+<.live_component
+  module={DictionaryGameWeb.RoomLive.FormComponent}
+  id={:new}
+  title={@page_title}
+  action={:new}
+  room={@room}
+  return_to={Routes.room_index_path(@socket, :index)}
+/>
+
+<table>
+  <thead>
+    <tr>
+      <th>Room code</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="rooms">
+    <%= for room <- @rooms do %>
+      <tr id={"room-#{room.id}"}>
+        <td><%= room.room_code %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.room_show_path(@socket, :show, room) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: room.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

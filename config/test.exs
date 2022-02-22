@@ -6,18 +6,15 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :dictionary_game, DictionaryGame.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "dictionary_game_test#{System.get_env("MIX_TEST_PARTITION")}",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 10
+  database: Path.expand("../dictionary_game_test.db", Path.dirname(__ENV__.file)),
+  pool_size: 5,
+  pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :dictionary_game, DictionaryGameWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "jttpJe7C966/6RhPPpce05mTE8Xf0rwqEjVA7CfwsE1BL3gZp17Oqhws7z8ecd9Y",
+  secret_key_base: "eQtn1x3m3ymRoTp5y53vZ8T4RFoB+jbHY1zH8d7nx/d17N2xjCHL6OrWSQ3Bws8b",
   server: false
 
 # In test we don't send emails.

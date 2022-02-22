@@ -7,7 +7,7 @@ defmodule DictionaryGameWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_dictionary_game_key",
-    signing_salt: "dij1MtFE"
+    signing_salt: "T4vhZoW/"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
