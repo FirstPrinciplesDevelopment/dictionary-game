@@ -36,3 +36,6 @@ npm-debug.log
 *.db
 *.db-*
 
+# Local editor config
+.vscode/
+.idea/
