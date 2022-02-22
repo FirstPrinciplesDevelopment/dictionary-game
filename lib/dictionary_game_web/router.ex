@@ -20,18 +20,16 @@ defmodule DictionaryGameWeb.Router do
     get "/", PageController, :index
 
     live "/rooms", RoomLive.Index, :index
-    live "/rooms/new", RoomLive.Index, :new
-    live "/rooms/:id/edit", RoomLive.Index, :edit
-
+    # live "/rooms/new", RoomLive.Index, :new
+    # live "/rooms/:id/edit", RoomLive.Index, :edit
     live "/rooms/:id", RoomLive.Show, :show
-    live "/rooms/:id/show/edit", RoomLive.Show, :edit
-    
-    live "/players", PlayerLive.Index, :index
-    live "/players/new", PlayerLive.Index, :new
-    live "/players/:id/edit", PlayerLive.Index, :edit
+    # live "/rooms/:id/show/edit", RoomLive.Show, :edit
 
-    live "/players/:id", PlayerLive.Show, :show
-    live "/players/:id/show/edit", PlayerLive.Show, :edit
+    live "/players", PlayerLive.Index, :index
+    # live "/players/new", PlayerLive.Index, :new
+    # live "/players/:id/edit", PlayerLive.Index, :edit
+    # live "/players/:id", PlayerLive.Show, :show
+    # live "/players/:id/show/edit", PlayerLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

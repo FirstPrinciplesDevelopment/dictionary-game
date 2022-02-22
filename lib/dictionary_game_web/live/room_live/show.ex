@@ -17,5 +17,4 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   defp page_title(:show), do: "Show Room"
-  defp page_title(:edit), do: "Edit Room"
 end

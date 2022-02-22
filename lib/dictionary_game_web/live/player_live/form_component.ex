@@ -27,19 +27,6 @@ defmodule DictionaryGameWeb.PlayerLive.FormComponent do
     save_player(socket, socket.assigns.action, player_params)
   end
 
-  defp save_player(socket, :edit, player_params) do
-    case Game.update_player(socket.assigns.player, player_params) do
-      {:ok, _player} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Player updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
-    end
-  end
-
   defp save_player(socket, :new, player_params) do
     case Game.create_player(player_params) do
       {:ok, _player} ->

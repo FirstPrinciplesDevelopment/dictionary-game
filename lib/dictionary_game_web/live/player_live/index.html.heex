@@ -1,17 +1,13 @@
 <h1>Listing Players</h1>
 
-<%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.player_index_path(@socket, :index)}>
-    <.live_component
-      module={DictionaryGameWeb.PlayerLive.FormComponent}
-      id={@player.id || :new}
-      title={@page_title}
-      action={@live_action}
-      player={@player}
-      return_to={Routes.player_index_path(@socket, :index)}
-    />
-  </.modal>
-<% end %>
+<.live_component
+  module={DictionaryGameWeb.PlayerLive.FormComponent}
+  id={:new}
+  title={@page_title}
+  action={:new}
+  player={@player}
+  return_to={Routes.player_index_path(@socket, :index)}
+/>
 
 <table>
   <thead>
@@ -29,13 +25,9 @@
         <td><%= player.is_host %></td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.player_show_path(@socket, :show, player) %></span>
-          <span><%= live_patch "Edit", to: Routes.player_index_path(@socket, :edit, player) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: player.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<span><%= live_patch "New Player", to: Routes.player_index_path(@socket, :new) %></span>

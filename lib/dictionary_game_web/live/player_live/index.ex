@@ -14,22 +14,10 @@ defmodule DictionaryGameWeb.PlayerLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, _action, _params) do
     socket
-    |> assign(:page_title, "Edit Player")
-    |> assign(:player, Game.get_player!(id))
-  end
-
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Player")
+    |> assign(:page_title, "Players")
     |> assign(:player, %Player{})
-  end
-
-  defp apply_action(socket, :index, _params) do
-    socket
-    |> assign(:page_title, "Listing Players")
-    |> assign(:player, nil)
   end
 
   @impl true
