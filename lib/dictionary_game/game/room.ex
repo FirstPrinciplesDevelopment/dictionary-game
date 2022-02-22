@@ -5,6 +5,8 @@ defmodule DictionaryGame.Game.Room do
   schema "rooms" do
     field :room_code, :string
 
+    has_many :players, DictionaryGame.Game.Player
+
     timestamps()
   end
 

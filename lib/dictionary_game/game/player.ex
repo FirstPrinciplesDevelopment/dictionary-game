@@ -5,7 +5,11 @@ defmodule DictionaryGame.Game.Player do
   schema "players" do
     field :is_host, :boolean, default: false
     field :name, :string
-    field :room_id, :id
+
+    # replaced by belongs_to call below
+    # field :room_id, :id
+
+    belongs_to :room, DictionaryGame.Game.Room
 
     timestamps()
   end
