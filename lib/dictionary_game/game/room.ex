@@ -15,6 +15,7 @@ defmodule DictionaryGame.Game.Room do
     room
     |> cast(attrs, [:room_code])
     |> validate_required([:room_code])
+    |> validate_length(:room_code, min: 3, max: 20)
     |> unique_constraint(:room_code)
   end
 end
