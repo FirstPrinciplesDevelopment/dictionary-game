@@ -9,11 +9,11 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
+  def handle_params(%{"room_code" => room_code}, _, socket) do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:room, Game.get_room!(id))}
+     |> assign(:room, Game.get_room_by_room_code!(room_code))}
   end
 
   defp page_title(:show), do: "Show Room"

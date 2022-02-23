@@ -38,6 +38,25 @@ defmodule DictionaryGame.Game do
   def get_room!(id), do: Repo.get!(Room, id)
 
   @doc """
+  Gets a single room by room_code.
+
+  Raises `Ecto.NoResultsError` if the Room does not exist.
+
+  ## Examples
+
+      iex> get_room!("super fun room")
+      %Room{}
+
+      iex> get_room!("no room here")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_room_by_room_code!(room_code) do
+    Room
+    |> Repo.get_by!(room_code: room_code)
+  end
+
+  @doc """
   Creates a room.
 
   ## Examples

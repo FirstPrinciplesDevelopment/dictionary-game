@@ -23,7 +23,7 @@
         <td><%= room.room_code %></td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.room_show_path(@socket, :show, room) %></span>
+          <span><%= live_redirect "Show", to: Routes.room_show_path(@socket, :show, room.room_code) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: room.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
