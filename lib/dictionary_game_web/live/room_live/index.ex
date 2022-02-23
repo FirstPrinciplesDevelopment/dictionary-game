@@ -3,6 +3,7 @@ defmodule DictionaryGameWeb.RoomLive.Index do
 
   alias DictionaryGame.Game
   alias DictionaryGame.Game.Room
+  alias Phoenix.LiveView.JS
 
   @impl true
   def mount(_params, _session, socket) do
@@ -16,16 +17,8 @@ defmodule DictionaryGameWeb.RoomLive.Index do
 
   defp apply_action(socket, _action, _params) do
     socket
-    |> assign(:page_title, "Rooms")
+    |> assign(:page_title, "Create Or Join A Room")
     |> assign(:room, %Room{})
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    room = Game.get_room!(id)
-    {:ok, _} = Game.delete_room(room)
-
-    {:noreply, assign(socket, :rooms, list_rooms())}
   end
 
   defp list_rooms do

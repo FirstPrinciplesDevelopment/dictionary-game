@@ -1,4 +1,4 @@
-<h1>Listing Rooms</h1>
+<h1>Dictionary Game</h1>
 
 <.live_component
   module={DictionaryGameWeb.RoomLive.FormComponent}
@@ -11,7 +11,7 @@
 <table>
   <thead>
     <tr>
-      <th>Room code</th>
+      <th>Rooms</th>
 
       <th></th>
     </tr>
@@ -19,11 +19,12 @@
   <tbody id="rooms">
     <%= for room <- @rooms do %>
       <tr id={"room-#{room.id}"}>
-        <td><%= room.room_code %></td>
+        <td>
+          <h2><%= live_redirect "#{room.room_code}", id: "join-#{room.id}", to: Routes.room_show_path(@socket, :show, room.room_code) %></h2>
+        </td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.room_show_path(@socket, :show, room.room_code) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: room.id, data: [confirm: "Are you sure?"] %></span>
+          <button phx-click={JS.dispatch("click", to: "#join-#{room.id}")}>Join</button>
         </td>
       </tr>
     <% end %>
