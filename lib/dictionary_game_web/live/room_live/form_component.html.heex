@@ -7,14 +7,14 @@
     id="room-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="save">
+    phx-submit="create_or_join">
   
     <%= label f, :room_code %>
     <%= text_input f, :room_code %>
     <%= error_tag f, :room_code %>
   
     <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+      <%= submit "create or join", phx_disable_with: "Joining..." %>
     </div>
   </.form>
 </div>

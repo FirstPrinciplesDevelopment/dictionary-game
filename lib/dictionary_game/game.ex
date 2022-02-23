@@ -44,16 +44,35 @@ defmodule DictionaryGame.Game do
 
   ## Examples
 
-      iex> get_room!("super fun room")
+      iex> get_room_by_room_code!("super fun room")
       %Room{}
 
-      iex> get_room!("no room here")
+      iex> get_room_by_room_code!("no room here")
       ** (Ecto.NoResultsError)
 
   """
   def get_room_by_room_code!(room_code) do
     Room
     |> Repo.get_by!(room_code: room_code)
+  end
+
+  @doc """
+  Gets a single room by room_code.
+
+  Returns `nil` if Room does not exit.
+
+  ## Examples
+
+      iex> get_room_by_room_code("super fun room")
+      %Room{}
+
+      iex> get_room_by_room_code("no room here")
+      nil
+
+  """
+  def get_room_by_room_code(room_code) do
+    Room
+    |> Repo.get_by(room_code: room_code)
   end
 
   @doc """
