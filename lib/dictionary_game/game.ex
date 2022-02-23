@@ -94,6 +94,31 @@ defmodule DictionaryGame.Game do
   end
 
   @doc """
+  Create a room if it doesn't exist, fetch an existing room otherwise.
+
+  Returns the created or existing Room.
+
+  ## Examples
+
+      iex> create_or_get_room(%{field: value})
+      %Room{}
+
+  """
+  def create_or_get_room(attrs \\ %{}) do
+    case get_room_by_room_code(attrs["room_code"]) do
+      %Room{} = room ->
+        # Return the existing room.
+        {:ok, room}
+
+      nil ->
+        # Create a room, return created room or error.
+        %Room{}
+        |> Room.changeset(attrs)
+        |> Repo.insert()
+    end
+  end
+
+  @doc """
   Updates a room.
 
   ## Examples

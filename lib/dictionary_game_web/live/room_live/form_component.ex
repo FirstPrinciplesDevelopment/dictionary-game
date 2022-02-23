@@ -24,27 +24,15 @@ defmodule DictionaryGameWeb.RoomLive.FormComponent do
   end
 
   def handle_event("create_or_join", %{"room" => room_params}, socket) do
-    # Get the existing room or nil if it doesn't exist.
-    room = Game.get_room_by_room_code(room_params["room_code"])
+    case Game.create_or_get_room(room_params) do
+      {:ok, room} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Joining")
+         |> push_redirect(to: Routes.room_show_path(socket, :show, room.room_code))}
 
-    if !room do
-      # Create the room since it doesn't exist.
-      case Game.create_room(room_params) do
-        {:ok, room} ->
-          {:noreply,
-           socket
-           |> put_flash(:info, "Created room")
-           |> push_redirect(to: Routes.room_show_path(socket, :show, room.room_code))}
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          {:noreply, assign(socket, changeset: changeset)}
-      end
-    else
-      # Join the room.
-      {:noreply,
-       socket
-       |> put_flash(:info, "Joining room")
-       |> push_redirect(to: Routes.room_show_path(socket, :show, room.room_code))}
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
     end
   end
 end
