@@ -9,16 +9,12 @@
     phx-change="validate"
     phx-submit="save">
   
-    <%= label f, :name %>
+    <%= label f, :name, "Player Name" %>
     <%= text_input f, :name %>
     <%= error_tag f, :name %>
-  
-    <%= label f, :is_host %>
-    <%= checkbox f, :is_host %>
-    <%= error_tag f, :is_host %>
-  
+    
     <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+      <%= submit "Ready", phx_disable_with: "Joining..." %>
     </div>
   </.form>
 </div>

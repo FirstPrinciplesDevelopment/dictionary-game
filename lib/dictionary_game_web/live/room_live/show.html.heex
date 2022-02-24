@@ -1,4 +1,17 @@
-<h1>Show Room</h1>
+<h1>Dictionary Game</h1>
+
+<%= unless @player.name do%>
+  <.live_component
+    module={DictionaryGameWeb.PlayerLive.FormComponent}
+    id={:new}
+    title={@page_title}
+    action={:new}
+    player={@player}
+    return_to={Routes.room_show_path(@socket, :show, @room.room_code)}
+  />
+<% else %>
+  <h4><%= @player.name %></h4>
+<% end %>
 
 <ul>
 
