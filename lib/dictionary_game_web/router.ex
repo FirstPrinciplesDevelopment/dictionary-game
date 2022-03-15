@@ -8,6 +8,7 @@ defmodule DictionaryGameWeb.Router do
     plug :put_root_layout, {DictionaryGameWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug DictionaryGame.UserPlug
   end
 
   pipeline :api do

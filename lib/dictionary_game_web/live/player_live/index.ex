@@ -5,8 +5,11 @@ defmodule DictionaryGameWeb.PlayerLive.Index do
   alias DictionaryGame.Game.Player
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :players, list_players())}
+  def mount(_params, session, socket) do
+    {:ok,
+     socket
+     |> assign(:players, list_players())
+     |> assign(:user_id, session["user_id"])}
   end
 
   @impl true

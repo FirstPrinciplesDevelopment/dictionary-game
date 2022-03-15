@@ -6,8 +6,11 @@ defmodule DictionaryGameWeb.RoomLive.Index do
   alias Phoenix.LiveView.JS
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :rooms, list_rooms())}
+  def mount(_params, session, socket) do
+    {:ok,
+     socket
+     |> assign(:rooms, list_rooms())
+     |> assign(:user_id, session["user_id"])}
   end
 
   @impl true
