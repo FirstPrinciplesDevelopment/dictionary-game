@@ -26,7 +26,7 @@ defmodule DictionaryGameWeb.Router do
     live "/rooms/:room_code", RoomLive.Show, :show
     # live "/rooms/:id/show/edit", RoomLive.Show, :edit
 
-    live "/players", PlayerLive.Index, :index
+    # live "/players", PlayerLive.Index, :index
     # live "/players/new", PlayerLive.Index, :new
     # live "/players/:id/edit", PlayerLive.Index, :edit
     # live "/players/:id", PlayerLive.Show, :show

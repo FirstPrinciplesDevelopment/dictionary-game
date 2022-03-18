@@ -1,6 +1,5 @@
 defmodule DictionaryGame.UserPlug do
   import Plug.Conn
-  require Logger
 
   def init(options) do
     options

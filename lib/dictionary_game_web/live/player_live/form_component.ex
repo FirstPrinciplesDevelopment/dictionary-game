@@ -28,7 +28,7 @@ defmodule DictionaryGameWeb.PlayerLive.FormComponent do
   end
 
   defp save_player(socket, :new, player_params) do
-    case Game.create_player(player_params) do
+    case Game.create_player(socket.assigns.room_id, socket.assigns.user_id, player_params) do
       {:ok, _player} ->
         {:noreply,
          socket

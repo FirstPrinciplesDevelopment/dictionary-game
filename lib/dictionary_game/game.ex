@@ -181,6 +181,19 @@ defmodule DictionaryGame.Game do
   end
 
   @doc """
+  Returns the list of players in a room.
+
+  ## Examples
+
+      iex> list_players(room_id)
+      [%Player{}, ...]
+
+  """
+  def list_players(room_id) do
+    Repo.get_by(Player, room_id: room_id)
+  end
+
+  @doc """
   Gets a single player.
 
   Raises `Ecto.NoResultsError` if the Player does not exist.
@@ -197,19 +210,35 @@ defmodule DictionaryGame.Game do
   def get_player!(id), do: Repo.get!(Player, id)
 
   @doc """
+  Gets a single player by user_id and room_id.
+
+  Returns `nil` if no result was found.
+
+  ## Examples
+
+      iex> get_player!(room_id, user_id)
+      %Player{}
+
+      iex> get_player!(room_id, user_id)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_player(room_id, user_id), do: Repo.get_by(Player, user_id: user_id, room_id: room_id)
+
+  @doc """
   Creates a player.
 
   ## Examples
 
-      iex> create_player(%{field: value})
+      iex> create_player(room_id, user_id, %{field: value})
       {:ok, %Player{}}
 
-      iex> create_player(%{field: bad_value})
+      iex> create_player(room_id, user_id, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_player(attrs \\ %{}) do
-    %Player{}
+  def create_player(room_id, user_id, attrs \\ %{}) do
+    %Player{room_id: room_id, user_id: user_id}
     |> Player.changeset(attrs)
     |> Repo.insert()
   end

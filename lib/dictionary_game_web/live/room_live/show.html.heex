@@ -1,5 +1,8 @@
 <h1>Dictionary Game</h1>
-<h3><%= @user_id %></h3>
+
+<span><%= live_redirect "Back", to: Routes.room_index_path(@socket, :index) %></span>
+
+<h4><strong>Room Code:</strong> <%= @room.room_code %></h4>
 
 <%= unless @player.name do%>
   <.live_component
@@ -8,19 +11,27 @@
     title={@page_title}
     action={:new}
     player={@player}
+    room_id={@room.id}
+    user_id={@user_id}
     return_to={Routes.room_show_path(@socket, :show, @room.room_code)}
   />
 <% else %>
-  <h4><%= @player.name %></h4>
+  <h4><strong>User: </strong><%= @player.name %><em>(me)</em></h4>
+
+  <div id="user-list">
+    <h3>Online Players:</h3>
+    <%= for p <- @player_list do %>
+      <%= if p === @player.name do %>
+        <div id={p}><%= p %><em> (me)</em></div>
+      <% else %>
+        <div id={p}><%= p %></div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= if length(@player_list) >= 2 do %>
+    <button>Start Game</button>
+  <% else %>
+    <p>You're the only one here. At least 2 players are required to play.</p>
+  <% end %>
 <% end %>
-
-<ul>
-
-  <li>
-    <strong>Room code:</strong>
-    <%= @room.room_code %>
-  </li>
-
-</ul>
-
-<span><%= live_redirect "Back", to: Routes.room_index_path(@socket, :index) %></span>

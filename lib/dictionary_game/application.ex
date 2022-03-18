@@ -15,7 +15,9 @@ defmodule DictionaryGame.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: DictionaryGame.PubSub},
       # Start the Endpoint (http/https)
-      DictionaryGameWeb.Endpoint
+      DictionaryGameWeb.Endpoint,
+      # Start the presence
+      DictionaryGameWeb.Presence
       # Start a worker by calling: DictionaryGame.Worker.start_link(arg)
       # {DictionaryGame.Worker, arg}
     ]

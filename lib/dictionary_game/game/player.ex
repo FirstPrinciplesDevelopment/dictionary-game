@@ -5,6 +5,7 @@ defmodule DictionaryGame.Game.Player do
   schema "players" do
     field :is_host, :boolean, default: false
     field :name, :string
+    field :user_id, :string
 
     # replaced by belongs_to call below
     # field :room_id, :id
@@ -18,6 +19,6 @@ defmodule DictionaryGame.Game.Player do
   def changeset(player, attrs) do
     player
     |> cast(attrs, [:name, :is_host])
-    |> validate_required([:name, :is_host])
+    |> validate_required([:name, :is_host, :room_id, :user_id])
   end
 end
