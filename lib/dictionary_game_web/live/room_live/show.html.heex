@@ -30,7 +30,7 @@
   </div>
 
   <%= if length(@player_list) >= 2 do %>
-    <button>Start Game</button>
+    <button phx-click="start_game">Start Game</button>
   <% else %>
     <p>You're the only one here. At least 2 players are required to play.</p>
   <% end %>

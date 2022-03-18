@@ -54,5 +54,10 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     {:noreply, assign(socket, player_list: player_list)}
   end
 
+  def handle_event("start_game", _value, socket) do
+    game_state = %{}
+    {:noreply, assign(socket, :game_state, game_state)}
+  end
+
   defp page_title(:show, room_code), do: "Room: #{room_code}"
 end
