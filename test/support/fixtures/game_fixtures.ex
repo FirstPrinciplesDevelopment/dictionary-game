@@ -37,4 +37,25 @@ defmodule DictionaryGame.GameFixtures do
 
     player
   end
+
+  @doc """
+  Generate a unique definition word.
+  """
+  def unique_definition_word, do: "some word#{System.unique_integer([:positive])}"
+
+  @doc """
+  Generate a definition.
+  """
+  def definition_fixture(attrs \\ %{}) do
+    {:ok, definition} =
+      attrs
+      |> Enum.into(%{
+        definition: "some definition",
+        part_of_speech: "some part_of_speech",
+        word: unique_definition_word()
+      })
+      |> DictionaryGame.Game.create_definition()
+
+    definition
+  end
 end

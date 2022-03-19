@@ -12,6 +12,8 @@ defmodule DictionaryGame.Game.Player do
 
     belongs_to :room, DictionaryGame.Game.Room
 
+    has_many :definitions, DictionaryGame.Game.Definition
+
     timestamps()
   end
 

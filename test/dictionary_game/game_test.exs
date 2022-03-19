@@ -112,4 +112,62 @@ defmodule DictionaryGame.GameTest do
       assert %Ecto.Changeset{} = Game.change_player(player)
     end
   end
+
+  describe "definitions" do
+    alias DictionaryGame.Game.Definition
+
+    import DictionaryGame.GameFixtures
+
+    @invalid_attrs %{definition: nil, part_of_speech: nil, word: nil}
+
+    test "list_definitions/0 returns all definitions" do
+      definition = definition_fixture()
+      assert Game.list_definitions() == [definition]
+    end
+
+    test "get_definition!/1 returns the definition with given id" do
+      definition = definition_fixture()
+      assert Game.get_definition!(definition.id) == definition
+    end
+
+    test "create_definition/1 with valid data creates a definition" do
+      valid_attrs = %{definition: "some definition", part_of_speech: "some part_of_speech", word: "some word"}
+
+      assert {:ok, %Definition{} = definition} = Game.create_definition(valid_attrs)
+      assert definition.definition == "some definition"
+      assert definition.part_of_speech == "some part_of_speech"
+      assert definition.word == "some word"
+    end
+
+    test "create_definition/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Game.create_definition(@invalid_attrs)
+    end
+
+    test "update_definition/2 with valid data updates the definition" do
+      definition = definition_fixture()
+      update_attrs = %{definition: "some updated definition", part_of_speech: "some updated part_of_speech", word: "some updated word"}
+
+      assert {:ok, %Definition{} = definition} = Game.update_definition(definition, update_attrs)
+      assert definition.definition == "some updated definition"
+      assert definition.part_of_speech == "some updated part_of_speech"
+      assert definition.word == "some updated word"
+    end
+
+    test "update_definition/2 with invalid data returns error changeset" do
+      definition = definition_fixture()
+      assert {:error, %Ecto.Changeset{}} = Game.update_definition(definition, @invalid_attrs)
+      assert definition == Game.get_definition!(definition.id)
+    end
+
+    test "delete_definition/1 deletes the definition" do
+      definition = definition_fixture()
+      assert {:ok, %Definition{}} = Game.delete_definition(definition)
+      assert_raise Ecto.NoResultsError, fn -> Game.get_definition!(definition.id) end
+    end
+
+    test "change_definition/1 returns a definition changeset" do
+      definition = definition_fixture()
+      assert %Ecto.Changeset{} = Game.change_definition(definition)
+    end
+  end
 end
