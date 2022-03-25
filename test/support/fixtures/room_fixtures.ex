@@ -1,7 +1,7 @@
-defmodule DictionaryGame.GameFixtures do
+defmodule DictionaryGame.RoomFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `DictionaryGame.Game` context.
+  entities via the `DictionaryGame.Room` context.
   """
 
   @doc """
@@ -18,7 +18,7 @@ defmodule DictionaryGame.GameFixtures do
       |> Enum.into(%{
         room_code: unique_room_room_code()
       })
-      |> DictionaryGame.Game.create_room()
+      |> DictionaryGame.Room.create_room()
 
     room
   end
@@ -33,7 +33,7 @@ defmodule DictionaryGame.GameFixtures do
         is_host: true,
         name: "some name"
       })
-      |> DictionaryGame.Game.create_player()
+      |> DictionaryGame.Room.create_player()
 
     player
   end
@@ -54,7 +54,7 @@ defmodule DictionaryGame.GameFixtures do
         part_of_speech: "some part_of_speech",
         word: unique_definition_word()
       })
-      |> DictionaryGame.Game.create_definition()
+      |> DictionaryGame.Room.create_definition()
 
     definition
   end

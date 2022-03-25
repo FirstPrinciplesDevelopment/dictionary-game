@@ -1,4 +1,4 @@
-defmodule DictionaryGame.Game do
+defmodule DictionaryGame.Room do
   @moduledoc """
   The Game context.
   """
@@ -6,7 +6,7 @@ defmodule DictionaryGame.Game do
   import Ecto.Query, warn: false
   alias DictionaryGame.Repo
 
-  alias DictionaryGame.Game.Room
+  alias DictionaryGame.Room.Room
 
   @doc """
   Returns the list of rooms.
@@ -165,7 +165,7 @@ defmodule DictionaryGame.Game do
     Room.changeset(room, attrs)
   end
 
-  alias DictionaryGame.Game.Player
+  alias DictionaryGame.Room.Player
 
   @doc """
   Returns the list of players.

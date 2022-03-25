@@ -1,12 +1,12 @@
-defmodule DictionaryGame.GameTest do
+defmodule DictionaryGame.RoomTest do
   use DictionaryGame.DataCase
 
-  alias DictionaryGame.Game
+  alias DictionaryGame.Room
 
   describe "rooms" do
-    alias DictionaryGame.Game.Room
+    alias DictionaryGame.Room.Room
 
-    import DictionaryGame.GameFixtures
+    import DictionaryGame.RoomFixtures
 
     @invalid_attrs %{room_code: nil}
 
@@ -58,9 +58,9 @@ defmodule DictionaryGame.GameTest do
   end
 
   describe "players" do
-    alias DictionaryGame.Game.Player
+    alias DictionaryGame.Room.Player
 
-    import DictionaryGame.GameFixtures
+    import DictionaryGame.RoomFixtures
 
     @invalid_attrs %{is_host: nil, name: nil}
 
@@ -114,9 +114,9 @@ defmodule DictionaryGame.GameTest do
   end
 
   describe "definitions" do
-    alias DictionaryGame.Game.Definition
+    alias DictionaryGame.Room.Definition
 
-    import DictionaryGame.GameFixtures
+    import DictionaryGame.RoomFixtures
 
     @invalid_attrs %{definition: nil, part_of_speech: nil, word: nil}
 
@@ -131,7 +131,11 @@ defmodule DictionaryGame.GameTest do
     end
 
     test "create_definition/1 with valid data creates a definition" do
-      valid_attrs = %{definition: "some definition", part_of_speech: "some part_of_speech", word: "some word"}
+      valid_attrs = %{
+        definition: "some definition",
+        part_of_speech: "some part_of_speech",
+        word: "some word"
+      }
 
       assert {:ok, %Definition{} = definition} = Game.create_definition(valid_attrs)
       assert definition.definition == "some definition"
@@ -145,7 +149,12 @@ defmodule DictionaryGame.GameTest do
 
     test "update_definition/2 with valid data updates the definition" do
       definition = definition_fixture()
-      update_attrs = %{definition: "some updated definition", part_of_speech: "some updated part_of_speech", word: "some updated word"}
+
+      update_attrs = %{
+        definition: "some updated definition",
+        part_of_speech: "some updated part_of_speech",
+        word: "some updated word"
+      }
 
       assert {:ok, %Definition{} = definition} = Game.update_definition(definition, update_attrs)
       assert definition.definition == "some updated definition"

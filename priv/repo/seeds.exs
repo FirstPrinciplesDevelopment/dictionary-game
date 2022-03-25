@@ -9,7 +9,7 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-alias DictionaryGame.Game.Definition
+alias DictionaryGame.Room.Definition
 
 DictionaryGame.Repo.insert!(%Definition{
   word: "retroflexion",

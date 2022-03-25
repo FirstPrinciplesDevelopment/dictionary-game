@@ -1,15 +1,15 @@
 defmodule DictionaryGameWeb.RoomLive.Show do
   use DictionaryGameWeb, :live_view
 
-  alias DictionaryGame.Game
-  alias DictionaryGame.Game.Player
+  alias DictionaryGame.Room
+  alias DictionaryGame.Room.Player
 
   require Logger
 
   @impl true
   def mount(%{"room_code" => room_code}, session, socket) do
     # Get a player by room_code and user_id
-    player = Game.get_player(Game.get_room_by_room_code!(room_code).id, session["user_id"])
+    player = Room.get_player(Room.get_room_by_room_code!(room_code).id, session["user_id"])
 
     topic = "room:" <> room_code
 
@@ -33,15 +33,11 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   @impl true
-  @spec handle_params(map, any, %{
-          :assigns => atom | %{:live_action => :show, optional(any) => any},
-          optional(any) => any
-        }) :: {:noreply, map}
   def handle_params(%{"room_code" => room_code}, _, socket) do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action, room_code))
-     |> assign(:room, Game.get_room_by_room_code!(room_code))}
+     |> assign(:room, Room.get_room_by_room_code!(room_code))}
   end
 
   @impl true
@@ -54,6 +50,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     {:noreply, assign(socket, player_list: player_list)}
   end
 
+  @impl true
   def handle_event("start_game", _value, socket) do
     game_state = %{}
     {:noreply, assign(socket, :game_state, game_state)}

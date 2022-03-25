@@ -1,11 +1,11 @@
-defmodule DictionaryGame.Game.Room do
+defmodule DictionaryGame.Room.Room do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "rooms" do
     field :room_code, :string
 
-    has_many :players, DictionaryGame.Game.Player
+    has_many :players, DictionaryGame.Room.Player
 
     timestamps()
   end
