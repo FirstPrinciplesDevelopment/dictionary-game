@@ -9,20 +9,30 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-alias DictionaryGame.Dictionary.Definition
+alias DictionaryGame.Dictionary.{Definition, Word}
+
+{:ok, word} =
+  DictionaryGame.Repo.insert(%Word{
+    word: "retroflexion",
+    part_of_speech: "noun"
+  })
 
 DictionaryGame.Repo.insert!(%Definition{
-  word: "retroflexion",
-  part_of_speech: "noun",
+  word_id: word.id,
   definition: "a bending backward.",
   is_real: true,
-  player: nil
+  player_id: nil
 })
 
+{:ok, word} =
+  DictionaryGame.Repo.insert(%Word{
+    word: "polychromatic",
+    part_of_speech: "adjective"
+  })
+
 DictionaryGame.Repo.insert!(%Definition{
-  word: "polychromatic",
-  part_of_speech: "adjective",
+  word_id: word.id,
   definition: "having or exhibiting a variety of colors.",
   is_real: true,
-  player: nil
+  player_id: nil
 })
