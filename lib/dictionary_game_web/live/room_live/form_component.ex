@@ -1,11 +1,11 @@
 defmodule DictionaryGameWeb.RoomLive.FormComponent do
   use DictionaryGameWeb, :live_component
 
-  alias DictionaryGame.Room
+  alias DictionaryGame.Rooms
 
   @impl true
   def update(%{room: room} = assigns, socket) do
-    changeset = Room.change_room(room)
+    changeset = Rooms.change_room(room)
 
     {:ok,
      socket
@@ -17,14 +17,14 @@ defmodule DictionaryGameWeb.RoomLive.FormComponent do
   def handle_event("validate", %{"room" => room_params}, socket) do
     changeset =
       socket.assigns.room
-      |> Room.change_room(room_params)
+      |> Rooms.change_room(room_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
   def handle_event("create_or_join", %{"room" => room_params}, socket) do
-    case Room.create_or_get_room(room_params) do
+    case Rooms.create_or_get_room(room_params) do
       {:ok, room} ->
         {:noreply,
          socket

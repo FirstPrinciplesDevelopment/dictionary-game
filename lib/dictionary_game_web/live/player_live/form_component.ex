@@ -1,11 +1,11 @@
 defmodule DictionaryGameWeb.PlayerLive.FormComponent do
   use DictionaryGameWeb, :live_component
 
-  alias DictionaryGame.Room
+  alias DictionaryGame.Rooms
 
   @impl true
   def update(%{player: player} = assigns, socket) do
-    changeset = Room.change_player(player)
+    changeset = Rooms.change_player(player)
 
     {:ok,
      socket
@@ -17,7 +17,7 @@ defmodule DictionaryGameWeb.PlayerLive.FormComponent do
   def handle_event("validate", %{"player" => player_params}, socket) do
     changeset =
       socket.assigns.player
-      |> Room.change_player(player_params)
+      |> Rooms.change_player(player_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
@@ -28,7 +28,7 @@ defmodule DictionaryGameWeb.PlayerLive.FormComponent do
   end
 
   defp save_player(socket, :new, player_params) do
-    case Room.create_player(socket.assigns.room_id, socket.assigns.user_id, player_params) do
+    case Rooms.create_player(socket.assigns.room_id, socket.assigns.user_id, player_params) do
       {:ok, _player} ->
         {:noreply,
          socket

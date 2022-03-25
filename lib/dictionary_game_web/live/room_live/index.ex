@@ -1,7 +1,7 @@
 defmodule DictionaryGameWeb.RoomLive.Index do
   use DictionaryGameWeb, :live_view
 
-  alias DictionaryGame.Room
+  alias DictionaryGame.Rooms
   alias Phoenix.LiveView.JS
 
   @impl true
@@ -20,10 +20,10 @@ defmodule DictionaryGameWeb.RoomLive.Index do
   defp apply_action(socket, _action, _params) do
     socket
     |> assign(:page_title, "Create Or Join A Room")
-    |> assign(:room, %Room.Room{})
+    |> assign(:room, %Rooms.Room{})
   end
 
   defp list_rooms do
-    Room.list_rooms()
+    Rooms.list_rooms()
   end
 end
