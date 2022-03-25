@@ -2,7 +2,7 @@ defmodule DictionaryGameWeb.RoomLiveTest do
   use DictionaryGameWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import DictionaryGame.RoomFixtures
+  import DictionaryGame.RoomsFixtures
 
   @create_attrs %{room_code: "some room_code"}
   @update_attrs %{room_code: "some updated room_code"}

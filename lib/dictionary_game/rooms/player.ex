@@ -1,4 +1,4 @@
-defmodule DictionaryGame.Room.Player do
+defmodule DictionaryGame.Rooms.Player do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -10,7 +10,7 @@ defmodule DictionaryGame.Room.Player do
     # replaced by belongs_to call below
     # field :room_id, :id
 
-    belongs_to :room, DictionaryGame.Room.Room
+    belongs_to :room, DictionaryGame.Rooms.Room
 
     timestamps()
   end

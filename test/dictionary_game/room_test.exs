@@ -1,12 +1,12 @@
-defmodule DictionaryGame.RoomTest do
+defmodule DictionaryGame.RoomsTest do
   use DictionaryGame.DataCase
 
-  alias DictionaryGame.Room
+  alias DictionaryGame.Rooms
 
   describe "rooms" do
-    alias DictionaryGame.Room.Room
+    alias DictionaryGame.Rooms.Room
 
-    import DictionaryGame.RoomFixtures
+    import DictionaryGame.RoomsFixtures
 
     @invalid_attrs %{room_code: nil}
 
@@ -58,9 +58,9 @@ defmodule DictionaryGame.RoomTest do
   end
 
   describe "players" do
-    alias DictionaryGame.Room.Player
+    alias DictionaryGame.Rooms.Player
 
-    import DictionaryGame.RoomFixtures
+    import DictionaryGame.RoomsFixtures
 
     @invalid_attrs %{is_host: nil, name: nil}
 
@@ -114,9 +114,9 @@ defmodule DictionaryGame.RoomTest do
   end
 
   describe "definitions" do
-    alias DictionaryGame.Room.Definition
+    alias DictionaryGame.Rooms.Definition
 
-    import DictionaryGame.RoomFixtures
+    import DictionaryGame.RoomsFixtures
 
     @invalid_attrs %{definition: nil, part_of_speech: nil, word: nil}
 
