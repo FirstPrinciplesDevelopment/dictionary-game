@@ -17,4 +17,88 @@ defmodule DictionaryGame.GamesFixtures do
 
     game
   end
+
+  @doc """
+  Generate a round.
+  """
+  def round_fixture(attrs \\ %{}) do
+    {:ok, round} =
+      attrs
+      |> Enum.into(%{
+        round_number: 42
+      })
+      |> DictionaryGame.Games.create_round()
+
+    round
+  end
+
+  @doc """
+  Generate a score.
+  """
+  def score_fixture(attrs \\ %{}) do
+    {:ok, score} =
+      attrs
+      |> Enum.into(%{
+        score: 42
+      })
+      |> DictionaryGame.Games.create_score()
+
+    score
+  end
+
+  @doc """
+  Generate a played_words.
+  """
+  def played_words_fixture(attrs \\ %{}) do
+    {:ok, played_words} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> DictionaryGame.Games.create_played_words()
+
+    played_words
+  end
+
+  @doc """
+  Generate a known_words.
+  """
+  def known_words_fixture(attrs \\ %{}) do
+    {:ok, known_words} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> DictionaryGame.Games.create_known_words()
+
+    known_words
+  end
+
+  @doc """
+  Generate a player_word_approval.
+  """
+  def player_word_approval_fixture(attrs \\ %{}) do
+    {:ok, player_word_approval} =
+      attrs
+      |> Enum.into(%{
+        approved: true
+      })
+      |> DictionaryGame.Games.create_player_word_approval()
+
+    player_word_approval
+  end
+
+  @doc """
+  Generate a player_definition_votes.
+  """
+  def player_definition_votes_fixture(attrs \\ %{}) do
+    {:ok, player_definition_votes} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> DictionaryGame.Games.create_player_definition_votes()
+
+    player_definition_votes
+  end
 end
