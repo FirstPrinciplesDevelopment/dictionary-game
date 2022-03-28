@@ -3,7 +3,7 @@ defmodule DictionaryGame.Repo.Migrations.CreateGames do
 
   def change do
     create table(:games) do
-      add :number_of_rounds, :integer
+      add :number_of_rounds, :integer, default: 3
       add :room_id, references(:rooms, on_delete: :nothing)
 
       timestamps()

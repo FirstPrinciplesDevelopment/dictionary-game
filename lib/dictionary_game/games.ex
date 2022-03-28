@@ -6,6 +6,7 @@ defmodule DictionaryGame.Games do
   import Ecto.Query, warn: false
   alias DictionaryGame.Repo
 
+  alias DictionaryGame.{Rooms, Dictionary}
   alias DictionaryGame.Games.Game
 
   @doc """
@@ -38,21 +39,61 @@ defmodule DictionaryGame.Games do
   def get_game!(id), do: Repo.get!(Game, id)
 
   @doc """
+  Gets a single game by room id.
+
+  Returns `nil` if the Game does not exist.
+
+  ## Examples
+
+      iex> get_game!(room_id)
+      %Game{}
+
+      iex> get_game!(room_id)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_game(room_id), do: Repo.get_by(Game, room_id: room_id)
+
+  @doc """
   Creates a game.
 
   ## Examples
 
-      iex> create_game(%{field: value})
+      iex> create_game(room_id, %{field: value})
       {:ok, %Game{}}
 
-      iex> create_game(%{field: bad_value})
+      iex> create_game(room_id, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_game(attrs \\ %{}) do
-    %Game{}
+  def create_game(room_id, attrs \\ %{}) do
+    %Game{room_id: room_id}
     |> Game.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Gets the game for a room_id or creates a game if one doesn't exist.
+
+  ## Examples
+
+      iex> get_or_create_game(room_id, %{field: value})
+      {:ok, %Game{}}
+
+      iex> get_or_create_game(room_id, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def get_or_create_game(room_id, attrs \\ %{}) do
+    case Repo.get_by(Game, room_id: room_id) do
+      %Game{} = game ->
+        {:ok, game}
+
+      nil ->
+        %Game{room_id: room_id}
+        |> Game.changeset(attrs)
+        |> Repo.insert()
+    end
   end
 
   @doc """
@@ -294,7 +335,7 @@ defmodule DictionaryGame.Games do
     Score.changeset(score, attrs)
   end
 
-  alias DictionaryGame.Games.PlayedWords
+  alias DictionaryGame.Games.PlayedWord
 
   @doc """
   Returns the list of played_words.
@@ -302,11 +343,11 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> list_played_words()
-      [%PlayedWords{}, ...]
+      [%PlayedWord{}, ...]
 
   """
   def list_played_words do
-    Repo.all(PlayedWords)
+    Repo.all(PlayedWord)
   end
 
   @doc """
@@ -317,13 +358,13 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> get_played_words!(123)
-      %PlayedWords{}
+      %PlayedWord{}
 
       iex> get_played_words!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_played_words!(id), do: Repo.get!(PlayedWords, id)
+  def get_played_words!(id), do: Repo.get!(PlayedWord, id)
 
   @doc """
   Creates a played_words.
@@ -331,15 +372,15 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> create_played_words(%{field: value})
-      {:ok, %PlayedWords{}}
+      {:ok, %PlayedWord{}}
 
       iex> create_played_words(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def create_played_words(attrs \\ %{}) do
-    %PlayedWords{}
-    |> PlayedWords.changeset(attrs)
+    %PlayedWord{}
+    |> PlayedWord.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -349,15 +390,15 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> update_played_words(played_words, %{field: new_value})
-      {:ok, %PlayedWords{}}
+      {:ok, %PlayedWord{}}
 
       iex> update_played_words(played_words, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_played_words(%PlayedWords{} = played_words, attrs) do
+  def update_played_words(%PlayedWord{} = played_words, attrs) do
     played_words
-    |> PlayedWords.changeset(attrs)
+    |> PlayedWord.changeset(attrs)
     |> Repo.update()
   end
 
@@ -367,13 +408,13 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> delete_played_words(played_words)
-      {:ok, %PlayedWords{}}
+      {:ok, %PlayedWord{}}
 
       iex> delete_played_words(played_words)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_played_words(%PlayedWords{} = played_words) do
+  def delete_played_words(%PlayedWord{} = played_words) do
     Repo.delete(played_words)
   end
 
@@ -383,14 +424,14 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> change_played_words(played_words)
-      %Ecto.Changeset{data: %PlayedWords{}}
+      %Ecto.Changeset{data: %PlayedWord{}}
 
   """
-  def change_played_words(%PlayedWords{} = played_words, attrs \\ %{}) do
-    PlayedWords.changeset(played_words, attrs)
+  def change_played_words(%PlayedWord{} = played_words, attrs \\ %{}) do
+    PlayedWord.changeset(played_words, attrs)
   end
 
-  alias DictionaryGame.Games.KnownWords
+  alias DictionaryGame.Games.KnownWord
 
   @doc """
   Returns the list of known_words.
@@ -398,11 +439,11 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> list_known_words()
-      [%KnownWords{}, ...]
+      [%KnownWord{}, ...]
 
   """
   def list_known_words do
-    Repo.all(KnownWords)
+    Repo.all(KnownWord)
   end
 
   @doc """
@@ -413,13 +454,13 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> get_known_words!(123)
-      %KnownWords{}
+      %KnownWord{}
 
       iex> get_known_words!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_known_words!(id), do: Repo.get!(KnownWords, id)
+  def get_known_words!(id), do: Repo.get!(KnownWord, id)
 
   @doc """
   Creates a known_words.
@@ -427,15 +468,15 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> create_known_words(%{field: value})
-      {:ok, %KnownWords{}}
+      {:ok, %KnownWord{}}
 
       iex> create_known_words(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def create_known_words(attrs \\ %{}) do
-    %KnownWords{}
-    |> KnownWords.changeset(attrs)
+    %KnownWord{}
+    |> KnownWord.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -445,15 +486,15 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> update_known_words(known_words, %{field: new_value})
-      {:ok, %KnownWords{}}
+      {:ok, %KnownWord{}}
 
       iex> update_known_words(known_words, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_known_words(%KnownWords{} = known_words, attrs) do
+  def update_known_words(%KnownWord{} = known_words, attrs) do
     known_words
-    |> KnownWords.changeset(attrs)
+    |> KnownWord.changeset(attrs)
     |> Repo.update()
   end
 
@@ -463,13 +504,13 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> delete_known_words(known_words)
-      {:ok, %KnownWords{}}
+      {:ok, %KnownWord{}}
 
       iex> delete_known_words(known_words)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_known_words(%KnownWords{} = known_words) do
+  def delete_known_words(%KnownWord{} = known_words) do
     Repo.delete(known_words)
   end
 
@@ -479,11 +520,11 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> change_known_words(known_words)
-      %Ecto.Changeset{data: %KnownWords{}}
+      %Ecto.Changeset{data: %KnownWord{}}
 
   """
-  def change_known_words(%KnownWords{} = known_words, attrs \\ %{}) do
-    KnownWords.changeset(known_words, attrs)
+  def change_known_words(%KnownWord{} = known_words, attrs \\ %{}) do
+    KnownWord.changeset(known_words, attrs)
   end
 
   alias DictionaryGame.Games.PlayerWordApproval
@@ -582,7 +623,7 @@ defmodule DictionaryGame.Games do
     PlayerWordApproval.changeset(player_word_approval, attrs)
   end
 
-  alias DictionaryGame.Games.PlayerDefinitionVotes
+  alias DictionaryGame.Games.PlayerDefinitionVote
 
   @doc """
   Returns the list of player_definition_votes.
@@ -590,11 +631,11 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> list_player_definition_votes()
-      [%PlayerDefinitionVotes{}, ...]
+      [%PlayerDefinitionVote{}, ...]
 
   """
   def list_player_definition_votes do
-    Repo.all(PlayerDefinitionVotes)
+    Repo.all(PlayerDefinitionVote)
   end
 
   @doc """
@@ -605,13 +646,13 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> get_player_definition_votes!(123)
-      %PlayerDefinitionVotes{}
+      %PlayerDefinitionVote{}
 
       iex> get_player_definition_votes!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_player_definition_votes!(id), do: Repo.get!(PlayerDefinitionVotes, id)
+  def get_player_definition_votes!(id), do: Repo.get!(PlayerDefinitionVote, id)
 
   @doc """
   Creates a player_definition_votes.
@@ -619,15 +660,15 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> create_player_definition_votes(%{field: value})
-      {:ok, %PlayerDefinitionVotes{}}
+      {:ok, %PlayerDefinitionVote{}}
 
       iex> create_player_definition_votes(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def create_player_definition_votes(attrs \\ %{}) do
-    %PlayerDefinitionVotes{}
-    |> PlayerDefinitionVotes.changeset(attrs)
+    %PlayerDefinitionVote{}
+    |> PlayerDefinitionVote.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -637,15 +678,15 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> update_player_definition_votes(player_definition_votes, %{field: new_value})
-      {:ok, %PlayerDefinitionVotes{}}
+      {:ok, %PlayerDefinitionVote{}}
 
       iex> update_player_definition_votes(player_definition_votes, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_player_definition_votes(%PlayerDefinitionVotes{} = player_definition_votes, attrs) do
+  def update_player_definition_votes(%PlayerDefinitionVote{} = player_definition_votes, attrs) do
     player_definition_votes
-    |> PlayerDefinitionVotes.changeset(attrs)
+    |> PlayerDefinitionVote.changeset(attrs)
     |> Repo.update()
   end
 
@@ -655,13 +696,13 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> delete_player_definition_votes(player_definition_votes)
-      {:ok, %PlayerDefinitionVotes{}}
+      {:ok, %PlayerDefinitionVote{}}
 
       iex> delete_player_definition_votes(player_definition_votes)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_player_definition_votes(%PlayerDefinitionVotes{} = player_definition_votes) do
+  def delete_player_definition_votes(%PlayerDefinitionVote{} = player_definition_votes) do
     Repo.delete(player_definition_votes)
   end
 
@@ -671,10 +712,13 @@ defmodule DictionaryGame.Games do
   ## Examples
 
       iex> change_player_definition_votes(player_definition_votes)
-      %Ecto.Changeset{data: %PlayerDefinitionVotes{}}
+      %Ecto.Changeset{data: %PlayerDefinitionVote{}}
 
   """
-  def change_player_definition_votes(%PlayerDefinitionVotes{} = player_definition_votes, attrs \\ %{}) do
-    PlayerDefinitionVotes.changeset(player_definition_votes, attrs)
+  def change_player_definition_votes(
+        %PlayerDefinitionVote{} = player_definition_votes,
+        attrs \\ %{}
+      ) do
+    PlayerDefinitionVote.changeset(player_definition_votes, attrs)
   end
 end

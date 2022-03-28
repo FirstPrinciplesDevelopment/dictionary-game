@@ -13,6 +13,6 @@ defmodule DictionaryGame.Games.Game do
   def changeset(game, attrs) do
     game
     |> cast(attrs, [:number_of_rounds])
-    |> validate_required([:number_of_rounds])
+    |> validate_required([:room_id])
   end
 end

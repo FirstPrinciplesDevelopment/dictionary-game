@@ -1,4 +1,4 @@
-defmodule DictionaryGame.Repo.Migrations.CreatePlayerDefinitionVotes do
+defmodule DictionaryGame.Repo.Migrations.CreatePlayerDefinitionVote do
   use Ecto.Migration
 
   def change do

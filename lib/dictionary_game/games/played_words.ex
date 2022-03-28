@@ -1,9 +1,8 @@
-defmodule DictionaryGame.Games.PlayedWords do
+defmodule DictionaryGame.Games.PlayedWord do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "played_words" do
-
     field :game_id, :id
     field :word_id, :id
 

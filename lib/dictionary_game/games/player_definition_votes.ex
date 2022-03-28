@@ -1,9 +1,8 @@
-defmodule DictionaryGame.Games.PlayerDefinitionVotes do
+defmodule DictionaryGame.Games.PlayerDefinitionVote do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "player_definition_votes" do
-
     field :player_id, :id
     field :definition_id, :id
     field :round_id, :id

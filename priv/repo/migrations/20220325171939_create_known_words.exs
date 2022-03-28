@@ -1,4 +1,4 @@
-defmodule DictionaryGame.Repo.Migrations.CreateKnownWords do
+defmodule DictionaryGame.Repo.Migrations.CreateKnownWord do
   use Ecto.Migration
 
   def change do

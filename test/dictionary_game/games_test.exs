@@ -166,7 +166,7 @@ defmodule DictionaryGame.GamesTest do
   end
 
   describe "played_words" do
-    alias DictionaryGame.Games.PlayedWords
+    alias DictionaryGame.Games.PlayedWord
 
     import DictionaryGame.GamesFixtures
 
@@ -185,7 +185,7 @@ defmodule DictionaryGame.GamesTest do
     test "create_played_words/1 with valid data creates a played_words" do
       valid_attrs = %{}
 
-      assert {:ok, %PlayedWords{} = played_words} = Games.create_played_words(valid_attrs)
+      assert {:ok, %PlayedWord{} = played_words} = Games.create_played_words(valid_attrs)
     end
 
     test "create_played_words/1 with invalid data returns error changeset" do
@@ -196,7 +196,8 @@ defmodule DictionaryGame.GamesTest do
       played_words = played_words_fixture()
       update_attrs = %{}
 
-      assert {:ok, %PlayedWords{} = played_words} = Games.update_played_words(played_words, update_attrs)
+      assert {:ok, %PlayedWord{} = played_words} =
+               Games.update_played_words(played_words, update_attrs)
     end
 
     test "update_played_words/2 with invalid data returns error changeset" do
@@ -207,7 +208,7 @@ defmodule DictionaryGame.GamesTest do
 
     test "delete_played_words/1 deletes the played_words" do
       played_words = played_words_fixture()
-      assert {:ok, %PlayedWords{}} = Games.delete_played_words(played_words)
+      assert {:ok, %PlayedWord{}} = Games.delete_played_words(played_words)
       assert_raise Ecto.NoResultsError, fn -> Games.get_played_words!(played_words.id) end
     end
 
@@ -218,7 +219,7 @@ defmodule DictionaryGame.GamesTest do
   end
 
   describe "known_words" do
-    alias DictionaryGame.Games.KnownWords
+    alias DictionaryGame.Games.KnownWord
 
     import DictionaryGame.GamesFixtures
 
@@ -237,7 +238,7 @@ defmodule DictionaryGame.GamesTest do
     test "create_known_words/1 with valid data creates a known_words" do
       valid_attrs = %{}
 
-      assert {:ok, %KnownWords{} = known_words} = Games.create_known_words(valid_attrs)
+      assert {:ok, %KnownWord{} = known_words} = Games.create_known_words(valid_attrs)
     end
 
     test "create_known_words/1 with invalid data returns error changeset" do
@@ -248,7 +249,8 @@ defmodule DictionaryGame.GamesTest do
       known_words = known_words_fixture()
       update_attrs = %{}
 
-      assert {:ok, %KnownWords{} = known_words} = Games.update_known_words(known_words, update_attrs)
+      assert {:ok, %KnownWord{} = known_words} =
+               Games.update_known_words(known_words, update_attrs)
     end
 
     test "update_known_words/2 with invalid data returns error changeset" do
@@ -259,7 +261,7 @@ defmodule DictionaryGame.GamesTest do
 
     test "delete_known_words/1 deletes the known_words" do
       known_words = known_words_fixture()
-      assert {:ok, %KnownWords{}} = Games.delete_known_words(known_words)
+      assert {:ok, %KnownWord{}} = Games.delete_known_words(known_words)
       assert_raise Ecto.NoResultsError, fn -> Games.get_known_words!(known_words.id) end
     end
 
@@ -289,7 +291,9 @@ defmodule DictionaryGame.GamesTest do
     test "create_player_word_approval/1 with valid data creates a player_word_approval" do
       valid_attrs = %{approved: true}
 
-      assert {:ok, %PlayerWordApproval{} = player_word_approval} = Games.create_player_word_approval(valid_attrs)
+      assert {:ok, %PlayerWordApproval{} = player_word_approval} =
+               Games.create_player_word_approval(valid_attrs)
+
       assert player_word_approval.approved == true
     end
 
@@ -301,20 +305,30 @@ defmodule DictionaryGame.GamesTest do
       player_word_approval = player_word_approval_fixture()
       update_attrs = %{approved: false}
 
-      assert {:ok, %PlayerWordApproval{} = player_word_approval} = Games.update_player_word_approval(player_word_approval, update_attrs)
+      assert {:ok, %PlayerWordApproval{} = player_word_approval} =
+               Games.update_player_word_approval(player_word_approval, update_attrs)
+
       assert player_word_approval.approved == false
     end
 
     test "update_player_word_approval/2 with invalid data returns error changeset" do
       player_word_approval = player_word_approval_fixture()
-      assert {:error, %Ecto.Changeset{}} = Games.update_player_word_approval(player_word_approval, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Games.update_player_word_approval(player_word_approval, @invalid_attrs)
+
       assert player_word_approval == Games.get_player_word_approval!(player_word_approval.id)
     end
 
     test "delete_player_word_approval/1 deletes the player_word_approval" do
       player_word_approval = player_word_approval_fixture()
-      assert {:ok, %PlayerWordApproval{}} = Games.delete_player_word_approval(player_word_approval)
-      assert_raise Ecto.NoResultsError, fn -> Games.get_player_word_approval!(player_word_approval.id) end
+
+      assert {:ok, %PlayerWordApproval{}} =
+               Games.delete_player_word_approval(player_word_approval)
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Games.get_player_word_approval!(player_word_approval.id)
+      end
     end
 
     test "change_player_word_approval/1 returns a player_word_approval changeset" do
@@ -324,7 +338,7 @@ defmodule DictionaryGame.GamesTest do
   end
 
   describe "player_definition_votes" do
-    alias DictionaryGame.Games.PlayerDefinitionVotes
+    alias DictionaryGame.Games.PlayerDefinitionVote
 
     import DictionaryGame.GamesFixtures
 
@@ -337,13 +351,16 @@ defmodule DictionaryGame.GamesTest do
 
     test "get_player_definition_votes!/1 returns the player_definition_votes with given id" do
       player_definition_votes = player_definition_votes_fixture()
-      assert Games.get_player_definition_votes!(player_definition_votes.id) == player_definition_votes
+
+      assert Games.get_player_definition_votes!(player_definition_votes.id) ==
+               player_definition_votes
     end
 
     test "create_player_definition_votes/1 with valid data creates a player_definition_votes" do
       valid_attrs = %{}
 
-      assert {:ok, %PlayerDefinitionVotes{} = player_definition_votes} = Games.create_player_definition_votes(valid_attrs)
+      assert {:ok, %PlayerDefinitionVote{} = player_definition_votes} =
+               Games.create_player_definition_votes(valid_attrs)
     end
 
     test "create_player_definition_votes/1 with invalid data returns error changeset" do
@@ -354,19 +371,29 @@ defmodule DictionaryGame.GamesTest do
       player_definition_votes = player_definition_votes_fixture()
       update_attrs = %{}
 
-      assert {:ok, %PlayerDefinitionVotes{} = player_definition_votes} = Games.update_player_definition_votes(player_definition_votes, update_attrs)
+      assert {:ok, %PlayerDefinitionVote{} = player_definition_votes} =
+               Games.update_player_definition_votes(player_definition_votes, update_attrs)
     end
 
     test "update_player_definition_votes/2 with invalid data returns error changeset" do
       player_definition_votes = player_definition_votes_fixture()
-      assert {:error, %Ecto.Changeset{}} = Games.update_player_definition_votes(player_definition_votes, @invalid_attrs)
-      assert player_definition_votes == Games.get_player_definition_votes!(player_definition_votes.id)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Games.update_player_definition_votes(player_definition_votes, @invalid_attrs)
+
+      assert player_definition_votes ==
+               Games.get_player_definition_votes!(player_definition_votes.id)
     end
 
     test "delete_player_definition_votes/1 deletes the player_definition_votes" do
       player_definition_votes = player_definition_votes_fixture()
-      assert {:ok, %PlayerDefinitionVotes{}} = Games.delete_player_definition_votes(player_definition_votes)
-      assert_raise Ecto.NoResultsError, fn -> Games.get_player_definition_votes!(player_definition_votes.id) end
+
+      assert {:ok, %PlayerDefinitionVote{}} =
+               Games.delete_player_definition_votes(player_definition_votes)
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Games.get_player_definition_votes!(player_definition_votes.id)
+      end
     end
 
     test "change_player_definition_votes/1 returns a player_definition_votes changeset" do

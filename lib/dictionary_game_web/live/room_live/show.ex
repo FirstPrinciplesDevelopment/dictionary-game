@@ -1,15 +1,19 @@
 defmodule DictionaryGameWeb.RoomLive.Show do
   use DictionaryGameWeb, :live_view
 
-  alias DictionaryGame.Rooms
+  alias DictionaryGame.{Rooms, Games, Dictionary}
   alias DictionaryGame.Rooms.Player
 
   require Logger
 
   @impl true
   def mount(%{"room_code" => room_code}, session, socket) do
-    # Get a player by room_code and user_id
-    player = Rooms.get_player(Rooms.get_room_by_room_code!(room_code).id, session["user_id"])
+    # Get the room by room_code.
+    room = Rooms.get_room_by_room_code!(room_code)
+    # Get a player by room_code and user_id.
+    player = Rooms.get_player(room.id, session["user_id"])
+    # Get the game if it exists.
+    game = Games.get_game(room.id)
 
     topic = "room:" <> room_code
 
@@ -25,6 +29,8 @@ defmodule DictionaryGameWeb.RoomLive.Show do
      socket
      |> assign(
        player: player || %Player{},
+       room: room,
+       game: game,
        user_id: session["user_id"],
        topic: topic,
        player_list: [],
@@ -52,8 +58,9 @@ defmodule DictionaryGameWeb.RoomLive.Show do
 
   @impl true
   def handle_event("start_game", _value, socket) do
-    game_state = %{}
-    {:noreply, assign(socket, :game_state, game_state)}
+    # create game if one doesn't already exist
+    {:ok, game} = Games.get_or_create_game(socket.assigns.room.id)
+    {:noreply, assign(socket, :game, game)}
   end
 
   defp page_title(:show, room_code), do: "Room: #{room_code}"
