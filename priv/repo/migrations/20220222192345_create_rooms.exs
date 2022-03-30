@@ -4,6 +4,7 @@ defmodule DictionaryGame.Repo.Migrations.CreateRooms do
   def change do
     create table(:rooms) do
       add :room_code, :string
+      add :is_public, :boolean, default: false
 
       timestamps()
     end
