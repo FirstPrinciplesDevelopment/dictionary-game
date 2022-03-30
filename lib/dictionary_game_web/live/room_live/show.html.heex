@@ -17,7 +17,9 @@
   />
 <% else %>
   <h4><strong>User: </strong><%= @player.name %><em>(me)</em></h4>
-
+  <%= if @score do %>
+    <h4><strong>Score: </strong><%= @score.score %><em>(me)</em></h4>
+ <% end %>
   <div id="user-list">
     <h3>Online Players:</h3>
     <%= for p <- @player_list do %>

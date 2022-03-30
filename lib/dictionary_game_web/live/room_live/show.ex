@@ -14,6 +14,15 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     player = Rooms.get_player(room.id, session["user_id"])
     # Get the game if it exists.
     game = Games.get_game(room.id)
+    # Get the players score if it exists.
+    score =
+      cond do
+        game && player ->
+          Games.get_score(game.id, player.id)
+
+        true ->
+          nil
+      end
 
     topic = "room:" <> room_id
 
@@ -31,10 +40,10 @@ defmodule DictionaryGameWeb.RoomLive.Show do
        player: player || %Player{},
        room: room,
        game: game,
+       score: score,
        user_id: session["user_id"],
        topic: topic,
-       player_list: [],
-       temporary_assigns: [player_list: []]
+       player_list: []
      )}
   end
 
@@ -50,7 +59,9 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_info(%{event: "game_created", payload: game}, socket) do
     Logger.info(payload: game)
 
-    {:noreply, socket |> assign(game: game) |> put_flash(:info, "Game started.")}
+    # Create a score for the player.
+    {:ok, score} = Games.create_score(game, socket.assigns.player)
+    {:noreply, socket |> assign(game: game, score: score) |> put_flash(:info, "Game started.")}
   end
 
   @impl true

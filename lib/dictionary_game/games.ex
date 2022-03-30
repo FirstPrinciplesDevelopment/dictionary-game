@@ -255,36 +255,39 @@ defmodule DictionaryGame.Games do
   end
 
   @doc """
-  Gets a single score.
+  Gets a single score by game and player ids.
 
   Raises `Ecto.NoResultsError` if the Score does not exist.
 
   ## Examples
 
-      iex> get_score!(123)
+      iex> get_score!(game_id, player_id)
       %Score{}
 
-      iex> get_score!(456)
+      iex> get_score!(game_id, player_id)
       ** (Ecto.NoResultsError)
 
   """
-  def get_score!(id), do: Repo.get!(Score, id)
+  def get_score(game_id, player_id),
+    do: Repo.get_by(Score, game_id: game_id, player_id: player_id)
 
   @doc """
   Creates a score.
 
   ## Examples
 
-      iex> create_score(%{field: value})
+      iex> create_score(game, player, %{field: value})
       {:ok, %Score{}}
 
       iex> create_score(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_score(attrs \\ %{}) do
+  def create_score(%Game{} = game, %Rooms.Player{} = player, attrs \\ %{}) do
     %Score{}
     |> Score.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:game, game)
+    |> Ecto.Changeset.put_assoc(:player, player)
     |> Repo.insert()
   end
 

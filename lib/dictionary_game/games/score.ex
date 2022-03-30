@@ -4,8 +4,12 @@ defmodule DictionaryGame.Games.Score do
 
   schema "scores" do
     field :score, :integer, default: 0
-    field :player_id, :id
-    field :game_id, :id
+
+    # field :game_id, :id
+    # field :player_id, :id
+    
+    belongs_to :player, DictionaryGame.Rooms.Player
+    belongs_to :game, DictionaryGame.Games.Game
 
     timestamps()
   end
