@@ -89,7 +89,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_event("end_game", _value, socket) do
     # Delete game.
     case Games.delete_game(socket.assigns.game) do
-      {:ok, game} ->
+      {:ok, _game} ->
         # TODO: Make sure delete cascades properly.
         # TODO: Should this move to the data access (Context) layer?
         # Broadcast game_deleted event to every player (including the player who triggered the event).
