@@ -22,6 +22,19 @@ defmodule DictionaryGame.Rooms do
   end
 
   @doc """
+  Returns the list of public rooms.
+
+  ## Examples
+
+      iex> list_public_rooms()
+      [%Room{}, ...]
+
+  """
+  def list_public_rooms do
+    Repo.all(from r in Room, where: r.is_public)
+  end
+
+  @doc """
   Gets a single room.
 
   Raises `Ecto.NoResultsError` if the Room does not exist.
@@ -36,44 +49,6 @@ defmodule DictionaryGame.Rooms do
 
   """
   def get_room!(id), do: Repo.get!(Room, id)
-
-  @doc """
-  Gets a single room by room_code.
-
-  Raises `Ecto.NoResultsError` if the Room does not exist.
-
-  ## Examples
-
-      iex> get_room_by_room_code!("super fun room")
-      %Room{}
-
-      iex> get_room_by_room_code!("no room here")
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_room_by_room_code!(room_code) do
-    Room
-    |> Repo.get_by!(room_code: room_code)
-  end
-
-  @doc """
-  Gets a single room by room_code.
-
-  Returns `nil` if Room does not exit.
-
-  ## Examples
-
-      iex> get_room_by_room_code("super fun room")
-      %Room{}
-
-      iex> get_room_by_room_code("no room here")
-      nil
-
-  """
-  def get_room_by_room_code(room_code) do
-    Room
-    |> Repo.get_by(room_code: room_code)
-  end
 
   @doc """
   Creates a room.
@@ -91,31 +66,6 @@ defmodule DictionaryGame.Rooms do
     %Room{}
     |> Room.changeset(attrs)
     |> Repo.insert()
-  end
-
-  @doc """
-  Create a room if it doesn't exist, fetch an existing room otherwise.
-
-  Returns the created or existing Room.
-
-  ## Examples
-
-      iex> create_or_get_room(%{field: value})
-      %Room{}
-
-  """
-  def create_or_get_room(attrs \\ %{}) do
-    case get_room_by_room_code(attrs["room_code"]) do
-      %Room{} = room ->
-        # Return the existing room.
-        {:ok, room}
-
-      nil ->
-        # Create a room, return created room or error.
-        %Room{}
-        |> Room.changeset(attrs)
-        |> Repo.insert()
-    end
   end
 
   @doc """

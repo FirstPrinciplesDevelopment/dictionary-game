@@ -7,15 +7,15 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   require Logger
 
   @impl true
-  def mount(%{"room_code" => room_code}, session, socket) do
-    # Get the room by room_code.
-    room = Rooms.get_room_by_room_code!(room_code)
-    # Get a player by room_code and user_id.
+  def mount(%{"id" => room_id}, session, socket) do
+    # Get the room by room id.
+    room = Rooms.get_room!(room_id)
+    # Get a player by room id and user_id.
     player = Rooms.get_player(room.id, session["user_id"])
     # Get the game if it exists.
     game = Games.get_game(room.id)
 
-    topic = "room:" <> room_code
+    topic = "room:" <> room_id
 
     if connected?(socket) do
       DictionaryGameWeb.Endpoint.subscribe(topic)
@@ -39,11 +39,11 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   @impl true
-  def handle_params(%{"room_code" => room_code}, _, socket) do
+  def handle_params(%{"id" => room_id}, _, socket) do
     {:noreply,
      socket
-     |> assign(:page_title, page_title(socket.assigns.live_action, room_code))
-     |> assign(:room, Rooms.get_room_by_room_code!(room_code))}
+     |> assign(:page_title, page_title(socket.assigns.live_action, room_id))
+     |> assign(:room, Rooms.get_room!(room_id))}
   end
 
   @impl true
@@ -66,17 +66,19 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   @impl true
   def handle_event("start_game", _value, socket) do
     case Games.get_or_create_game(socket.assigns.room.id) do
-    # Create game if one doesn't already exist.
-    {:ok, game} ->
-      # TODO: Create round
-      # TODO: Should this move to the data access (Context) layer?
-      # Broadcast game_created event to other players.
-      DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "game_created", game)
-      {:noreply, assign(socket, :game, game)}
-    {:error, %Ecto.Changeset{} = changeset} ->
-      {:noreply, assign(socket, changeset: changeset)}
+      # Create game if one doesn't already exist.
+      {:ok, game} ->
+        # TODO: Create round
+        # TODO: Should this move to the data access (Context) layer?
+        # Broadcast game_created event to every player (including the player who triggered the event).
+        DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "game_created", game)
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
     end
   end
 
-  defp page_title(:show, room_code), do: "Room: #{room_code}"
+  # TODO: make room name?
+  defp page_title(:show, room_id), do: "Room: #{room_id}"
 end

@@ -4,9 +4,9 @@ defmodule DictionaryGameWeb.RoomLiveTest do
   import Phoenix.LiveViewTest
   import DictionaryGame.RoomsFixtures
 
-  @create_attrs %{room_code: "some room_code"}
-  @update_attrs %{room_code: "some updated room_code"}
-  @invalid_attrs %{room_code: nil}
+  @create_attrs %{description: "some description", is_censored: true, is_public: true, name: "some name"}
+  @update_attrs %{description: "some updated description", is_censored: false, is_public: false, name: "some updated name"}
+  @invalid_attrs %{description: nil, is_censored: false, is_public: false, name: nil}
 
   defp create_room(_) do
     room = room_fixture()
@@ -20,7 +20,7 @@ defmodule DictionaryGameWeb.RoomLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.room_index_path(conn, :index))
 
       assert html =~ "Listing Rooms"
-      assert html =~ room.room_code
+      assert html =~ room.description
     end
 
     test "saves new room", %{conn: conn} do
@@ -42,7 +42,7 @@ defmodule DictionaryGameWeb.RoomLiveTest do
         |> follow_redirect(conn, Routes.room_index_path(conn, :index))
 
       assert html =~ "Room created successfully"
-      assert html =~ "some room_code"
+      assert html =~ "some description"
     end
 
     test "updates room in listing", %{conn: conn, room: room} do
@@ -64,7 +64,7 @@ defmodule DictionaryGameWeb.RoomLiveTest do
         |> follow_redirect(conn, Routes.room_index_path(conn, :index))
 
       assert html =~ "Room updated successfully"
-      assert html =~ "some updated room_code"
+      assert html =~ "some updated description"
     end
 
     test "deletes room in listing", %{conn: conn, room: room} do
@@ -82,7 +82,7 @@ defmodule DictionaryGameWeb.RoomLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.room_show_path(conn, :show, room))
 
       assert html =~ "Show Room"
-      assert html =~ room.room_code
+      assert html =~ room.description
     end
 
     test "updates room within modal", %{conn: conn, room: room} do
@@ -104,7 +104,7 @@ defmodule DictionaryGameWeb.RoomLiveTest do
         |> follow_redirect(conn, Routes.room_show_path(conn, :show, room))
 
       assert html =~ "Room updated successfully"
-      assert html =~ "some updated room_code"
+      assert html =~ "some updated description"
     end
   end
 end

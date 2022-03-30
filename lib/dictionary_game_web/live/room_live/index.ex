@@ -38,6 +38,6 @@ defmodule DictionaryGameWeb.RoomLive.Index do
   end
 
   defp list_rooms do
-    Rooms.list_rooms()
+    Rooms.list_public_rooms()
   end
 end

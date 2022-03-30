@@ -2,7 +2,7 @@
 
 <span><%= live_redirect "Back", to: Routes.room_index_path(@socket, :index) %></span>
 
-<h4><strong>Room Code:</strong> <%= @room.room_code %></h4>
+<h4><strong>Room:</strong> <%= @room.name %></h4>
 
 <%= unless @player.name do%>
   <.live_component
@@ -13,7 +13,7 @@
     player={@player}
     room_id={@room.id}
     user_id={@user_id}
-    return_to={Routes.room_show_path(@socket, :show, @room.room_code)}
+    return_to={Routes.room_show_path(@socket, :show, @room.id)}
   />
 <% else %>
   <h4><strong>User: </strong><%= @player.name %><em>(me)</em></h4>

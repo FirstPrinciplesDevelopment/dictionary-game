@@ -3,7 +3,7 @@ defmodule DictionaryGame.Games.Game do
   import Ecto.Changeset
 
   schema "games" do
-    field :number_of_rounds, :integer
+    field :number_of_rounds, :integer, default: 3
     field :room_id, :id
 
     timestamps()

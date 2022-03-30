@@ -7,14 +7,26 @@
     id="room-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="create_or_join">
+    phx-submit="create_room">
   
-    <%= label f, :room_code %>
-    <%= text_input f, :room_code %>
-    <%= error_tag f, :room_code %>
+    <%= label f, :name %>
+    <%= text_input f, :name %>
+    <%= error_tag f, :name %>
+
+    <%= label f, :description %>
+    <%= text_input f, :description %>
+    <%= error_tag f, :description %>
+  
+    <%= label f, :is_public %>
+    <%= checkbox f, :is_public %>
+    <%= error_tag f, :is_public %>
+  
+    <%= label f, :is_censored %>
+    <%= checkbox f, :is_censored %>
+    <%= error_tag f, :is_censored %>
   
     <div>
-      <%= submit "create or join", phx_disable_with: "Joining..." %>
+      <%= submit "Create New Room", phx_disable_with: "Creating..." %>
     </div>
   </.form>
 </div>

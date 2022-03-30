@@ -14,6 +14,9 @@
   <thead>
     <tr>
       <th>Rooms</th>
+      <th>Description</th>
+      <th>Is public</th>
+      <th>Is censored</th>
 
       <th></th>
     </tr>
@@ -22,9 +25,11 @@
     <%= for room <- @rooms do %>
       <tr id={"room-#{room.id}"}>
         <td>
-          <h2><%= live_redirect "#{room.room_code}", id: "join-#{room.id}", to: Routes.room_show_path(@socket, :show, room.room_code) %></h2>
+          <h2><%= live_redirect "#{room.name}", id: "join-#{room.id}", to: Routes.room_show_path(@socket, :show, room.id) %></h2>
         </td>
-
+        <td><%= room.description %></td>
+        <td><%= room.is_public %></td>
+        <td><%= room.is_censored %></td>
         <td>
           <button phx-click={JS.dispatch("click", to: "#join-#{room.id}")}>Join</button>
         </td>

@@ -5,9 +5,9 @@ defmodule DictionaryGame.RoomsFixtures do
   """
 
   @doc """
-  Generate a unique room room_code.
+  Generate a unique room name.
   """
-  def unique_room_room_code, do: "some room_code#{System.unique_integer([:positive])}"
+  def unique_room_name, do: "some name#{System.unique_integer([:positive])}"
 
   @doc """
   Generate a room.
@@ -16,30 +16,13 @@ defmodule DictionaryGame.RoomsFixtures do
     {:ok, room} =
       attrs
       |> Enum.into(%{
-        room_code: unique_room_room_code()
+        description: "some description",
+        is_censored: true,
+        is_public: true,
+        name: unique_room_name()
       })
       |> DictionaryGame.Rooms.create_room()
 
     room
   end
-
-  @doc """
-  Generate a player.
-  """
-  def player_fixture(attrs \\ %{}) do
-    {:ok, player} =
-      attrs
-      |> Enum.into(%{
-        is_host: true,
-        name: "some name"
-      })
-      |> DictionaryGame.Rooms.create_player()
-
-    player
-  end
-
-  @doc """
-  Generate a unique definition word.
-  """
-  def unique_definition_word, do: "some word#{System.unique_integer([:positive])}"
 end
