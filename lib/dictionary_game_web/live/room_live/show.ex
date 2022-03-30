@@ -50,7 +50,13 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_info(%{event: "game_created", payload: game}, socket) do
     Logger.info(payload: game)
 
-    {:noreply, assign(socket, game: game)}
+    {:noreply, socket |> assign(game: game) |> put_flash(:info, "Game started.")}
+  end
+
+  @impl true
+  def handle_info(%{event: "game_deleted", payload: delete_by}, socket) do
+    {:noreply,
+     socket |> assign(game: nil) |> put_flash(:info, "Game ended by #{delete_by.name}.")}
   end
 
   @impl true
@@ -60,18 +66,39 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     player_list = DictionaryGameWeb.Presence.list(socket.assigns.topic) |> Map.keys()
     Logger.info(player_list: player_list)
 
-    {:noreply, assign(socket, player_list: player_list)}
+    {:noreply, socket |> assign(player_list: player_list)}
   end
 
   @impl true
   def handle_event("start_game", _value, socket) do
+    # Create game if one doesn't already exist.
     case Games.get_or_create_game(socket.assigns.room.id) do
-      # Create game if one doesn't already exist.
       {:ok, game} ->
         # TODO: Create round
         # TODO: Should this move to the data access (Context) layer?
         # Broadcast game_created event to every player (including the player who triggered the event).
         DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "game_created", game)
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  @impl true
+  def handle_event("end_game", _value, socket) do
+    # Delete game.
+    case Games.delete_game(socket.assigns.game) do
+      {:ok, game} ->
+        # TODO: Make sure delete cascades properly.
+        # TODO: Should this move to the data access (Context) layer?
+        # Broadcast game_deleted event to every player (including the player who triggered the event).
+        DictionaryGameWeb.Endpoint.broadcast(
+          socket.assigns.topic,
+          "game_deleted",
+          socket.assigns.player
+        )
+
         {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
