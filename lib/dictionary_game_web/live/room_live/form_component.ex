@@ -26,6 +26,7 @@ defmodule DictionaryGameWeb.RoomLive.FormComponent do
   def handle_event("create_or_join", %{"room" => room_params}, socket) do
     case Rooms.create_or_get_room(room_params) do
       {:ok, room} ->
+        DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "room_created", room)
         {:noreply,
          socket
          |> put_flash(:info, "Joining")

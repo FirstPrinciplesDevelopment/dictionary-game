@@ -65,11 +65,17 @@ defmodule DictionaryGameWeb.RoomLive.Show do
 
   @impl true
   def handle_event("start_game", _value, socket) do
+    case Games.get_or_create_game(socket.assigns.room.id) do
     # Create game if one doesn't already exist.
-    {:ok, game} = Games.get_or_create_game(socket.assigns.room.id)
-    # Broadcast game_created event to other players.
-    DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "game_created", game)
-    {:noreply, assign(socket, :game, game)}
+    {:ok, game} ->
+      # TODO: Create round
+      # TODO: Should this move to the data access (Context) layer?
+      # Broadcast game_created event to other players.
+      DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "game_created", game)
+      {:noreply, assign(socket, :game, game)}
+    {:error, %Ecto.Changeset{} = changeset} ->
+      {:noreply, assign(socket, changeset: changeset)}
+    end
   end
 
   defp page_title(:show, room_code), do: "Room: #{room_code}"
