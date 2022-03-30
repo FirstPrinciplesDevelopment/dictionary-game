@@ -3,9 +3,9 @@ defmodule DictionaryGame.Repo.Migrations.CreatePlayerDefinitionVote do
 
   def change do
     create table(:player_definition_votes) do
-      add :player_id, references(:players, on_delete: :nothing)
-      add :definition_id, references(:definitions, on_delete: :nothing)
-      add :round_id, references(:rounds, on_delete: :nothing)
+      add :player_id, references(:players, on_delete: :delete_all)
+      add :definition_id, references(:definitions, on_delete: :delete_all)
+      add :round_id, references(:rounds, on_delete: :delete_all)
 
       timestamps()
     end

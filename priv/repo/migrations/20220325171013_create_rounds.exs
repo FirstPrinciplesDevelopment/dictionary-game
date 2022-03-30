@@ -4,8 +4,8 @@ defmodule DictionaryGame.Repo.Migrations.CreateRounds do
   def change do
     create table(:rounds) do
       add :round_number, :integer
-      add :game_id, references(:games, on_delete: :nothing)
-      add :word_id, references(:words, on_delete: :nothing)
+      add :game_id, references(:games, on_delete: :delete_all)
+      add :word_id, references(:words, on_delete: :nilify_all)
 
       timestamps()
     end

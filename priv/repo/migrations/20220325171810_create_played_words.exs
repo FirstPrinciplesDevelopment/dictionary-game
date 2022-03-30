@@ -3,8 +3,8 @@ defmodule DictionaryGame.Repo.Migrations.CreatePlayedWord do
 
   def change do
     create table(:played_words) do
-      add :game_id, references(:games, on_delete: :nothing)
-      add :word_id, references(:integer, on_delete: :nothing)
+      add :game_id, references(:games, on_delete: :delete_all)
+      add :word_id, references(:integer, on_delete: :delete_all)
 
       timestamps()
     end

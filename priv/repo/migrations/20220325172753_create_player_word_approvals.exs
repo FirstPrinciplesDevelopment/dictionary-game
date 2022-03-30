@@ -4,9 +4,9 @@ defmodule DictionaryGame.Repo.Migrations.CreatePlayerWordApprovals do
   def change do
     create table(:player_word_approvals) do
       add :approved, :boolean, default: false, null: false
-      add :player_id, references(:players, on_delete: :nothing)
-      add :word_id, references(:words, on_delete: :nothing)
-      add :round_id, references(:rounds, on_delete: :nothing)
+      add :player_id, references(:players, on_delete: :delete_all)
+      add :word_id, references(:words, on_delete: :delete_all)
+      add :round_id, references(:rounds, on_delete: :delete_all)
 
       timestamps()
     end
