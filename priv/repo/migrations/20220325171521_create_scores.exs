@@ -3,7 +3,7 @@ defmodule DictionaryGame.Repo.Migrations.CreateScores do
 
   def change do
     create table(:scores) do
-      add :score, :integer
+      add :score, :integer, default: 0, null: false
       add :player_id, references(:players, on_delete: :delete_all)
       add :game_id, references(:games, on_delete: :delete_all)
 
