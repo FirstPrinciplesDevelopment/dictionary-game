@@ -5,7 +5,8 @@ defmodule DictionaryGame.Games.Score do
   schema "scores" do
     field :score, :integer
     field :player_id, :id
-
+    field :game_id, :id
+    
     timestamps()
   end
 
