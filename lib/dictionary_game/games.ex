@@ -186,9 +186,10 @@ defmodule DictionaryGame.Games do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_round(attrs \\ %{}) do
+  def create_round(%Game{} = game, attrs \\ %{}) do
     %Round{}
     |> Round.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:game, game)
     |> Repo.insert()
   end
 

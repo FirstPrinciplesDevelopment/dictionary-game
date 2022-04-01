@@ -4,8 +4,9 @@ defmodule DictionaryGame.Games.Round do
 
   schema "rounds" do
     field :round_number, :integer
-    field :game_id, :id
     field :word_id, :id
+
+    belongs_to :game, DictionaryGame.Games.Game
 
     timestamps()
   end
