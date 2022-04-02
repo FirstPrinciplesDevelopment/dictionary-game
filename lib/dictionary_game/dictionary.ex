@@ -7,6 +7,7 @@ defmodule DictionaryGame.Dictionary do
   alias DictionaryGame.Repo
 
   alias DictionaryGame.Dictionary.Word
+  alias DictionaryGame.Games.KnownWord
 
   @doc """
   Returns the list of words.
@@ -36,6 +37,32 @@ defmodule DictionaryGame.Dictionary do
 
   """
   def get_word!(id), do: Repo.get!(Word, id)
+
+  @doc """
+  Gets a single unknown word for a game, i.e. a word that no one in game has marked as "known".
+
+  Raises `Ecto.NoResultsError` if the Word does not exist.
+
+  ## Examples
+
+      iex> get_unknown_word!(game_id)
+      %Word{}
+
+      iex> get_unknown_word!(game_id)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_unknown_word!(game_id) do
+    query =
+      from w in Word,
+        left_join: kw in KnownWord,
+        on: w.id == kw.word_id,
+        where: is_nil(kw.game_id) or kw.game_id != ^game_id
+
+    query
+    |> first()
+    |> Repo.one!()
+  end
 
   @doc """
   Creates a word.

@@ -6,8 +6,10 @@ defmodule DictionaryGame.Games do
   import Ecto.Query, warn: false
   alias DictionaryGame.Repo
 
-  alias DictionaryGame.{Rooms, Dictionary}
-  alias DictionaryGame.Games.Game
+  alias DictionaryGame.Rooms
+  alias DictionaryGame.Rooms.{Player}
+  alias DictionaryGame.Dictionary.Word
+  alias DictionaryGame.Games.{Game, Round}
 
   @doc """
   Returns the list of games.
@@ -159,20 +161,27 @@ defmodule DictionaryGame.Games do
   end
 
   @doc """
-  Gets a single round.
+  Gets the current round for a game_id.
 
-  Raises `Ecto.NoResultsError` if the Round does not exist.
+  Returns `nil` if the Round does not exist.
 
   ## Examples
 
-      iex> get_round!(123)
+      iex> get_current_round(123)
       %Round{}
 
-      iex> get_round!(456)
-      ** (Ecto.NoResultsError)
+      iex> get_current_round(456)
+      nil
 
   """
-  def get_round!(id), do: Repo.get!(Round, id)
+  def get_current_round(game_id) do
+    # TODO: make sure frist(order_by) is working - https://hexdocs.pm/ecto/Ecto.Query.html#first/2
+    query = from r in Round, where: r.game_id == ^game_id, preload: [:word]
+
+    query
+    |> first(:round_number)
+    |> Repo.one()
+  end
 
   @doc """
   Creates a round.
@@ -186,10 +195,11 @@ defmodule DictionaryGame.Games do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_round(%Game{} = game, attrs \\ %{}) do
+  def create_round(%Game{} = game, %Word{} = word, attrs \\ %{}) do
     %Round{}
     |> Round.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:game, game)
+    |> Ecto.Changeset.put_assoc(:word, word)
     |> Repo.insert()
   end
 
@@ -198,16 +208,17 @@ defmodule DictionaryGame.Games do
 
   ## Examples
 
-      iex> update_round(round, %{field: new_value})
+      iex> update_round(round, word, %{field: new_value})
       {:ok, %Round{}}
 
-      iex> update_round(round, %{field: bad_value})
+      iex> update_round(round, word, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_round(%Round{} = round, attrs) do
+  def update_round(%Round{} = round, %Word{} = word, attrs \\ %{}) do
     round
     |> Round.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:word, word)
     |> Repo.update()
   end
 
@@ -438,112 +449,114 @@ defmodule DictionaryGame.Games do
   alias DictionaryGame.Games.KnownWord
 
   @doc """
-  Returns the list of known_words.
+  Returns the list of known_word.
 
   ## Examples
 
-      iex> list_known_words()
+      iex> list_known_word()
       [%KnownWord{}, ...]
 
   """
-  def list_known_words do
+  def list_known_word do
     Repo.all(KnownWord)
   end
 
   @doc """
-  Gets a single known_words.
+  Gets a single known_word.
 
   Raises `Ecto.NoResultsError` if the Known words does not exist.
 
   ## Examples
 
-      iex> get_known_words!(123)
+      iex> get_known_word!(123)
       %KnownWord{}
 
-      iex> get_known_words!(456)
+      iex> get_known_word!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_known_words!(id), do: Repo.get!(KnownWord, id)
+  def get_known_word!(id), do: Repo.get!(KnownWord, id)
 
   @doc """
-  Creates a known_words.
+  Creates a known_word.
 
   ## Examples
 
-      iex> create_known_words(%{field: value})
+      iex> create_known_word(%{field: value})
       {:ok, %KnownWord{}}
 
-      iex> create_known_words(%{field: bad_value})
+      iex> create_known_word(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_known_words(attrs \\ %{}) do
+  def create_known_word(%Game{} = game, %Word{} = word, attrs \\ %{}) do
     %KnownWord{}
     |> KnownWord.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:game, game)
+    |> Ecto.Changeset.put_assoc(:word, word)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a known_words.
+  Updates a known_word.
 
   ## Examples
 
-      iex> update_known_words(known_words, %{field: new_value})
+      iex> update_known_word(known_word, %{field: new_value})
       {:ok, %KnownWord{}}
 
-      iex> update_known_words(known_words, %{field: bad_value})
+      iex> update_known_word(known_word, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_known_words(%KnownWord{} = known_words, attrs) do
-    known_words
+  def update_known_word(%KnownWord{} = known_word, attrs) do
+    known_word
     |> KnownWord.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a known_words.
+  Deletes a known_word.
 
   ## Examples
 
-      iex> delete_known_words(known_words)
+      iex> delete_known_word(known_word)
       {:ok, %KnownWord{}}
 
-      iex> delete_known_words(known_words)
+      iex> delete_known_word(known_word)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_known_words(%KnownWord{} = known_words) do
-    Repo.delete(known_words)
+  def delete_known_word(%KnownWord{} = known_word) do
+    Repo.delete(known_word)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking known_words changes.
+  Returns an `%Ecto.Changeset{}` for tracking known_word changes.
 
   ## Examples
 
-      iex> change_known_words(known_words)
+      iex> change_known_word(known_word)
       %Ecto.Changeset{data: %KnownWord{}}
 
   """
-  def change_known_words(%KnownWord{} = known_words, attrs \\ %{}) do
-    KnownWord.changeset(known_words, attrs)
+  def change_known_word(%KnownWord{} = known_word, attrs \\ %{}) do
+    KnownWord.changeset(known_word, attrs)
   end
 
   alias DictionaryGame.Games.PlayerWordApproval
 
   @doc """
-  Returns the list of player_word_approvals.
+  Returns the list of player_word_approvals for a round_id.
 
   ## Examples
 
-      iex> list_player_word_approvals()
+      iex> list_player_word_approvals(round_id)
       [%PlayerWordApproval{}, ...]
 
   """
-  def list_player_word_approvals do
-    Repo.all(PlayerWordApproval)
+  def list_player_word_approvals(round_id) do
+    Repo.all(from p in PlayerWordApproval, where: p.round_id == ^round_id)
   end
 
   @doc """
@@ -567,16 +580,24 @@ defmodule DictionaryGame.Games do
 
   ## Examples
 
-      iex> create_player_word_approval(%{field: value})
+      iex> create_player_word_approval(player, word, round, %{field: value})
       {:ok, %PlayerWordApproval{}}
 
-      iex> create_player_word_approval(%{field: bad_value})
+      iex> create_player_word_approval(player, word, round, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_player_word_approval(attrs \\ %{}) do
+  def create_player_word_approval(
+        %Player{} = player,
+        %Word{} = word,
+        %Round{} = round,
+        attrs \\ %{}
+      ) do
     %PlayerWordApproval{}
     |> PlayerWordApproval.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:player, player)
+    |> Ecto.Changeset.put_assoc(:round, round)
+    |> Ecto.Changeset.put_assoc(:word, word)
     |> Repo.insert()
   end
 

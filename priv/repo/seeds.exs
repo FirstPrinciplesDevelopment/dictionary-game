@@ -36,3 +36,29 @@ DictionaryGame.Repo.insert!(%Definition{
   is_real: true,
   player_id: nil
 })
+
+{:ok, word} =
+  DictionaryGame.Repo.insert(%Word{
+    word: "gremmie",
+    part_of_speech: "noun"
+  })
+
+DictionaryGame.Repo.insert!(%Definition{
+  word_id: word.id,
+  definition: "a novice surfer or one with poor form.",
+  is_real: true,
+  player_id: nil
+})
+
+{:ok, word} =
+  DictionaryGame.Repo.insert(%Word{
+    word: "enteron",
+    part_of_speech: "noun"
+  })
+
+DictionaryGame.Repo.insert!(%Definition{
+  word_id: word.id,
+  definition: "the alimentary canal; the digestive tract.",
+  is_real: true,
+  player_id: nil
+})

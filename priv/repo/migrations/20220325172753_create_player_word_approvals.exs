@@ -14,5 +14,8 @@ defmodule DictionaryGame.Repo.Migrations.CreatePlayerWordApprovals do
     create index(:player_word_approvals, [:player_id])
     create index(:player_word_approvals, [:word_id])
     create index(:player_word_approvals, [:round_id])
+    # Only one record per word per player is needed.
+    create unique_index(:player_word_approvals, [:player_id, :word_id])
+
   end
 end

@@ -33,6 +33,22 @@
 
   <%= if @game do %>
     <h2>Game Started</h2>
+    <%= if @round do %>
+      <p>Round Number: <%= @round.round_number %></p>
+      <%= if @round.word do %>
+        <p>Round Word: <%= @round.word.word %></p>
+        <div>
+          <%= if Enum.any?(@word_approvals, fn w -> w.player_id == @player.id && w.word_id == @round.word.id end) do %>
+            <p><em>Waiting for other players.</em></p>
+          <% else %>
+            <p>Do you already know the definition of this word?</p>
+            <button phx-click="create_known_word">Yes</button>
+            <button phx-click="approve_word">No</button>
+          <% end %>
+        </div>
+      <% end %>
+      <p>Approvals: <%= length(@word_approvals) %></p>
+    <% end %>
     <div>Rounds: <%= @game.number_of_rounds %></div>
     <button phx-click="end_game">End Game</button>
   <% else %>
