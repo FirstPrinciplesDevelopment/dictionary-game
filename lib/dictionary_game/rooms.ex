@@ -140,7 +140,7 @@ defmodule DictionaryGame.Rooms do
 
   """
   def list_players(room_id) do
-    Repo.get_by(Player, room_id: room_id)
+    Repo.all(from p in Player, where: p.room_id == ^room_id)
   end
 
   @doc """
