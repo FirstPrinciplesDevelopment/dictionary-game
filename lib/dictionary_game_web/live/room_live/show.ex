@@ -49,19 +49,6 @@ defmodule DictionaryGameWeb.RoomLive.Show do
 
     players = Rooms.list_players(room_id)
 
-    approved =
-      cond do
-        round ->
-          Enum.reduce(players, true, fn p, acc ->
-            Enum.any?(word_approvals, fn x ->
-              x.player_id == p.id && x.word_id == round.word_id
-            end) && acc
-          end)
-
-        true ->
-          false
-      end
-
     {:ok,
      socket
      |> assign(
@@ -72,7 +59,6 @@ defmodule DictionaryGameWeb.RoomLive.Show do
        game: game,
        round: round,
        word_approvals: word_approvals,
-       approved: approved,
        topic: topic,
        # TODO: load initial user list?
        player_list: []
@@ -102,7 +88,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_info(%{event: "game_deleted", payload: delete_by}, socket) do
     {:noreply,
      socket
-     |> assign(game: nil, score: nil, round: nil, word_approvals: [], approved: false)
+     |> assign(game: nil, score: nil, round: nil, word_approvals: [])
      |> put_flash(:info, "Game ended by #{delete_by.name}.")}
   end
 
@@ -127,14 +113,26 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     players = Rooms.list_players(socket.assigns.room.id)
 
     # Has every player approved the current word?
-    approved =
+    approved? =
       Enum.reduce(players, true, fn p, acc ->
         Enum.any?(word_approvals, fn x ->
           x.player_id == p.id && x.word_id == socket.assigns.round.word_id
         end) && acc
       end)
 
-    {:noreply, socket |> assign(word_approvals: word_approvals, approved: approved)}
+    # Update round.is_approved if necessary.
+    {:ok, round} =
+      cond do
+        approved? ->
+          Games.update_round(socket.assigns.round, socket.assigns.round.word, %{
+            is_approved: approved?
+          })
+
+        true ->
+          {:ok, socket.assigns.round}
+      end
+
+    {:noreply, socket |> assign(word_approvals: word_approvals, round: round)}
   end
 
   @impl true

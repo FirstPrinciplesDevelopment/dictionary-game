@@ -36,7 +36,7 @@
     <%= if @round do %>
       <p>Round Number: <%= @round.round_number %></p>
       <%= if @round.word do %>
-        <p>Round Word: <%= @round.word.word %> <%= if @approved, do: ~H(<strong>Approved!</strong>) %></p>
+        <p>Round Word: <%= @round.word.word %> <%= if @round.is_approved, do: ~H(<strong>Approved!</strong>) %></p>
         <div>
           <%= if Enum.any?(@word_approvals, fn w -> w.player_id == @player.id && w.word_id == @round.word_id end) do %>
             <p><em>Waiting for other players.</em></p>
