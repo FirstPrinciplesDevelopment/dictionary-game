@@ -13,5 +13,6 @@ defmodule DictionaryGame.Repo.Migrations.CreateDefinitions do
 
     create index(:definitions, [:player_id])
     create index(:definitions, [:word_id])
+    create unique_index(:definitions, [:player_id, :word_id, :is_real])
   end
 end
