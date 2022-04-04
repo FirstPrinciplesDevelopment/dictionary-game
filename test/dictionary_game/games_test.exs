@@ -276,8 +276,6 @@ defmodule DictionaryGame.GamesTest do
 
     import DictionaryGame.GamesFixtures
 
-    @invalid_attrs %{approved: nil}
-
     test "list_player_word_approvals/0 returns all player_word_approvals" do
       player_word_approval = player_word_approval_fixture()
       assert Games.list_player_word_approvals() == [player_word_approval]
@@ -286,38 +284,6 @@ defmodule DictionaryGame.GamesTest do
     test "get_player_word_approval!/1 returns the player_word_approval with given id" do
       player_word_approval = player_word_approval_fixture()
       assert Games.get_player_word_approval!(player_word_approval.id) == player_word_approval
-    end
-
-    test "create_player_word_approval/1 with valid data creates a player_word_approval" do
-      valid_attrs = %{approved: true}
-
-      assert {:ok, %PlayerWordApproval{} = player_word_approval} =
-               Games.create_player_word_approval(valid_attrs)
-
-      assert player_word_approval.approved == true
-    end
-
-    test "create_player_word_approval/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Games.create_player_word_approval(@invalid_attrs)
-    end
-
-    test "update_player_word_approval/2 with valid data updates the player_word_approval" do
-      player_word_approval = player_word_approval_fixture()
-      update_attrs = %{approved: false}
-
-      assert {:ok, %PlayerWordApproval{} = player_word_approval} =
-               Games.update_player_word_approval(player_word_approval, update_attrs)
-
-      assert player_word_approval.approved == false
-    end
-
-    test "update_player_word_approval/2 with invalid data returns error changeset" do
-      player_word_approval = player_word_approval_fixture()
-
-      assert {:error, %Ecto.Changeset{}} =
-               Games.update_player_word_approval(player_word_approval, @invalid_attrs)
-
-      assert player_word_approval == Games.get_player_word_approval!(player_word_approval.id)
     end
 
     test "delete_player_word_approval/1 deletes the player_word_approval" do

@@ -173,9 +173,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     # Create player word approval, does nothing if already exists (this shouldn't happen, but maybe a user can double click really fast).
     round = socket.assigns.round
 
-    case Games.create_player_word_approval(socket.assigns.player, round.word, round, %{
-           approved: true
-         }) do
+    case Games.create_player_word_approval(socket.assigns.player, round.word, round) do
       {:ok, approval} ->
         # TODO: Should this move to the data access (Context) layer?
         # Broadcast word_approval_created event to every player (including the player who triggered the event).

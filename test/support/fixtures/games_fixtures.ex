@@ -52,9 +52,7 @@ defmodule DictionaryGame.GamesFixtures do
   def played_words_fixture(attrs \\ %{}) do
     {:ok, played_words} =
       attrs
-      |> Enum.into(%{
-
-      })
+      |> Enum.into(%{})
       |> DictionaryGame.Games.create_played_words()
 
     played_words
@@ -66,9 +64,7 @@ defmodule DictionaryGame.GamesFixtures do
   def known_words_fixture(attrs \\ %{}) do
     {:ok, known_words} =
       attrs
-      |> Enum.into(%{
-
-      })
+      |> Enum.into(%{})
       |> DictionaryGame.Games.create_known_words()
 
     known_words
@@ -80,9 +76,7 @@ defmodule DictionaryGame.GamesFixtures do
   def player_word_approval_fixture(attrs \\ %{}) do
     {:ok, player_word_approval} =
       attrs
-      |> Enum.into(%{
-        approved: true
-      })
+      |> Enum.into(%{})
       |> DictionaryGame.Games.create_player_word_approval()
 
     player_word_approval
@@ -94,9 +88,7 @@ defmodule DictionaryGame.GamesFixtures do
   def player_definition_votes_fixture(attrs \\ %{}) do
     {:ok, player_definition_votes} =
       attrs
-      |> Enum.into(%{
-
-      })
+      |> Enum.into(%{})
       |> DictionaryGame.Games.create_player_definition_votes()
 
     player_definition_votes
