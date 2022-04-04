@@ -5,8 +5,11 @@ defmodule DictionaryGame.Dictionary.Definition do
   schema "definitions" do
     field :definition, :string
     field :is_real, :boolean, default: false
-    field :player_id, :id
-    field :word_id, :id
+    # field :player_id, :id
+    # field :word_id, :id
+
+    belongs_to :player, DictionaryGame.Rooms.Player
+    belongs_to :word, DictionaryGame.Dictionary.Word
 
     timestamps()
   end

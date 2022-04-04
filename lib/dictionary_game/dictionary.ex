@@ -8,6 +8,7 @@ defmodule DictionaryGame.Dictionary do
 
   alias DictionaryGame.Dictionary.Word
   alias DictionaryGame.Games.KnownWord
+  alias DictionaryGame.Rooms.Player
 
   @doc """
   Returns the list of words.
@@ -161,20 +162,40 @@ defmodule DictionaryGame.Dictionary do
   def get_definition!(id), do: Repo.get!(Definition, id)
 
   @doc """
+  Gets a single definition by player_id and word_id.
+
+  Returns `nil` if the Definition does not exist.
+
+  ## Examples
+
+      iex> get_definition!(player_id, word_id)
+      %Definition{}
+
+      iex> get_definition!(player_id, word_id)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_definition(player_id, word_id) do
+    Repo.get_by(Definition, player_id: player_id, word_id: word_id)
+  end
+
+  @doc """
   Creates a definition.
 
   ## Examples
 
-      iex> create_definition(%{field: value})
+      iex> create_definition(player, word, %{field: value})
       {:ok, %Definition{}}
 
-      iex> create_definition(%{field: bad_value})
+      iex> create_definition(player, word, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_definition(attrs \\ %{}) do
+  def create_definition(%Player{} = player, %Word{} = word, attrs \\ %{}) do
     %Definition{}
     |> Definition.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:player, player)
+    |> Ecto.Changeset.put_assoc(:word, word)
     |> Repo.insert()
   end
 

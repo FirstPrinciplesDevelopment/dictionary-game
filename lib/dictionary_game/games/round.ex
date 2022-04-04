@@ -5,6 +5,7 @@ defmodule DictionaryGame.Games.Round do
   schema "rounds" do
     field :round_number, :integer
     field :is_approved, :boolean, default: false
+    field :are_definitions_submitted, :boolean, default: false
     # field :word_id, :id
 
     # Read about :on_replace https://hexdocs.pm/ecto/Ecto.Changeset.html#module-the-on_replace-option
@@ -18,7 +19,7 @@ defmodule DictionaryGame.Games.Round do
   @doc false
   def changeset(round, attrs) do
     round
-    |> cast(attrs, [:round_number, :is_approved])
-    |> validate_required([:round_number, :is_approved])
+    |> cast(attrs, [:round_number, :is_approved, :are_definitions_submitted])
+    |> validate_required([:round_number, :is_approved, :are_definitions_submitted])
   end
 end

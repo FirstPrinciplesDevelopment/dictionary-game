@@ -4,6 +4,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   alias DictionaryGame.{Rooms, Games, Dictionary}
   alias DictionaryGame.Games.{Round}
   alias DictionaryGame.Rooms.Player
+  alias DictionaryGame.Dictionary.{Definition}
 
   require Logger
 
@@ -12,7 +13,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     # Get the room by room id.
     room = Rooms.get_room!(room_id)
     # Get a player by room id and user_id.
-    player = Rooms.get_player(room.id, session["user_id"])
+    player = Rooms.get_player(room.id, session["user_id"]) || %Player{}
     # Get the game if it exists.
     game = Games.get_game(room.id)
     # Get the players score if it exists.
@@ -25,16 +26,28 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           nil
       end
 
+    # Get the round only if the game exists (may be `nil`).
     round =
       cond do
         game -> Games.get_current_round(game.id)
         true -> nil
       end
 
+    # Get the word approvals only if the round exists (may be `[]`).
     word_approvals =
       cond do
         round -> Games.list_player_word_approvals(round.id)
         true -> []
+      end
+
+    # Get the definition only if player and round exist (may be "empty" `%Definition{}`).
+    definition =
+      cond do
+        player && round ->
+          Dictionary.get_definition(player.id, round.word_id) || %Definition{}
+
+        true ->
+          %Definition{}
       end
 
     topic = "room:" <> room_id
@@ -47,13 +60,12 @@ defmodule DictionaryGameWeb.RoomLive.Show do
       end
     end
 
-    players = Rooms.list_players(room_id)
-
     {:ok,
      socket
      |> assign(
        user_id: session["user_id"],
-       player: player || %Player{},
+       player: player,
+       definition: definition,
        score: score,
        room: room,
        game: game,
@@ -133,6 +145,35 @@ defmodule DictionaryGameWeb.RoomLive.Show do
       end
 
     {:noreply, socket |> assign(word_approvals: word_approvals, round: round)}
+  end
+
+  @impl true
+  def handle_info(%{event: "definition_created", payload: definition}, socket) do
+    definitions = socket.assigns.definitions ++ [definition]
+
+    players = Rooms.list_players(socket.assigns.room.id)
+
+    # Has every player submitted a definition for the current word?
+    definitions_submitted? =
+      Enum.reduce(players, true, fn p, acc ->
+        Enum.any?(definitions, fn d ->
+          d.player_id == p.id && d.word_id == socket.assigns.round.word_id
+        end) && acc
+      end)
+
+    # Update round.are_definitions_submitted if necessary.
+    {:ok, round} =
+      cond do
+        definitions_submitted? ->
+          Games.update_round(socket.assigns.round, socket.assigns.round.word, %{
+            are_definitions_submitted: definitions_submitted?
+          })
+
+        true ->
+          {:ok, socket.assigns.round}
+      end
+
+    {:noreply, socket |> assign(definitions: definitions, round: round)}
   end
 
   @impl true

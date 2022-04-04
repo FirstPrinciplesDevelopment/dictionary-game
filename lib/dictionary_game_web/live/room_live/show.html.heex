@@ -36,16 +36,36 @@
     <%= if @round do %>
       <p>Round Number: <%= @round.round_number %></p>
       <%= if @round.word do %>
-        <p>Round Word: <%= @round.word.word %> <%= if @round.is_approved, do: ~H(<strong>Approved!</strong>) %></p>
-        <div>
-          <%= if Enum.any?(@word_approvals, fn w -> w.player_id == @player.id && w.word_id == @round.word_id end) do %>
-            <p><em>Waiting for other players.</em></p>
+        <p>Round Word: <%= @round.word.word %> </p>
+        <%= if @round.is_approved do %>
+          <%= unless @definition.definition do %>
+          <.live_component
+              module={DictionaryGameWeb.DefinitionLive.FormComponent}
+              id={:new}
+              title={@page_title}
+              action={:new}
+              definition={@definition}
+              player={@player}
+              round={@round}
+              room_id={@room.id}
+              user_id={@user_id}
+              return_to={Routes.room_show_path(@socket, :show, @room.id)}
+            />
           <% else %>
-            <p>Do you already know the definition of this word?</p>
-            <button phx-click="create_known_word">Yes</button>
-            <button phx-click="approve_word">No</button>
+            <p>Definition Submitted!</p>
+            <p><em>Waiting for other players.</em></p>
           <% end %>
-        </div>
+        <% else %>
+          <div>
+            <%= if Enum.any?(@word_approvals, fn w -> w.player_id == @player.id && w.word_id == @round.word_id end) do %>
+              <p><em>Waiting for other players.</em></p>
+            <% else %>
+              <p>Do you already know the definition of this word?</p>
+              <button phx-click="create_known_word">Yes</button>
+              <button phx-click="approve_word">No</button>
+            <% end %>
+          </div>
+        <% end %>
       <% end %>
       <p>Approvals: <%= length(@word_approvals) %></p>
     <% end %>
