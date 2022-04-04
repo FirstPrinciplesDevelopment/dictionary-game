@@ -15,8 +15,10 @@ defmodule DictionaryGame.Games.PlayerWordApproval do
   end
 
   @doc false
-  def changeset(player_word_approval, _attrs) do
+  def changeset(player_word_approval, attrs) do
     player_word_approval
+    |> cast(attrs, [])
+    |> validate_required([])
     |> unique_constraint([:player_id, :word_id])
   end
 end
