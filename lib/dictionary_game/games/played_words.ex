@@ -3,6 +3,7 @@ defmodule DictionaryGame.Games.PlayedWord do
   import Ecto.Changeset
 
   schema "played_words" do
+    # TODO: consider changing game to room and adding a fk to player, to make sure a player doesn't get a known word again.
     field :game_id, :id
     field :word_id, :id
 
