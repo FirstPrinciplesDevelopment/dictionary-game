@@ -332,8 +332,11 @@ defmodule DictionaryGame.Games do
 
   """
   def increment_score(%Score{id: id}, amount) do
-    from(s in Score, where: s.id == ^id)
-    |> Repo.update_all(inc: [score: amount])
+    {1, [score]} =
+      from(s in Score, where: s.id == ^id, select: s)
+      |> Repo.update_all(inc: [score: amount])
+
+    {:ok, score}
   end
 
   @doc """

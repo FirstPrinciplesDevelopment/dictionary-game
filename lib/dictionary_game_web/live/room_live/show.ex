@@ -196,6 +196,19 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_info(%{event: "definition_vote_created", payload: vote}, socket) do
     definition_votes = socket.assigns.definition_votes ++ [vote]
 
+    {:ok, score} =
+      cond do
+        Enum.any?(
+          socket.assigns.definitions,
+          &(&1.id == vote.definition_id && &1.player_id == socket.assigns.player.id)
+        ) ->
+          # The player receives 5 points for someone guessing their definition.
+          Games.increment_score(socket.assigns.score, 5)
+
+        true ->
+          {:ok, socket.assigns.score}
+      end
+
     players = Rooms.list_players(socket.assigns.room.id)
 
     # Has every player voted for a definition?
@@ -218,7 +231,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           {:ok, socket.assigns.round}
       end
 
-    {:noreply, socket |> assign(definition_votes: definition_votes, round: round)}
+    {:noreply, socket |> assign(definition_votes: definition_votes, round: round, score: score)}
   end
 
   @impl true
@@ -326,10 +339,6 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_event("vote_for_definition", %{"definition_id" => id_string}, socket) do
     {definition_id, _} = Integer.parse(id_string)
 
-    if Enum.any?(socket.assigns.definitions, &(&1.id == definition_id && &1.is_real)) do
-      Games.increment_score(socket.assigns.score, 10)
-    end
-
     # Create PlayerDefinitionVote.
     case Games.create_player_definition_vote(
            socket.assigns.player,
@@ -345,7 +354,17 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           vote
         )
 
-        {:noreply, socket}
+        {:ok, score} =
+          cond do
+            Enum.any?(socket.assigns.definitions, &(&1.id == definition_id && &1.is_real)) ->
+              # The player receives 10 points for guessing the correct definition.
+              Games.increment_score(socket.assigns.score, 10)
+
+            true ->
+              {:ok, socket.assigns.score}
+          end
+
+        {:noreply, assign(socket, score: score)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
