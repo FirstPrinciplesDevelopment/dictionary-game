@@ -11,5 +11,6 @@ defmodule DictionaryGame.Repo.Migrations.CreateScores do
     end
 
     create index(:scores, [:player_id])
+    create unique_index(:scores, [:player_id, :game_id])
   end
 end

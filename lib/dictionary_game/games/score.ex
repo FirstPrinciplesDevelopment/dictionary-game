@@ -5,11 +5,11 @@ defmodule DictionaryGame.Games.Score do
   schema "scores" do
     field :score, :integer, default: 0
 
-    # field :game_id, :id
-    # field :player_id, :id
-    
-    belongs_to :player, DictionaryGame.Rooms.Player
-    belongs_to :game, DictionaryGame.Games.Game
+    field :game_id, :id
+    field :player_id, :id
+
+    # belongs_to :player, DictionaryGame.Rooms.Player
+    # belongs_to :game, DictionaryGame.Games.Game
 
     timestamps()
   end
@@ -17,7 +17,8 @@ defmodule DictionaryGame.Games.Score do
   @doc false
   def changeset(score, attrs) do
     score
-    |> cast(attrs, [:score])
-    |> validate_required([:score])
+    |> cast(attrs, [:score, :game_id, :player_id])
+    |> validate_required([:score, :game_id, :player_id])
+    |> unique_constraint([:game_id, :player_id])
   end
 end

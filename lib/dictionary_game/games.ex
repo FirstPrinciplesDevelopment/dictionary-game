@@ -288,18 +288,16 @@ defmodule DictionaryGame.Games do
 
   ## Examples
 
-      iex> create_score(game, player, %{field: value})
+      iex> create_score(%{field: value})
       {:ok, %Score{}}
 
       iex> create_score(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_score(%Game{} = game, %Rooms.Player{} = player, attrs \\ %{}) do
+  def create_score(attrs \\ %{}) do
     %Score{}
     |> Score.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:game, game)
-    |> Ecto.Changeset.put_assoc(:player, player)
     |> Repo.insert()
   end
 
@@ -319,6 +317,23 @@ defmodule DictionaryGame.Games do
     score
     |> Score.changeset(attrs)
     |> Repo.update()
+  end
+
+  @doc """
+  Increments a score by amount.
+
+  ## Examples
+
+      iex> increment_score(score, amount)
+      {:ok, %Score{}}
+
+      iex> increment_score(score, amount)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def increment_score(%Score{id: id}, amount) do
+    from(s in Score, where: s.id == ^id)
+    |> Repo.update_all(inc: [score: amount])
   end
 
   @doc """
