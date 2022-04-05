@@ -89,7 +89,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
        definition_votes: definition_votes,
        topic: topic,
        # TODO: load initial user list?
-       player_list: []
+       player_names: []
      )}
   end
 
@@ -105,8 +105,8 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_info(%{event: "game_created", payload: %{game: game, round: round}}, socket) do
     Logger.info(payload: game)
 
-    # Create a score for the player.
-    {:ok, score} = Games.create_score(game, socket.assigns.player)
+    # Create a score for the player for the newly created game.
+    {:ok, score} = Games.create_score(%{player_id: socket.assigns.player.id, game_id: game.id})
 
     {:noreply,
      socket |> assign(game: game, round: round, score: score) |> put_flash(:info, "Game started.")}
@@ -225,10 +225,10 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_info(%{event: "presence_diff", payload: %{joins: joins, leaves: leaves}}, socket) do
     Logger.info(joins: joins, leaves: leaves)
 
-    player_list = DictionaryGameWeb.Presence.list(socket.assigns.topic) |> Map.keys()
-    Logger.info(player_list: player_list)
+    player_names = DictionaryGameWeb.Presence.list(socket.assigns.topic) |> Map.keys()
+    Logger.info(player_names: player_names)
 
-    {:noreply, socket |> assign(player_list: player_list)}
+    {:noreply, socket |> assign(player_names: player_names)}
   end
 
   @impl true
@@ -325,6 +325,11 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   @impl true
   def handle_event("vote_for_definition", %{"definition_id" => id_string}, socket) do
     {definition_id, _} = Integer.parse(id_string)
+
+    if Enum.any?(socket.assigns.definitions, &(&1.id == definition_id && &1.is_real)) do
+      Games.increment_score(socket.assigns.score, 10)
+    end
+
     # Create PlayerDefinitionVote.
     case Games.create_player_definition_vote(
            socket.assigns.player,
@@ -332,9 +337,8 @@ defmodule DictionaryGameWeb.RoomLive.Show do
            socket.assigns.round
          ) do
       {:ok, vote} ->
-        # TODO: Make sure delete cascades properly.
         # TODO: Should this move to the data access (Context) layer?
-        # Broadcast game_deleted event to every player (including the player who triggered the event).
+        # Broadcast definition_vote_created event to every player (including the player who triggered the event).
         DictionaryGameWeb.Endpoint.broadcast(
           socket.assigns.topic,
           "definition_vote_created",
