@@ -133,16 +133,24 @@ defmodule DictionaryGame.Dictionary do
   alias DictionaryGame.Dictionary.Definition
 
   @doc """
-  Returns the list of definitions.
+  Returns the list of definitions for a room and word,
+  comprising the real definition of the word and the player submitted definitions.
 
   ## Examples
 
-      iex> list_definitions()
+      iex> list_definitions(room_id, word_id)
       [%Definition{}, ...]
 
   """
-  def list_definitions do
-    Repo.all(Definition)
+  def list_definitions(room_id, word_id) do
+    query =
+      from d in Definition,
+        left_join: p in Player,
+        on: d.player_id == p.id,
+        where:
+          d.word_id == ^word_id and (p.room_id == ^room_id or (d.is_real and is_nil(d.player_id)))
+
+    Repo.all(query)
   end
 
   @doc """

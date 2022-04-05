@@ -42,6 +42,7 @@
           <.live_component
               module={DictionaryGameWeb.DefinitionLive.FormComponent}
               id={:new}
+              topic={@topic}
               title={@page_title}
               action={:new}
               definition={@definition}
@@ -52,8 +53,28 @@
               return_to={Routes.room_show_path(@socket, :show, @room.id)}
             />
           <% else %>
-            <p>Definition Submitted!</p>
-            <p><em>Waiting for other players.</em></p>
+            <%= if @round.are_definitions_submitted do %>
+              <h3>All Definitions Submitted!!!</h3>
+              <%= if @round.are_votes_submitted do %>
+                <h3>All Votes Submitted!!!</h3>
+              <% else %>
+                <%= if Enum.any?(@definition_votes, &(&1.player_id == @player.id)) do %>
+                  <p>My Vote Submitted!</p>
+                  <p><em>Waiting for other players.</em></p>
+                <% else %>
+                  <%= for d <- @definitions do %>
+                    <div>
+                      <p><%= d.definition %></p>
+                      <button phx-click="vote_for_definition" phx-value-definition_id={d.id}>Vote For This Definition</button>
+                    </div>
+                  <% end %>
+                <% end %>
+              <% end %>
+
+            <% else %>
+              <p>My Definition Submitted!</p>
+              <p><em>Waiting for other players.</em></p>
+            <% end %>
           <% end %>
         <% else %>
           <div>

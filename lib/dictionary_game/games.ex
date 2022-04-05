@@ -8,7 +8,7 @@ defmodule DictionaryGame.Games do
 
   alias DictionaryGame.Rooms
   alias DictionaryGame.Rooms.{Player}
-  alias DictionaryGame.Dictionary.Word
+  alias DictionaryGame.Dictionary.{Word, Definition}
   alias DictionaryGame.Games.{Game, Round}
 
   @doc """
@@ -651,16 +651,16 @@ defmodule DictionaryGame.Games do
   alias DictionaryGame.Games.PlayerDefinitionVote
 
   @doc """
-  Returns the list of player_definition_votes.
+  Returns the list of player_definition_votes for a round.
 
   ## Examples
 
-      iex> list_player_definition_votes()
+      iex> list_player_definition_votes(round_id)
       [%PlayerDefinitionVote{}, ...]
 
   """
-  def list_player_definition_votes do
-    Repo.all(PlayerDefinitionVote)
+  def list_player_definition_votes(round_id) do
+    Repo.all(from p in PlayerDefinitionVote, where: p.round_id == ^round_id)
   end
 
   @doc """
@@ -670,30 +670,38 @@ defmodule DictionaryGame.Games do
 
   ## Examples
 
-      iex> get_player_definition_votes!(123)
+      iex> get_player_definition_vote!(123)
       %PlayerDefinitionVote{}
 
-      iex> get_player_definition_votes!(456)
+      iex> get_player_definition_vote!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_player_definition_votes!(id), do: Repo.get!(PlayerDefinitionVote, id)
+  def get_player_definition_vote!(id), do: Repo.get!(PlayerDefinitionVote, id)
 
   @doc """
   Creates a player_definition_votes.
 
   ## Examples
 
-      iex> create_player_definition_votes(%{field: value})
+      iex> create_player_definition_vote(player, definition, round, %{field: value})
       {:ok, %PlayerDefinitionVote{}}
 
-      iex> create_player_definition_votes(%{field: bad_value})
+      iex> create_player_definition_vote(player, definition, round, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_player_definition_votes(attrs \\ %{}) do
+  def create_player_definition_vote(
+        %Player{} = player,
+        %Definition{} = definition,
+        %Round{} = round,
+        attrs \\ %{}
+      ) do
     %PlayerDefinitionVote{}
     |> PlayerDefinitionVote.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:player, player)
+    |> Ecto.Changeset.put_assoc(:definition, definition)
+    |> Ecto.Changeset.put_assoc(:round, round)
     |> Repo.insert()
   end
 
@@ -702,14 +710,14 @@ defmodule DictionaryGame.Games do
 
   ## Examples
 
-      iex> update_player_definition_votes(player_definition_votes, %{field: new_value})
+      iex> update_player_definition_vote(player_definition_votes, %{field: new_value})
       {:ok, %PlayerDefinitionVote{}}
 
-      iex> update_player_definition_votes(player_definition_votes, %{field: bad_value})
+      iex> update_player_definition_vote(player_definition_votes, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_player_definition_votes(%PlayerDefinitionVote{} = player_definition_votes, attrs) do
+  def update_player_definition_vote(%PlayerDefinitionVote{} = player_definition_votes, attrs) do
     player_definition_votes
     |> PlayerDefinitionVote.changeset(attrs)
     |> Repo.update()
@@ -720,14 +728,14 @@ defmodule DictionaryGame.Games do
 
   ## Examples
 
-      iex> delete_player_definition_votes(player_definition_votes)
+      iex> delete_player_definition_vote(player_definition_votes)
       {:ok, %PlayerDefinitionVote{}}
 
-      iex> delete_player_definition_votes(player_definition_votes)
+      iex> delete_player_definition_vote(player_definition_votes)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_player_definition_votes(%PlayerDefinitionVote{} = player_definition_votes) do
+  def delete_player_definition_vote(%PlayerDefinitionVote{} = player_definition_votes) do
     Repo.delete(player_definition_votes)
   end
 
@@ -736,11 +744,11 @@ defmodule DictionaryGame.Games do
 
   ## Examples
 
-      iex> change_player_definition_votes(player_definition_votes)
+      iex> change_player_definition_vote(player_definition_votes)
       %Ecto.Changeset{data: %PlayerDefinitionVote{}}
 
   """
-  def change_player_definition_votes(
+  def change_player_definition_vote(
         %PlayerDefinitionVote{} = player_definition_votes,
         attrs \\ %{}
       ) do

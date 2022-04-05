@@ -315,56 +315,56 @@ defmodule DictionaryGame.GamesTest do
       assert Games.list_player_definition_votes() == [player_definition_votes]
     end
 
-    test "get_player_definition_votes!/1 returns the player_definition_votes with given id" do
+    test "get_player_definition_vote!/1 returns the player_definition_votes with given id" do
       player_definition_votes = player_definition_votes_fixture()
 
-      assert Games.get_player_definition_votes!(player_definition_votes.id) ==
+      assert Games.get_player_definition_vote!(player_definition_votes.id) ==
                player_definition_votes
     end
 
-    test "create_player_definition_votes/1 with valid data creates a player_definition_votes" do
+    test "create_player_definition_vote/1 with valid data creates a player_definition_votes" do
       valid_attrs = %{}
 
       assert {:ok, %PlayerDefinitionVote{} = player_definition_votes} =
-               Games.create_player_definition_votes(valid_attrs)
+               Games.create_player_definition_vote(valid_attrs)
     end
 
-    test "create_player_definition_votes/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Games.create_player_definition_votes(@invalid_attrs)
+    test "create_player_definition_vote/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Games.create_player_definition_vote(@invalid_attrs)
     end
 
-    test "update_player_definition_votes/2 with valid data updates the player_definition_votes" do
+    test "update_player_definition_vote/2 with valid data updates the player_definition_votes" do
       player_definition_votes = player_definition_votes_fixture()
       update_attrs = %{}
 
       assert {:ok, %PlayerDefinitionVote{} = player_definition_votes} =
-               Games.update_player_definition_votes(player_definition_votes, update_attrs)
+               Games.update_player_definition_vote(player_definition_votes, update_attrs)
     end
 
-    test "update_player_definition_votes/2 with invalid data returns error changeset" do
+    test "update_player_definition_vote/2 with invalid data returns error changeset" do
       player_definition_votes = player_definition_votes_fixture()
 
       assert {:error, %Ecto.Changeset{}} =
-               Games.update_player_definition_votes(player_definition_votes, @invalid_attrs)
+               Games.update_player_definition_vote(player_definition_votes, @invalid_attrs)
 
       assert player_definition_votes ==
-               Games.get_player_definition_votes!(player_definition_votes.id)
+               Games.get_player_definition_vote!(player_definition_votes.id)
     end
 
-    test "delete_player_definition_votes/1 deletes the player_definition_votes" do
+    test "delete_player_definition_vote/1 deletes the player_definition_votes" do
       player_definition_votes = player_definition_votes_fixture()
 
       assert {:ok, %PlayerDefinitionVote{}} =
-               Games.delete_player_definition_votes(player_definition_votes)
+               Games.delete_player_definition_vote(player_definition_votes)
 
       assert_raise Ecto.NoResultsError, fn ->
-        Games.get_player_definition_votes!(player_definition_votes.id)
+        Games.get_player_definition_vote!(player_definition_votes.id)
       end
     end
 
-    test "change_player_definition_votes/1 returns a player_definition_votes changeset" do
+    test "change_player_definition_vote/1 returns a player_definition_votes changeset" do
       player_definition_votes = player_definition_votes_fixture()
-      assert %Ecto.Changeset{} = Games.change_player_definition_votes(player_definition_votes)
+      assert %Ecto.Changeset{} = Games.change_player_definition_vote(player_definition_votes)
     end
   end
 end

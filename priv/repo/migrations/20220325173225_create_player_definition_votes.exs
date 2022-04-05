@@ -13,5 +13,7 @@ defmodule DictionaryGame.Repo.Migrations.CreatePlayerDefinitionVote do
     create index(:player_definition_votes, [:player_id])
     create index(:player_definition_votes, [:definition_id])
     create index(:player_definition_votes, [:round_id])
+    # Only allow one vote per player per round.
+    create unique_index(:player_definition_votes, [:player_id, :round_id])
   end
 end

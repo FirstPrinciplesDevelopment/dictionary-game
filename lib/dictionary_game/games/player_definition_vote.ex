@@ -3,9 +3,13 @@ defmodule DictionaryGame.Games.PlayerDefinitionVote do
   import Ecto.Changeset
 
   schema "player_definition_votes" do
-    field :player_id, :id
-    field :definition_id, :id
-    field :round_id, :id
+    # field :player_id, :id
+    # field :definition_id, :id
+    # field :round_id, :id
+
+    belongs_to :player, DictionaryGame.Rooms.Player
+    belongs_to :definition, DictionaryGame.Dictionary.Definition
+    belongs_to :round, DictionaryGame.Games.Round
 
     timestamps()
   end
@@ -15,5 +19,6 @@ defmodule DictionaryGame.Games.PlayerDefinitionVote do
     player_definition_votes
     |> cast(attrs, [])
     |> validate_required([])
+    |> unique_constraint([:player_id, :round])
   end
 end

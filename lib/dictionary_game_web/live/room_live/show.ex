@@ -50,6 +50,20 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           %Definition{}
       end
 
+    # Get the list of definitions for the current word if round exists (may be `[]`).
+    definitions =
+      cond do
+        round -> Dictionary.list_definitions(room_id, round.word_id)
+        true -> []
+      end
+
+    # Get the list of votes for this round if round exists (may be `[]`).
+    definition_votes =
+      cond do
+        round -> Games.list_player_definition_votes(round.id)
+        true -> []
+      end
+
     topic = "room:" <> room_id
 
     if connected?(socket) do
@@ -65,12 +79,14 @@ defmodule DictionaryGameWeb.RoomLive.Show do
      |> assign(
        user_id: session["user_id"],
        player: player,
-       definition: definition,
        score: score,
        room: room,
        game: game,
        round: round,
        word_approvals: word_approvals,
+       definition: definition,
+       definitions: definitions,
+       definition_votes: definition_votes,
        topic: topic,
        # TODO: load initial user list?
        player_list: []
@@ -177,6 +193,35 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   @impl true
+  def handle_info(%{event: "definition_vote_created", payload: vote}, socket) do
+    definition_votes = socket.assigns.definition_votes ++ [vote]
+
+    players = Rooms.list_players(socket.assigns.room.id)
+
+    # Has every player voted for a definition?
+    votes_submitted? =
+      Enum.reduce(players, true, fn p, acc ->
+        Enum.any?(definition_votes, fn x ->
+          x.player_id == p.id && x.round_id == socket.assigns.round.id
+        end) && acc
+      end)
+
+    # Update round.are_votes_submitted if necessary.
+    {:ok, round} =
+      cond do
+        votes_submitted? ->
+          Games.update_round(socket.assigns.round, socket.assigns.round.word, %{
+            are_votes_submitted: votes_submitted?
+          })
+
+        true ->
+          {:ok, socket.assigns.round}
+      end
+
+    {:noreply, socket |> assign(definition_votes: definition_votes, round: round)}
+  end
+
+  @impl true
   def handle_info(%{event: "presence_diff", payload: %{joins: joins, leaves: leaves}}, socket) do
     Logger.info(joins: joins, leaves: leaves)
 
@@ -268,6 +313,32 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           socket.assigns.topic,
           "game_deleted",
           socket.assigns.player
+        )
+
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
+  end
+
+  @impl true
+  def handle_event("vote_for_definition", %{"definition_id" => id_string}, socket) do
+    {definition_id, _} = Integer.parse(id_string)
+    # Create PlayerDefinitionVote.
+    case Games.create_player_definition_vote(
+           socket.assigns.player,
+           Enum.find(socket.assigns.definitions, &(&1.id == definition_id)),
+           socket.assigns.round
+         ) do
+      {:ok, vote} ->
+        # TODO: Make sure delete cascades properly.
+        # TODO: Should this move to the data access (Context) layer?
+        # Broadcast game_deleted event to every player (including the player who triggered the event).
+        DictionaryGameWeb.Endpoint.broadcast(
+          socket.assigns.topic,
+          "definition_vote_created",
+          vote
         )
 
         {:noreply, socket}

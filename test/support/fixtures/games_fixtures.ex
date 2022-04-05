@@ -89,7 +89,7 @@ defmodule DictionaryGame.GamesFixtures do
     {:ok, player_definition_votes} =
       attrs
       |> Enum.into(%{})
-      |> DictionaryGame.Games.create_player_definition_votes()
+      |> DictionaryGame.Games.create_player_definition_vote()
 
     player_definition_votes
   end
