@@ -1,0 +1,8 @@
+- Show Definitions, Votes, and Scores after each round
+- Indicate Winner when game is over
+- "Play Again" button to start a new game in the same room
+- Allow number of rounds to be set during game creation (with a default)
+- Setup project to use Tailwind CSS
+- Add chat to room (persist across games)
+- Expand size of dictionary
+- Randomize get_unkown_word function
