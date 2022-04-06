@@ -176,10 +176,14 @@ defmodule DictionaryGame.Games do
   """
   def get_current_round(game_id) do
     # TODO: make sure frist(order_by) is working - https://hexdocs.pm/ecto/Ecto.Query.html#first/2
-    query = from r in Round, where: r.game_id == ^game_id, preload: [:word]
+    query =
+      from r in Round,
+        where: r.game_id == ^game_id,
+        order_by: [desc: r.round_number],
+        preload: [:word]
 
     query
-    |> first(:round_number)
+    |> first()
     |> Repo.one()
   end
 
@@ -371,7 +375,7 @@ defmodule DictionaryGame.Games do
   alias DictionaryGame.Games.PlayedWord
 
   @doc """
-  Returns the list of played_words.
+  Returns the list of played_word.
 
   ## Examples
 
@@ -384,84 +388,86 @@ defmodule DictionaryGame.Games do
   end
 
   @doc """
-  Gets a single played_words.
+  Gets a single played_word.
 
   Raises `Ecto.NoResultsError` if the Played words does not exist.
 
   ## Examples
 
-      iex> get_played_words!(123)
+      iex> get_played_word!(123)
       %PlayedWord{}
 
-      iex> get_played_words!(456)
+      iex> get_played_word!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_played_words!(id), do: Repo.get!(PlayedWord, id)
+  def get_played_word!(id), do: Repo.get!(PlayedWord, id)
 
   @doc """
-  Creates a played_words.
+  Creates a played_word.
 
   ## Examples
 
-      iex> create_played_words(%{field: value})
+      iex> create_played_word(game, word, %{field: value})
       {:ok, %PlayedWord{}}
 
-      iex> create_played_words(%{field: bad_value})
+      iex> create_played_word(game, word, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_played_words(attrs \\ %{}) do
+  def create_played_word(%Game{} = game, %Word{} = word, attrs \\ %{}) do
     %PlayedWord{}
     |> PlayedWord.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:game, game)
+    |> Ecto.Changeset.put_assoc(:word, word)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a played_words.
+  Updates a played_word.
 
   ## Examples
 
-      iex> update_played_words(played_words, %{field: new_value})
+      iex> update_played_word(played_word, %{field: new_value})
       {:ok, %PlayedWord{}}
 
-      iex> update_played_words(played_words, %{field: bad_value})
+      iex> update_played_word(played_word, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_played_words(%PlayedWord{} = played_words, attrs) do
-    played_words
+  def update_played_word(%PlayedWord{} = played_word, attrs) do
+    played_word
     |> PlayedWord.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a played_words.
+  Deletes a played_word.
 
   ## Examples
 
-      iex> delete_played_words(played_words)
+      iex> delete_played_word(played_word)
       {:ok, %PlayedWord{}}
 
-      iex> delete_played_words(played_words)
+      iex> delete_played_word(played_word)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_played_words(%PlayedWord{} = played_words) do
-    Repo.delete(played_words)
+  def delete_played_word(%PlayedWord{} = played_word) do
+    Repo.delete(played_word)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking played_words changes.
+  Returns an `%Ecto.Changeset{}` for tracking played_word changes.
 
   ## Examples
 
-      iex> change_played_words(played_words)
+      iex> change_played_word(played_word)
       %Ecto.Changeset{data: %PlayedWord{}}
 
   """
-  def change_played_words(%PlayedWord{} = played_words, attrs \\ %{}) do
-    PlayedWord.changeset(played_words, attrs)
+  def change_played_word(%PlayedWord{} = played_word, attrs \\ %{}) do
+    PlayedWord.changeset(played_word, attrs)
   end
 
   alias DictionaryGame.Games.KnownWord

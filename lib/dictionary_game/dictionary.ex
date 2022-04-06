@@ -7,7 +7,7 @@ defmodule DictionaryGame.Dictionary do
   alias DictionaryGame.Repo
 
   alias DictionaryGame.Dictionary.Word
-  alias DictionaryGame.Games.KnownWord
+  alias DictionaryGame.Games.{KnownWord, PlayedWord}
   alias DictionaryGame.Rooms.Player
 
   @doc """
@@ -58,7 +58,11 @@ defmodule DictionaryGame.Dictionary do
       from w in Word,
         left_join: kw in KnownWord,
         on: w.id == kw.word_id,
-        where: is_nil(kw.game_id) or kw.game_id != ^game_id
+        left_join: pw in PlayedWord,
+        on: w.id == pw.word_id,
+        where:
+          (is_nil(kw.game_id) or kw.game_id != ^game_id) and
+            (is_nil(pw.game_id) or pw.game_id != ^game_id)
 
     query
     |> first()

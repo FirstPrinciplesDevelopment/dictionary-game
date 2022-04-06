@@ -165,56 +165,56 @@ defmodule DictionaryGame.GamesTest do
     end
   end
 
-  describe "played_words" do
+  describe "played_word" do
     alias DictionaryGame.Games.PlayedWord
 
     import DictionaryGame.GamesFixtures
 
     @invalid_attrs %{}
 
-    test "list_played_words/0 returns all played_words" do
-      played_words = played_words_fixture()
-      assert Games.list_played_words() == [played_words]
+    test "list_played_words/0 returns all played_word" do
+      played_word = played_word_fixture()
+      assert Games.list_played_words() == [played_word]
     end
 
-    test "get_played_words!/1 returns the played_words with given id" do
-      played_words = played_words_fixture()
-      assert Games.get_played_words!(played_words.id) == played_words
+    test "get_played_word!/1 returns the played_word with given id" do
+      played_word = played_word_fixture()
+      assert Games.get_played_word!(played_word.id) == played_word
     end
 
-    test "create_played_words/1 with valid data creates a played_words" do
+    test "create_played_word/1 with valid data creates a played_word" do
       valid_attrs = %{}
 
-      assert {:ok, %PlayedWord{} = played_words} = Games.create_played_words(valid_attrs)
+      assert {:ok, %PlayedWord{} = played_word} = Games.create_played_word(valid_attrs)
     end
 
-    test "create_played_words/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Games.create_played_words(@invalid_attrs)
+    test "create_played_word/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Games.create_played_word(@invalid_attrs)
     end
 
-    test "update_played_words/2 with valid data updates the played_words" do
-      played_words = played_words_fixture()
+    test "update_played_word/2 with valid data updates the played_word" do
+      played_word = played_word_fixture()
       update_attrs = %{}
 
-      assert {:ok, %PlayedWord{} = played_words} =
-               Games.update_played_words(played_words, update_attrs)
+      assert {:ok, %PlayedWord{} = played_word} =
+               Games.update_played_word(played_word, update_attrs)
     end
 
-    test "update_played_words/2 with invalid data returns error changeset" do
-      played_words = played_words_fixture()
-      assert {:error, %Ecto.Changeset{}} = Games.update_played_words(played_words, @invalid_attrs)
-      assert played_words == Games.get_played_words!(played_words.id)
+    test "update_played_word/2 with invalid data returns error changeset" do
+      played_word = played_word_fixture()
+      assert {:error, %Ecto.Changeset{}} = Games.update_played_word(played_word, @invalid_attrs)
+      assert played_word == Games.get_played_word!(played_word.id)
     end
 
-    test "delete_played_words/1 deletes the played_words" do
-      played_words = played_words_fixture()
-      assert {:ok, %PlayedWord{}} = Games.delete_played_words(played_words)
-      assert_raise Ecto.NoResultsError, fn -> Games.get_played_words!(played_words.id) end
+    test "delete_played_word/1 deletes the played_word" do
+      played_word = played_word_fixture()
+      assert {:ok, %PlayedWord{}} = Games.delete_played_word(played_word)
+      assert_raise Ecto.NoResultsError, fn -> Games.get_played_word!(played_word.id) end
     end
 
-    test "change_played_words/1 returns a played_words changeset" do
-      played_words = played_words_fixture()
-      assert %Ecto.Changeset{} = Games.change_played_words(played_words)
+    test "change_played_word/1 returns a played_word changeset" do
+      played_word = played_word_fixture()
+      assert %Ecto.Changeset{} = Games.change_played_word(played_word)
     end
   end
 

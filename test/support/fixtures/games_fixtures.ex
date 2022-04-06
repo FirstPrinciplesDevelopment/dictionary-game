@@ -47,15 +47,15 @@ defmodule DictionaryGame.GamesFixtures do
   end
 
   @doc """
-  Generate a played_words.
+  Generate a played_word.
   """
-  def played_words_fixture(attrs \\ %{}) do
-    {:ok, played_words} =
+  def played_word_fixture(attrs \\ %{}) do
+    {:ok, played_word} =
       attrs
       |> Enum.into(%{})
-      |> DictionaryGame.Games.create_played_words()
+      |> DictionaryGame.Games.create_played_word()
 
-    played_words
+    played_word
   end
 
   @doc """

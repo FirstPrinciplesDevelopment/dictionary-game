@@ -39,7 +39,7 @@
         <p>Round Word: <%= @round.word.word %> </p>
         <%= if @round.is_approved do %>
           <%= unless @definition.definition do %>
-          <.live_component
+            <.live_component
               module={DictionaryGameWeb.DefinitionLive.FormComponent}
               id={:new}
               topic={@topic}
@@ -57,6 +57,12 @@
               <h3>All Definitions Submitted!!!</h3>
               <%= if @round.are_votes_submitted do %>
                 <h3>All Votes Submitted!!!</h3>
+                <div>TODO: Show Definition Votes and Scores Here!</div>
+                <%= if @round.round_number < @game.number_of_rounds do %>
+                  <button phx-click="next_round">Next Round</button>
+                <% else %>
+                  Game Over.
+                <% end %>
               <% else %>
                 <%= if Enum.any?(@definition_votes, &(&1.player_id == @player.id)) do %>
                   <p>My Vote Submitted!</p>

@@ -113,6 +113,14 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   @impl true
+  def handle_info(%{event: "round_created", payload: round}, socket) do
+    {:noreply,
+     socket
+     |> assign(round: round, definition: %Definition{})
+     |> put_flash(:info, "Round #{round.round_number} started.")}
+  end
+
+  @impl true
   def handle_info(%{event: "game_deleted", payload: delete_by}, socket) do
     {:noreply,
      socket
@@ -135,31 +143,13 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   @impl true
-  def handle_info(%{event: "word_approval_created", payload: approval}, socket) do
-    word_approvals = socket.assigns.word_approvals ++ [approval]
-
-    players = Rooms.list_players(socket.assigns.room.id)
-
-    # Has every player approved the current word?
-    approved? =
-      Enum.reduce(players, true, fn p, acc ->
-        Enum.any?(word_approvals, fn x ->
-          x.player_id == p.id && x.word_id == socket.assigns.round.word_id
-        end) && acc
-      end)
-
-    # Update round.is_approved if necessary.
-    {:ok, round} =
-      cond do
-        approved? ->
-          Games.update_round(socket.assigns.round, socket.assigns.round.word, %{
-            is_approved: approved?
-          })
-
-        true ->
-          {:ok, socket.assigns.round}
-      end
-
+  def handle_info(
+        %{
+          event: "word_approval_created",
+          payload: %{word_approvals: word_approvals, round: round}
+        },
+        socket
+      ) do
     {:noreply, socket |> assign(word_approvals: word_approvals, round: round)}
   end
 
@@ -267,17 +257,46 @@ defmodule DictionaryGameWeb.RoomLive.Show do
 
   @impl true
   def handle_event("approve_word", _value, socket) do
-    # Create player word approval, does nothing if already exists (this shouldn't happen, but maybe a user can double click really fast).
     round = socket.assigns.round
 
+    # Create player word approval, does nothing if already exists (this shouldn't happen, but maybe a user can double click really fast).
     case Games.create_player_word_approval(socket.assigns.player, round.word, round) do
       {:ok, approval} ->
-        # TODO: Should this move to the data access (Context) layer?
+        word_approvals = socket.assigns.word_approvals ++ [approval]
+
+        players = Rooms.list_players(socket.assigns.room.id)
+
+        # Has every player approved the current word?
+        approved? =
+          Enum.reduce(players, true, fn p, acc ->
+            Enum.any?(word_approvals, fn x ->
+              x.player_id == p.id && x.word_id == round.word_id
+            end) && acc
+          end)
+
+        # Update round.is_approved and create PlayedWord if word is approved by all players.
+        {:ok, round} =
+          cond do
+            approved? ->
+              # Create PlayedWord since everyone has approved the word and it will now be played.
+              Games.create_played_word(socket.assigns.game, round.word)
+              # Update round.
+              Games.update_round(round, round.word, %{
+                is_approved: approved?
+              })
+
+            true ->
+              {:ok, round}
+          end
+
         # Broadcast word_approval_created event to every player (including the player who triggered the event).
         DictionaryGameWeb.Endpoint.broadcast(
           socket.assigns.topic,
           "word_approval_created",
-          approval
+          %{
+            word_approvals: word_approvals,
+            round: round
+          }
         )
 
         {:noreply, socket}
@@ -369,6 +388,17 @@ defmodule DictionaryGameWeb.RoomLive.Show do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  @impl true
+  def handle_event("next_round", _value, socket) do
+    # Create next round.
+    {:ok, round} = create_next_round(socket.assigns.game)
+
+    # Broadcast round_created event to every player (including the player who triggered the event).
+    DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "round_created", round)
+
+    {:noreply, socket}
   end
 
   # TODO: make room name?
