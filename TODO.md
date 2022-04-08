@@ -1,4 +1,6 @@
 - Show Definitions, Votes, and Scores after each round
+- Hide scores until end of round
+- Make known words room-wide instead of scoped to a game
 - Indicate Winner when game is over
 - "Play Again" button to start a new game in the same room
 - Allow number of rounds to be set during game creation (with a default)
