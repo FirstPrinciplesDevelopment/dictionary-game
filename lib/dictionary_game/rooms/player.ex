@@ -9,8 +9,9 @@ defmodule DictionaryGame.Rooms.Player do
 
     # replaced by belongs_to call below
     # field :room_id, :id
-
     belongs_to :room, DictionaryGame.Rooms.Room
+
+    has_one :score, DictionaryGame.Games.Score
 
     timestamps()
   end

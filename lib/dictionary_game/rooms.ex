@@ -140,7 +140,7 @@ defmodule DictionaryGame.Rooms do
 
   """
   def list_players(room_id) do
-    Repo.all(from p in Player, where: p.room_id == ^room_id)
+    Repo.all(from p in Player, where: p.room_id == ^room_id, preload: [:score])
   end
 
   @doc """
@@ -170,7 +170,7 @@ defmodule DictionaryGame.Rooms do
       %Player{}
 
       iex> get_player!(room_id, user_id)
-      ** (Ecto.NoResultsError)
+      nil
 
   """
   def get_player(room_id, user_id), do: Repo.get_by(Player, user_id: user_id, room_id: room_id)

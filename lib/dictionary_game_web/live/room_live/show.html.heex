@@ -57,11 +57,23 @@
               <h3>All Definitions Submitted!!!</h3>
               <%= if @round.are_votes_submitted do %>
                 <h3>All Votes Submitted!!!</h3>
-                <div>TODO: Show Definition Votes and Scores Here!</div>
+                <div>TODO: Show Definition Votes!</div>
+                <%= for p <- @players do %>
+                  <div><%= "#{p.name}: #{p.score.score}" %></div>
+                <% end %>
                 <%= if @round.round_number < @game.number_of_rounds do %>
                   <button phx-click="next_round">Next Round</button>
                 <% else %>
-                  Game Over.
+                  <%# TODO: remove all of this - very hacky %>
+                  <%= if length(Enum.filter(@players, fn x -> x.score.score == Enum.max_by(@players, &(&1.score.score)).score.score end)) == 1 do %>
+                    <p>Winner: <%= Enum.max_by(@players, &(&1.score.score)).name %></p>
+                  <% else %>
+                    <p>Tie:</p>
+                    <%= for p <- Enum.filter(@players, fn x -> x.score.score == Enum.max_by(@players, &(&1.score.score)).score.score end) do %>
+                      <span id={p.name}><%= p.name %></span>
+                    <% end %>
+                  <% end %>
+                  <p>Game Over.</p>
                 <% end %>
               <% else %>
                 <%= if Enum.any?(@definition_votes, &(&1.player_id == @player.id)) do %>

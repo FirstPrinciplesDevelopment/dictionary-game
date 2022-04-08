@@ -258,16 +258,16 @@ defmodule DictionaryGame.Games do
   alias DictionaryGame.Games.Score
 
   @doc """
-  Returns the list of scores.
+  Returns the list of scores for a game.
 
   ## Examples
 
-      iex> list_scores()
+      iex> list_scores(game_id)
       [%Score{}, ...]
 
   """
-  def list_scores do
-    Repo.all(Score)
+  def list_scores(game_id) do
+    Repo.all(from s in Score, where: s.game_id == ^game_id)
   end
 
   @doc """

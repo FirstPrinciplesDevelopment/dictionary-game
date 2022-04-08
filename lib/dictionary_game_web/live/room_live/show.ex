@@ -13,9 +13,11 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     # Get the room by room id.
     room = Rooms.get_room!(room_id)
     # Get a player by room id and user_id.
-    player = Rooms.get_player(room.id, session["user_id"]) || %Player{}
+    player = Rooms.get_player(room_id, session["user_id"]) || %Player{}
+    # Get the list of players.
+    players = Rooms.list_players(room_id)
     # Get the game if it exists.
-    game = Games.get_game(room.id)
+    game = Games.get_game(room_id)
     # Get the players score if it exists.
     score =
       cond do
@@ -69,7 +71,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     if connected?(socket) do
       DictionaryGameWeb.Endpoint.subscribe(topic)
 
-      if player do
+      if player.name do
         DictionaryGameWeb.Presence.track(self(), topic, player.name, %{})
       end
     end
@@ -89,7 +91,8 @@ defmodule DictionaryGameWeb.RoomLive.Show do
        definition_votes: definition_votes,
        topic: topic,
        # TODO: load initial user list?
-       player_names: []
+       player_names: [],
+       players: players
      )}
   end
 
@@ -186,18 +189,8 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_info(%{event: "definition_vote_created", payload: vote}, socket) do
     definition_votes = socket.assigns.definition_votes ++ [vote]
 
-    {:ok, score} =
-      cond do
-        Enum.any?(
-          socket.assigns.definitions,
-          &(&1.id == vote.definition_id && &1.player_id == socket.assigns.player.id)
-        ) ->
-          # The player receives 5 points for someone guessing their definition.
-          Games.increment_score(socket.assigns.score, 5)
-
-        true ->
-          {:ok, socket.assigns.score}
-      end
+    # This players score may have been updated by another players vote.
+    score = Games.get_score(socket.assigns.game.id, socket.assigns.player.id)
 
     players = Rooms.list_players(socket.assigns.room.id)
 
@@ -221,7 +214,9 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           {:ok, socket.assigns.round}
       end
 
-    {:noreply, socket |> assign(definition_votes: definition_votes, round: round, score: score)}
+    {:noreply,
+     socket
+     |> assign(definition_votes: definition_votes, round: round, score: score, players: players)}
   end
 
   @impl true
@@ -229,9 +224,11 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     Logger.info(joins: joins, leaves: leaves)
 
     player_names = DictionaryGameWeb.Presence.list(socket.assigns.topic) |> Map.keys()
+    # Update players.
+    players = Rooms.list_players(socket.assigns.room.id)
     Logger.info(player_names: player_names)
 
-    {:noreply, socket |> assign(player_names: player_names)}
+    {:noreply, socket |> assign(player_names: player_names, players: players)}
   end
 
   @impl true
@@ -374,12 +371,15 @@ defmodule DictionaryGameWeb.RoomLive.Show do
         )
 
         {:ok, score} =
-          cond do
-            Enum.any?(socket.assigns.definitions, &(&1.id == definition_id && &1.is_real)) ->
-              # The player receives 10 points for guessing the correct definition.
+          case Enum.find(socket.assigns.definitions, &(&1.id == definition_id)) do
+            %Definition{is_real: true} ->
+              # The voting player receives 10 points for guessing the correct definition.
               Games.increment_score(socket.assigns.score, 10)
 
-            true ->
+            %Definition{is_real: false, player_id: player_id} ->
+              # The player whose definition was voted for gets 5 points for fooling the voting player.
+              player_to_increment = Enum.find(socket.assigns.players, &(&1.id == player_id))
+              Games.increment_score(player_to_increment.score, 5)
               {:ok, socket.assigns.score}
           end
 
