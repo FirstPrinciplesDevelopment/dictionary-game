@@ -21,8 +21,10 @@ config :dictionary_game, DictionaryGameWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "XhJGcnxydz1M5HKIn79Lk367DsXiHX7M1W9s4TdUzVh53j72aNsjmixZSg0FAo51",
   watchers: [
-    # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+    # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args).
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    # Use the tailwind watcher in development.
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 
 # ## SSL Support
