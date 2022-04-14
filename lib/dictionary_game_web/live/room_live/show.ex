@@ -97,11 +97,14 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   @impl true
-  def handle_params(%{"id" => room_id}, _, socket) do
+  def handle_params(%{"id" => room_id}, uri, socket) do
     {:noreply,
      socket
-     |> assign(:page_title, page_title(socket.assigns.live_action, room_id))
-     |> assign(:room, Rooms.get_room!(room_id))}
+     |> assign(
+       page_title: page_title(socket.assigns.live_action, room_id),
+       url: uri,
+       room: Rooms.get_room!(room_id)
+     )}
   end
 
   @impl true
