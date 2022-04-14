@@ -62,3 +62,30 @@ DictionaryGame.Repo.insert!(%Definition{
   is_real: true,
   player_id: nil
 })
+
+{:ok, word} =
+  DictionaryGame.Repo.insert(%Word{
+    word: "tensegrity",
+    part_of_speech: "noun"
+  })
+
+DictionaryGame.Repo.insert!(%Definition{
+  word_id: word.id,
+  definition:
+    "the property of skeleton structures that employ continuous tension members and discontinuous compression members in such a way that each member operates with the maximum efficiency and economy.",
+  is_real: true,
+  player_id: nil
+})
+
+{:ok, word} =
+  DictionaryGame.Repo.insert(%Word{
+    word: "tartrazine",
+    part_of_speech: "noun"
+  })
+
+DictionaryGame.Repo.insert!(%Definition{
+  word_id: word.id,
+  definition: "Yellow No. 5.",
+  is_real: true,
+  player_id: nil
+})
