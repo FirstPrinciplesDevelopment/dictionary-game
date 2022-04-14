@@ -1,121 +1,122 @@
-<h1>Dictionary Game</h1>
+<h1 class="text-3xl md:text-5xl font-bold md:mx-auto md:my-8 text-center text-blue-900 max-w-md">The Dictionary Game</h1>
 
-<span><%= live_redirect "Back", to: Routes.room_index_path(@socket, :index) %></span>
+<div class="flex">
+<div class="text-blue-800 underline m-8"><%= live_redirect "Back", to: Routes.room_index_path(@socket, :index) %></div>
+<div class="text-lg font-bold text-blue-700 m-8"><%= @room.name %></div>
+</div>
 
-<h4><strong>Room:</strong> <%= @room.name %></h4>
+<div class="md:mx-auto max-w-4xl py-8 bg-slate-50 rounded-lg shadow-md text-blue-900">
 
-<%= unless @player.name do%>
-  <.live_component
-    module={DictionaryGameWeb.PlayerLive.FormComponent}
-    id={:new}
-    title={@page_title}
-    action={:new}
-    player={@player}
-    room_id={@room.id}
-    user_id={@user_id}
-    return_to={Routes.room_show_path(@socket, :show, @room.id)}
-  />
-<% else %>
-  <h4><strong>User: </strong><%= @player.name %><em>(me)</em></h4>
-  <%= if @score do %>
-    <h4><strong>Score: </strong><%= @score.score %><em>(me)</em></h4>
- <% end %>
-  <div id="user-list">
-    <h3>Online Players:</h3>
-    <%= for p <- @player_names do %>
-      <%= if p === @player.name do %>
-        <div id={p}><%= p %><em> (me)</em></div>
-      <% else %>
-        <div id={p}><%= p %></div>
-      <% end %>
-    <% end %>
-  </div>
+  <%= unless @player.name do%>
+    <.live_component
+      module={DictionaryGameWeb.PlayerLive.FormComponent}
+      id={:new}
+      action={:new}
+      player={@player}
+      room_id={@room.id}
+      user_id={@user_id}
+      return_to={Routes.room_show_path(@socket, :show, @room.id)}
+    />
+  <% else %>
 
-  <%= if @game do %>
-    <h2>Game Started</h2>
-    <%= if @round do %>
-      <p>Round Number: <%= @round.round_number %></p>
-      <%= if @round.word do %>
-        <p>Round Word: <%= @round.word.word %> </p>
-        <%= if @round.is_approved do %>
-          <%= unless @definition.definition do %>
-            <.live_component
-              module={DictionaryGameWeb.DefinitionLive.FormComponent}
-              id={:new}
-              topic={@topic}
-              title={@page_title}
-              action={:new}
-              definition={@definition}
-              player={@player}
-              round={@round}
-              room_id={@room.id}
-              user_id={@user_id}
-              return_to={Routes.room_show_path(@socket, :show, @room.id)}
-            />
-          <% else %>
-            <%= if @round.are_definitions_submitted do %>
-              <h3>All Definitions Submitted!!!</h3>
-              <%= if @round.are_votes_submitted do %>
-                <h3>All Votes Submitted!!!</h3>
-                <div>TODO: Show Definition Votes!</div>
-                <%= for p <- @players do %>
-                  <div><%= "#{p.name}: #{p.score.score}" %></div>
-                <% end %>
-                <%= if @round.round_number < @game.number_of_rounds do %>
-                  <button phx-click="next_round">Next Round</button>
-                <% else %>
-                  <%# TODO: remove all of this - very hacky %>
-                  <%= if length(Enum.filter(@players, fn x -> x.score.score == Enum.max_by(@players, &(&1.score.score)).score.score end)) == 1 do %>
-                    <p>Winner: <%= Enum.max_by(@players, &(&1.score.score)).name %></p>
-                  <% else %>
-                    <p>Tie:</p>
-                    <%= for p <- Enum.filter(@players, fn x -> x.score.score == Enum.max_by(@players, &(&1.score.score)).score.score end) do %>
-                      <span id={p.name}><%= p.name %></span>
-                    <% end %>
-                  <% end %>
-                  <p>Game Over.</p>
-                <% end %>
-              <% else %>
-                <%= if Enum.any?(@definition_votes, &(&1.player_id == @player.id)) do %>
-                  <p>My Vote Submitted!</p>
-                  <p><em>Waiting for other players.</em></p>
-                <% else %>
-                  <%= for d <- @definitions do %>
-                    <div>
-                      <p><%= d.definition %></p>
-                      <button phx-click="vote_for_definition" phx-value-definition_id={d.id}>Vote For This Definition</button>
-                    </div>
-                  <% end %>
-                <% end %>
-              <% end %>
-
-            <% else %>
-              <p>My Definition Submitted!</p>
-              <p><em>Waiting for other players.</em></p>
-            <% end %>
-          <% end %>
+    <div id="user-list">
+      <h3 class="px-4">Online Players:</h3>
+      <%= for p <- @player_names do %>
+        <%= if p === @player.name do %>
+          <div class="rounded-full bg-blue-100 border-blue-400 border-2 px-4 py-2 m-4" id={p}><%= p %><em> (me)</em></div>
         <% else %>
-          <div>
-            <%= if Enum.any?(@word_approvals, fn w -> w.player_id == @player.id && w.word_id == @round.word_id end) do %>
-              <p><em>Waiting for other players.</em></p>
-            <% else %>
-              <p>Do you already know the definition of this word?</p>
-              <button phx-click="create_known_word">Yes</button>
-              <button phx-click="approve_word">No</button>
-            <% end %>
-          </div>
+          <div class="rounded-full bg-teal-100 border-teal-400 border-2 px-4 py-2 m-4 text-teal-900" id={p}><%= p %></div>
         <% end %>
       <% end %>
-      <p>Approvals: <%= length(@word_approvals) %></p>
-    <% end %>
-    <div>Rounds: <%= @game.number_of_rounds %></div>
-    <button phx-click="end_game">End Game</button>
-  <% else %>
-    <%= if length(@player_names) >= 2 do %>
-      <button phx-click="start_game">Start Game</button>
-    <% else %>
-      <p>You're the only one here. At least 2 players are required to play.</p>
-    <% end %>
-  <% end %>
+    </div>
 
-<% end %>
+    <%= if @game do %>
+      <div class="mx-4 my-8">
+        <%= if @round do %>
+          <p>Round <span class="font-bold"><%= @round.round_number %></span> of <%= @game.number_of_rounds %></p>
+          <%= if @round.word do %>
+            <div class="my-8"><span class="text-4xl font-semibold"><%= @round.word.word %></span>&nbsp;&nbsp;<em><%= @round.word.part_of_speech %></em></div>
+            <%= if @round.is_approved do %>
+              <%= unless @definition.definition do %>
+                <.live_component
+                  module={DictionaryGameWeb.DefinitionLive.FormComponent}
+                  id={:new}
+                  topic={@topic}
+                  title={@page_title}
+                  action={:new}
+                  definition={@definition}
+                  player={@player}
+                  round={@round}
+                  room_id={@room.id}
+                  user_id={@user_id}
+                  return_to={Routes.room_show_path(@socket, :show, @room.id)}
+                />
+              <% else %>
+                <%= if @round.are_definitions_submitted do %>
+                  <h3>All Definitions Submitted!!!</h3>
+                  <%= if @round.are_votes_submitted do %>
+                    <h3>All Votes Submitted!!!</h3>
+                    <div>TODO: Show Definition Votes!</div>
+                    <%= for p <- @players do %>
+                      <div><%= "#{p.name}: #{p.score.score}" %></div>
+                    <% end %>
+                    <%= if @round.round_number < @game.number_of_rounds do %>
+                      <button phx-click="next_round">Next Round</button>
+                    <% else %>
+                      <%# TODO: remove all of this - very hacky %>
+                      <%= if length(Enum.filter(@players, fn x -> x.score.score == Enum.max_by(@players, &(&1.score.score)).score.score end)) == 1 do %>
+                        <p>Winner: <%= Enum.max_by(@players, &(&1.score.score)).name %></p>
+                      <% else %>
+                        <p>Tie:</p>
+                        <%= for p <- Enum.filter(@players, fn x -> x.score.score == Enum.max_by(@players, &(&1.score.score)).score.score end) do %>
+                          <span id={p.name}><%= p.name %></span>
+                        <% end %>
+                      <% end %>
+                      <p>Game Over.</p>
+                    <% end %>
+                  <% else %>
+                    <%= if Enum.any?(@definition_votes, &(&1.player_id == @player.id)) do %>
+                      <p>My Vote Submitted!</p>
+                      <p><em>Waiting for other players.</em></p>
+                    <% else %>
+                      <%= for d <- @definitions do %>
+                        <div>
+                          <p><%= d.definition %></p>
+                          <button phx-click="vote_for_definition" phx-value-definition_id={d.id}>Vote For This Definition</button>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+
+                <% else %>
+                  <p>My Definition Submitted!</p>
+                  <p><em>Waiting for other players.</em></p>
+                <% end %>
+              <% end %>
+            <% else %>
+              <div>
+                <%= if Enum.any?(@word_approvals, fn w -> w.player_id == @player.id && w.word_id == @round.word_id end) do %>
+                  <p><em>Waiting for other players.</em></p>
+                <% else %>
+                  <p class="text-lg">Do you already know the definition of <span class="font-semibold"><%= @round.word.word %></span>?</p>
+                  <div class="flex">
+                    <button class="text-white text-xl font-bold bg-blue-500 py-4 w-32 m-4 rounded-full" phx-click="create_known_word">Yes</button>
+                    <button class="text-white text-xl font-bold bg-blue-500 py-4 w-32 m-4 rounded-full" phx-click="approve_word">No</button>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+        <button class="text-red-500 text-xl font-bold border-2 border-red-500 py-4 px-8 m-8 rounded-full" phx-click="end_game">End Game</button>
+      </div>
+    <% else %>
+      <%= if length(@player_names) >= 2 do %>
+        <button class="text-white text-xl font-bold bg-blue-500 py-4 px-8 m-8 rounded-full" phx-click="start_game">Start Game</button>
+      <% else %>
+        <p class="m-4 mt-8 p-4 font-semibold bg-yellow-50 text-yellow-600 border-2 border-yellow-400 rounded-lg"><em>You're the only one here. At least 2 players are required to play.</em></p>
+      <% end %>
+    <% end %>
+
+  <% end %>
+</div>

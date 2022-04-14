@@ -1,6 +1,5 @@
-<div>
-  <h2><%= @title %></h2>
 
+<div class="m-8 text-blue-900">
   <.form
     let={f}
     for={@changeset}
@@ -8,13 +7,15 @@
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save">
-  
-    <%= label f, :name, "Player Name" %>
-    <%= text_input f, :name %>
-    <%= error_tag f, :name %>
+    
+    <div class="mb-8">
+      <%= label f, :name, "Player Name", class: "block font-medium" %>
+      <%= text_input f, :name, placeholder: "Player Name", class: "rounded-full block mb-4" %>
+      <%= error_tag f, :name %>
+    </div>
     
     <div>
-      <%= submit "Ready", phx_disable_with: "Joining..." %>
+      <%= submit ~H"Join&nbsp;Room", phx_disable_with: "Joining...", class: "text-white text-xl font-bold bg-blue-500 py-4 px-8 m-8 rounded-full" %>
     </div>
   </.form>
 </div>
