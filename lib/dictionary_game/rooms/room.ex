@@ -19,7 +19,7 @@ defmodule DictionaryGame.Rooms.Room do
     |> cast(attrs, [:description, :is_censored, :is_public, :name])
     |> validate_required([:is_censored, :is_public, :name])
     |> validate_length(:name, min: 3, max: 20)
-    |> validate_length(:description, max: 100)
+    |> validate_length(:description, max: 50)
     |> unique_constraint(:name)
   end
 end
