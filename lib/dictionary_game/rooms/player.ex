@@ -21,6 +21,7 @@ defmodule DictionaryGame.Rooms.Player do
     player
     |> cast(attrs, [:name, :is_host])
     |> validate_required([:name, :is_host, :room_id, :user_id])
+    |> validate_length(:name, min: 3, max: 12)
     |> unique_constraint([:name, :room_id])
   end
 end
