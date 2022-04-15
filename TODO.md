@@ -8,3 +8,5 @@
 - Allow number of rounds to be set during game creation (with a default)
 - Set up deployment
 - Add icons to design
+- Show realtime number of online players in public rooms
+- Allow filter/sort on room index/list view
