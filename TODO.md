@@ -2,8 +2,9 @@
 - Hide scores until end of round
 - Make known words room-wide instead of scoped to a game
 - "Play Again" button to start a new game in the same room
-- Setup project to use Tailwind CSS
 - Add chat to room (persist across games)
 - Expand size of dictionary
 - Randomize get_unkown_word function
 - Allow number of rounds to be set during game creation (with a default)
+- Set up deployment
+- Add icons to design
