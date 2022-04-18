@@ -6,7 +6,8 @@ defmodule DictionaryGame.Rooms.Player do
     field :is_host, :boolean, default: false
     field :name, :string
     field :user_id, :string
-
+    field :is_in_game, :boolean, default: false
+    
     # replaced by belongs_to call below
     # field :room_id, :id
     belongs_to :room, DictionaryGame.Rooms.Room
