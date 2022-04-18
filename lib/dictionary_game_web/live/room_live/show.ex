@@ -76,6 +76,12 @@ defmodule DictionaryGameWeb.RoomLive.Show do
       end
     end
 
+    display_scores =
+      cond do
+        # game -> Enum.reduce(players, fn p, acc -> Map.put(acc, p.name, p.score.score) end)
+        true -> Enum.reduce(players, %{}, fn p, acc -> Map.put(acc, p.name, 0) end)
+      end
+
     {:ok,
      socket
      |> assign(
@@ -92,7 +98,8 @@ defmodule DictionaryGameWeb.RoomLive.Show do
        topic: topic,
        # TODO: load initial user list?
        player_names: [],
-       players: players
+       players: players,
+       display_scores: display_scores
      )}
   end
 
