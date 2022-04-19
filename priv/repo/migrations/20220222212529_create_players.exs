@@ -8,6 +8,8 @@ defmodule DictionaryGame.Repo.Migrations.CreatePlayers do
       add :is_host, :boolean, default: false, null: false
       add :is_in_game, :boolean, default: false, null: false
       add :room_id, references(:rooms, on_delete: :delete_all), null: false
+      add :score, :integer, default: 0, null: false
+      add :display_score, :integer, default: 0, null: false
 
       timestamps()
     end
