@@ -10,3 +10,6 @@
 - Add icons to design
 - Show realtime number of online players in public rooms
 - Allow filter/sort on room index/list view
+- Maybe smush Room and Game into one entity to simplify things? Make rooms/games ephemeral
+- Remove Score schema, add `score` and `display_score` to Player schema
+- Deal with player joining room/game after it has started
