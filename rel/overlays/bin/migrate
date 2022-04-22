@@ -1,3 +1,0 @@
-#!/bin/sh
-cd -P -- "$(dirname -- "$0")"
-exec ./dictionary_game eval DictionaryGame.Release.migrate
