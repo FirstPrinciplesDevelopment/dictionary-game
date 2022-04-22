@@ -6,7 +6,6 @@ defmodule DictionaryGame.Games do
   import Ecto.Query, warn: false
   alias DictionaryGame.Repo
 
-  alias DictionaryGame.Rooms
   alias DictionaryGame.Rooms.{Player}
   alias DictionaryGame.Dictionary.{Word, Definition}
   alias DictionaryGame.Games.{Game, Round}
@@ -255,122 +254,6 @@ defmodule DictionaryGame.Games do
     Round.changeset(round, attrs)
   end
 
-  alias DictionaryGame.Games.Score
-
-  @doc """
-  Returns the list of scores for a game.
-
-  ## Examples
-
-      iex> list_scores(game_id)
-      [%Score{}, ...]
-
-  """
-  def list_scores(game_id) do
-    Repo.all(from s in Score, where: s.game_id == ^game_id)
-  end
-
-  @doc """
-  Gets a single score by game and player ids.
-
-  Raises `Ecto.NoResultsError` if the Score does not exist.
-
-  ## Examples
-
-      iex> get_score!(game_id, player_id)
-      %Score{}
-
-      iex> get_score!(game_id, player_id)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_score(game_id, player_id),
-    do: Repo.get_by(Score, game_id: game_id, player_id: player_id)
-
-  @doc """
-  Creates a score.
-
-  ## Examples
-
-      iex> create_score(%{field: value})
-      {:ok, %Score{}}
-
-      iex> create_score(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_score(attrs \\ %{}) do
-    %Score{}
-    |> Score.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a score.
-
-  ## Examples
-
-      iex> update_score(score, %{field: new_value})
-      {:ok, %Score{}}
-
-      iex> update_score(score, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_score(%Score{} = score, attrs) do
-    score
-    |> Score.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Increments a score by amount.
-
-  ## Examples
-
-      iex> increment_score(score, amount)
-      {:ok, %Score{}}
-
-      iex> increment_score(score, amount)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def increment_score(%Score{id: id}, amount) do
-    {1, [score]} =
-      from(s in Score, where: s.id == ^id, select: s)
-      |> Repo.update_all(inc: [score: amount])
-
-    {:ok, score}
-  end
-
-  @doc """
-  Deletes a score.
-
-  ## Examples
-
-      iex> delete_score(score)
-      {:ok, %Score{}}
-
-      iex> delete_score(score)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_score(%Score{} = score) do
-    Repo.delete(score)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking score changes.
-
-  ## Examples
-
-      iex> change_score(score)
-      %Ecto.Changeset{data: %Score{}}
-
-  """
-  def change_score(%Score{} = score, attrs \\ %{}) do
-    Score.changeset(score, attrs)
-  end
 
   alias DictionaryGame.Games.PlayedWord
 

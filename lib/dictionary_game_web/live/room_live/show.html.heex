@@ -26,24 +26,31 @@
         <span class="font-bold"><%= length(@player_names) %></span> Player<%= if length(@player_names) > 1, do: "s" %> Online:
       </h3>
       <div class="flex overflow-auto md:mx-4">
-        <%= for p <- @player_names do %>
-          <%= if p == @player.name do %>
-            <div id={p} class="shrink-0 my-4 w-24">
-              <div class="rounded-full bg-blue-100 border-blue-400 border-2 h-14 w-14 mx-auto text-center flex flex-col">
-                <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p)) %></span>
+        <%= for p <- Enum.map(@player_names, fn n -> Enum.find(@players, fn p -> p.name == n end) end) do %>
+          <div class="shrink-0">
+            <%= if p.name == @player.name do %>
+              <div id={p.name} class="my-4 w-24">
+                <div class="rounded-full bg-blue-100 border-blue-400 border-2 h-14 w-14 mx-auto text-center flex flex-col">
+                  <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
+                </div>
+                <div class="text-sm mx-auto text-center">Me</div>
+                  <div class="text-2xl font-bold mx-auto text-center"><%= p.display_score %></div>
               </div>
-              <div class="text-sm mx-auto text-center">Me</div>
-              <div class="text-2xl font-bold mx-auto text-center"><%= @display_scores[p] %></div>
-            </div>
-          <% else %>
-            <div id={p} class="shrink-0 my-4 w-24 text-teal-900">
-              <div class="rounded-full bg-teal-100 border-teal-400 border-2  h-14 w-14 mx-auto text-center flex flex-col">
-                <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p)) %></span>
+            <% else %>
+              <div id={p.name} class="my-4 w-24 text-teal-900">
+                <div class="rounded-full bg-teal-100 border-teal-400 border-2  h-14 w-14 mx-auto text-center flex flex-col">
+                  <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
+                </div>
+                <div class="text-sm mx-auto text-center"><%= p.name %></div>
+                <div class="text-2xl font-bold mx-auto text-center"><%= p.display_score %></div>
+
               </div>
-              <div class="text-sm mx-auto text-center"><%= p %></div>
-              <div class="text-2xl font-bold mx-auto text-center"><%= @display_scores[p] %></div>
-            </div>
-          <% end %>
+            <% end %>
+            <%# hackyMcHackFace %>
+            <%= if @round && @round.are_votes_submitted && @round.round_number >= @game.number_of_rounds && p.score == Enum.max_by(@players, &(&1.score)).score do %>
+              <div class="text-xl font-bold text-green-600 animate-bounce m-2 mx-auto text-center">Winner!</div>
+            <% end %>
+          </div>
         <% end %>
       </div>
     </div>
@@ -75,7 +82,7 @@
                   <%= if @round.are_votes_submitted do %>
                     <%# <div>TODO: Show Definition Votes!</div> %>
                     <%= for p <- @players do %>
-                      <div class="m-4"><%= "#{p.name}: #{p.score.score} points" %></div>
+                      <div class="m-4"><%= "#{p.name}: #{p.score} points" %></div>
                     <% end %>
                     <%= if @round.round_number < @game.number_of_rounds do %>
                       <div class="flex justify-center sm:justify-start">
@@ -86,11 +93,11 @@
                       </div>
                     <% else %>
                       <%# TODO: remove all of this - very hacky %>
-                      <%= if length(Enum.filter(@players, fn x -> x.score.score == Enum.max_by(@players, &(&1.score.score)).score.score end)) == 1 do %>
-                        <p class="m-4 font-bold">Winner: <%= Enum.max_by(@players, &(&1.score.score)).name %></p>
+                      <%= if length(Enum.filter(@players, fn x -> x.score == Enum.max_by(@players, &(&1.score)).score end)) == 1 do %>
+                        <p class="m-4 font-bold">Winner: <%= Enum.max_by(@players, &(&1.score)).name %></p>
                       <% else %>
                         <p class="m-4">Tie:</p>
-                        <%= for p <- Enum.filter(@players, fn x -> x.score.score == Enum.max_by(@players, &(&1.score.score)).score.score end) do %>
+                        <%= for p <- Enum.filter(@players, fn x -> x.score == Enum.max_by(@players, &(&1.score)).score end) do %>
                           <span id={p.name} class="mx-8"><%= p.name %></span>
                         <% end %>
                       <% end %>

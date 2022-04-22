@@ -140,7 +140,7 @@ defmodule DictionaryGame.Rooms do
 
   """
   def list_players(room_id) do
-    Repo.all(from p in Player, where: p.room_id == ^room_id, preload: [:score])
+    Repo.all(from p in Player, where: p.room_id == ^room_id)
   end
 
   @doc """
@@ -238,5 +238,45 @@ defmodule DictionaryGame.Rooms do
   """
   def change_player(%Player{} = player, attrs \\ %{}) do
     Player.changeset(player, attrs)
+  end
+
+  @doc """
+  Increments a player's score by amount.
+
+  ## Examples
+
+      iex> increment_player_score(score, amount)
+      {:ok, %Player{}}
+
+      iex> increment_player_score(score, amount)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def increment_player_score(%Player{id: id}, amount) do
+    {1, [player]} =
+      from(p in Player, where: p.id == ^id, select: p)
+      |> Repo.update_all(inc: [score: amount])
+
+    {:ok, player}
+  end
+
+  @doc """
+  Increments a player's display_score by amount.
+
+  ## Examples
+
+      iex> increment_player_display_score(score, amount)
+      {:ok, %Player{}}
+
+      iex> increment_player_display_score(score, amount)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def increment_player_display_score(%Player{id: id}, amount) do
+    {1, [player]} =
+      from(p in Player, where: p.id == ^id, select: p)
+      |> Repo.update_all(inc: [display_score: amount])
+
+    {:ok, player}
   end
 end
