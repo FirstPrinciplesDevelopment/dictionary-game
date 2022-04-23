@@ -1,93 +1,85 @@
-# Find eligible builder and runner images on Docker Hub. We use Ubuntu/Debian instead of
-# Alpine to avoid DNS resolution issues in production.
-#
-# https://hub.docker.com/r/hexpm/elixir/tags?page=1&name=ubuntu
-# https://hub.docker.com/_/ubuntu?tab=tags
-#
-#
-# This file is based on these images:
-#
-#   - https://hub.docker.com/r/hexpm/elixir/tags - for the build image
-#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20210902-slim - for the release image
-#   - https://pkgs.org/ - resource for finding needed packages
-#   - Ex: hexpm/elixir:1.13.0-erlang-24.3.3-debian-bullseye-20210902-slim
-#
-ARG BUILDER_IMAGE="hexpm/elixir:1.13.0-erlang-24.3.3-debian-bullseye-20210902-slim"
-ARG RUNNER_IMAGE="debian:bullseye-20210902-slim"
+ARG MIX_ENV="prod"
+ARG DATABASE_URL
+ARG PORT
+ARG POOL_SIZE
+ARG SECRET_KEY_BASE
 
-FROM ${BUILDER_IMAGE} as builder
+
+# build stage
+FROM hexpm/elixir:1.12.3-erlang-24.1.2-alpine-3.14.2 AS build
 
 # install build dependencies
-RUN apt-get update -y && apt-get install -y build-essential git \
-  && apt-get clean && rm -f /var/lib/apt/lists/*_*
+RUN apk add --no-cache build-base git python3 curl
 
-# prepare build dir
+# sets work dir
 WORKDIR /app
 
 # install hex + rebar
 RUN mix local.hex --force && \
   mix local.rebar --force
 
-# set build ENV
-ENV MIX_ENV="prod"
+ARG MIX_ENV
+ENV MIX_ENV="${MIX_ENV}"
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
-RUN mkdir config
 
-# copy compile-time config files before we compile dependencies
-# to ensure any relevant config change will trigger the dependencies
-# to be re-compiled.
-COPY config/config.exs config/${MIX_ENV}.exs config/
+# copy compile configuration files
+RUN mkdir config
+COPY config/config.exs config/$MIX_ENV.exs config/
+
+# compile dependencies
 RUN mix deps.compile
 
+# copy assets
 COPY priv priv
-
-# note: if your project uses a tool like https://purgecss.com/,
-# which customizes asset compilation based on what it finds in
-# your Elixir templates, you will need to move the asset compilation
-# step down so that `lib` is available.
 COPY assets assets
 
-# compile assets
+# Compile assets
 RUN mix assets.deploy
 
-# Compile the release
+# compile project
 COPY lib lib
-
 RUN mix compile
 
-# Changes to config/runtime.exs don't require recompiling the code
+# copy runtime configuration file
 COPY config/runtime.exs config/
 
-COPY rel rel
+# assemble release
 RUN mix release
 
-# start a new build stage so that the final image will only contain
-# the compiled release and other runtime necessities
-FROM ${RUNNER_IMAGE}
+# app stage
+FROM alpine:3.14.2 AS app
 
-RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales \
-  && apt-get clean && rm -f /var/lib/apt/lists/*_*
+ARG MIX_ENV
 
-# Set the locale
-RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+# install runtime dependencies
+RUN apk add --no-cache libstdc++ openssl ncurses-libs
 
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV USER="elixir"
 
-WORKDIR "/app"
-RUN chown nobody /app
+WORKDIR "/home/${USER}/app"
 
-# Only copy the final release from the build stage
-COPY --from=builder --chown=nobody:root /app/_build/prod/rel/dictionary_game ./
+# Create  unprivileged user to run the release
+RUN \
+  addgroup \
+  -g 1000 \
+  -S "${USER}" \
+  && adduser \
+  -s /bin/sh \
+  -u 1000 \
+  -G "${USER}" \
+  -h "/home/${USER}" \
+  -D "${USER}" \
+  && su "${USER}"
 
-USER nobody
+# run as user
+USER "${USER}"
 
-CMD ["/app/bin/server"]
+# copy release executables
+COPY --from=build --chown="${USER}":"${USER}" /app/_build/"${MIX_ENV}"/rel/railwayphoenix ./
 
-# Appended by flyctl
-# ENV ECTO_IPV6 true
-# ENV ERL_AFLAGS "-proto_dist inet6_tcp"
+ENTRYPOINT ["bin/railwayphoenix"]
+
+CMD ["start"]
