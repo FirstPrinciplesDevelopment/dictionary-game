@@ -13,7 +13,8 @@ config :dictionary_game, DictionaryGameWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   check_origin: [
     "https://dictionarygame.principlesdev.com",
-    "dictionarygame.firstprinciplesdevelopment.com"
+    "https://dictionarygame.firstprinciplesdevelopment.com",
+    "https://hidden-leaf-1625.fly.dev/"
   ]
 
 # Do not print debug messages in production
