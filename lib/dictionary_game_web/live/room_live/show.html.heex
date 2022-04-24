@@ -29,7 +29,7 @@
         <%= for p <- @players do %>
           <div class="shrink-0">
             <%= if p.name == @player.name do %>
-              <div id={p.name} class="py-2 mx-1 w-20 border-2 border-blue-500 rounded-lg">
+              <div id={p.name} class="py-2 mx-1 w-24 border-2 border-blue-500 rounded-lg">
                 <div class="rounded-full bg-blue-100 border-blue-500 border-2 h-14 w-14 mx-auto text-center flex flex-col">
                   <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
                 </div>
@@ -38,7 +38,7 @@
               </div>
             <% else %>
               <%= if p.name in @player_names do %>
-                <div id={p.name} class="py-2 mx-1 w-20 border-2 border-teal-500 text-teal-900 rounded-lg">
+                <div id={p.name} class="py-2 mx-1 w-24 border-2 border-teal-500 text-teal-900 rounded-lg">
                   <div class="rounded-full bg-teal-100 border-teal-600 border-2  h-14 w-14 mx-auto text-center flex flex-col">
                     <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
                   </div>
@@ -46,7 +46,7 @@
                   <div class="text-2xl font-bold mx-auto text-center"><%= p.display_score %></div>
                 </div>
               <% else %>
-                <div id={p.name} class="py-2 mx-1 w-20 border-2 border-gray-200 text-gray-600 bg-gray-200 rounded-lg">
+                <div id={p.name} class="py-2 mx-1 w-24 border-2 border-gray-200 text-gray-600 bg-gray-200 rounded-lg">
                   <div class="rounded-full bg-gray-100 border-gray-400 border-2  h-14 w-14 mx-auto text-center flex flex-col">
                     <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
                   </div>
