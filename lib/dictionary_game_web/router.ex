@@ -30,7 +30,7 @@ defmodule DictionaryGameWeb.Router do
     # live "/players/:id", PlayerLive.Show, :show
     # live "/players/:id/show/edit", PlayerLive.Show, :edit
 
-    resources "/words", WordController
+    resources "admin/words", WordController
 
     live "/definitions", DefinitionLive.Index, :index
     live "/definitions/new", DefinitionLive.Index, :new
