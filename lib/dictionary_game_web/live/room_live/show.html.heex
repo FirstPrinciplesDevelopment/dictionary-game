@@ -23,28 +23,38 @@
 
     <div id="user-list">
       <h3 class="mx-4 md:mx-8">
-        <span class="font-bold"><%= length(@player_names) %></span> Player<%= if length(@player_names) > 1, do: "s" %> Online:
+        <span class="font-bold"><%= length(@player_names) %></span> Player<%= if length(@player_names) > 1, do: "s" %> Online
       </h3>
       <div class="flex overflow-auto md:mx-4">
-        <%= for p <- Enum.map(@player_names, fn n -> Enum.find(@players, fn p -> p.name == n end) end) do %>
+        <%= for p <- @players do %>
           <div class="shrink-0">
             <%= if p.name == @player.name do %>
-              <div id={p.name} class="my-4 w-24">
-                <div class="rounded-full bg-blue-100 border-blue-400 border-2 h-14 w-14 mx-auto text-center flex flex-col">
+              <div id={p.name} class="py-2 mx-1 w-20 border-2 border-blue-500 rounded-lg">
+                <div class="rounded-full bg-blue-100 border-blue-500 border-2 h-14 w-14 mx-auto text-center flex flex-col">
                   <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
                 </div>
-                <div class="text-sm mx-auto text-center">Me</div>
+                <div class="text-sm font-bold mx-auto text-center">Me</div>
                   <div class="text-2xl font-bold mx-auto text-center"><%= p.display_score %></div>
               </div>
             <% else %>
-              <div id={p.name} class="my-4 w-24 text-teal-900">
-                <div class="rounded-full bg-teal-100 border-teal-400 border-2  h-14 w-14 mx-auto text-center flex flex-col">
-                  <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
+              <%= if p.name in @player_names do %>
+                <div id={p.name} class="py-2 mx-1 w-20 border-2 border-teal-500 text-teal-900 rounded-lg">
+                  <div class="rounded-full bg-teal-100 border-teal-600 border-2  h-14 w-14 mx-auto text-center flex flex-col">
+                    <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
+                  </div>
+                  <div class="text-sm font-bold mx-auto text-center"><%= p.name %></div>
+                  <div class="text-2xl font-bold mx-auto text-center"><%= p.display_score %></div>
                 </div>
-                <div class="text-sm mx-auto text-center"><%= p.name %></div>
-                <div class="text-2xl font-bold mx-auto text-center"><%= p.display_score %></div>
+              <% else %>
+                <div id={p.name} class="py-2 mx-1 w-20 border-2 border-gray-200 text-gray-600 bg-gray-200 rounded-lg">
+                  <div class="rounded-full bg-gray-100 border-gray-400 border-2  h-14 w-14 mx-auto text-center flex flex-col">
+                    <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
+                  </div>
+                  <div class="text-sm font-bold mx-auto text-center"><%= p.name %></div>
+                  <div class="text-xl pb-1 italic mx-auto text-center">Offline</div>
+                </div>
+              <% end %>
 
-              </div>
             <% end %>
             <%# hackyMcHackFace %>
             <%= if @round && @round.are_votes_submitted && @round.round_number >= @game.number_of_rounds && p.score == Enum.max_by(@players, &(&1.score)).score do %>
