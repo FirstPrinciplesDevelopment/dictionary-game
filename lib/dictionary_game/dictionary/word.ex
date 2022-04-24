@@ -6,6 +6,8 @@ defmodule DictionaryGame.Dictionary.Word do
     field :part_of_speech, :string
     field :word, :string
 
+    has_many :definitions, DictionaryGame.Dictionary.Definition
+
     timestamps()
   end
 
