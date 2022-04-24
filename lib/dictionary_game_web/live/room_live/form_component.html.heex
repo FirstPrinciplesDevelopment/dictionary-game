@@ -1,5 +1,5 @@
 <div class="bg-slate-50 rounded-lg md:mx-auto md:my-8 text-blue-900 shadow-md border-t-8 border-blue-500 max-w-md">
-  <div class="bg-blue-100 text-lg p-8">Create A New Room</div>
+  <div class="bg-blue-100 text-lg font-semibold p-4">Create A New Room</div>
 
   <div class="m-8">
     <.form
@@ -11,13 +11,13 @@
       phx-submit="create_room">
     
       <div class="mb-8">
-        <%= label f, :name, class: "block font-medium" %>
+        <%= label f, :name, "Room Name", class: "block font-medium" %>
         <%= text_input f, :name, placeholder: "Name", class: "rounded-full block mb-4" %>
         <%= error_tag f, :name %>
       </div>
 
       <div class="mb-8">
-        <%= label f, :description, class: "block font-medium" %>
+        <%= label f, :description, "Room Description", class: "block font-medium" %>
         <%= text_input f, :description, placeholder: "Description", class: "rounded-full block mb-4" %>
         <%= error_tag f, :description %>
       </div>
