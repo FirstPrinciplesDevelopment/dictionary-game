@@ -40,7 +40,7 @@ defmodule DictionaryGame.Dictionary do
   def get_word!(id), do: Repo.get!(Word, id)
 
   @doc """
-  Gets a single unknown word for a game, i.e. a word that no one in game has marked as "known".
+  Gets a single random unknown word for a game, i.e. a word that no one in game has marked as "known".
 
   Raises `Ecto.NoResultsError` if the Word does not exist.
 
@@ -64,9 +64,7 @@ defmodule DictionaryGame.Dictionary do
           (is_nil(kw.game_id) or kw.game_id != ^game_id) and
             (is_nil(pw.game_id) or pw.game_id != ^game_id)
 
-    query
-    |> first()
-    |> Repo.one!()
+    hd(Enum.shuffle(Repo.all(query)))
   end
 
   @doc """
