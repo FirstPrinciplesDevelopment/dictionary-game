@@ -77,7 +77,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
        round: round,
        word_approvals: word_approvals,
        definition: definition,
-       definitions: definitions,
+       definitions: Enum.shuffle(definitions),
        definition_votes: definition_votes,
        topic: topic,
        # TODO: load initial user list?
@@ -167,7 +167,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           {:ok, socket.assigns.round}
       end
 
-    {:noreply, socket |> assign(definitions: definitions, round: round)}
+    {:noreply, socket |> assign(definitions: Enum.shuffle(definitions), round: round)}
   end
 
   @impl true
