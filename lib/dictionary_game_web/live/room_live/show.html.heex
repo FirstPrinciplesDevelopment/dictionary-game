@@ -22,7 +22,7 @@
   <% else %>
 
     <div id="user-list">
-      <h3 class="mx-4 md:mx-8">
+      <h3 class="mx-4 md:mx-8 text-gray-600">
         <span class="font-bold"><%= length(@player_names) %></span> Player<%= if length(@player_names) > 1, do: "s" %> Online
       </h3>
       <div class="flex overflow-auto md:mx-4">
@@ -68,7 +68,7 @@
     <%= if @game do %>
       <div class="mx-4 md:mx-8 my-8">
         <%= if @round do %>
-          <p>Round <span class="font-bold"><%= @round.round_number %></span> of <%= @game.number_of_rounds %></p>
+          <p class="text-gray-600">Round <span class="font-bold"><%= @round.round_number %></span> of <%= @game.number_of_rounds %></p>
           <%= if @round.word do %>
             <div class="my-8"><span class="text-4xl font-semibold"><%= @round.word.word %></span>&nbsp;&nbsp;<em class="text-lg"><%= @round.word.part_of_speech %></em></div>
             <%= if @round.is_approved do %>
