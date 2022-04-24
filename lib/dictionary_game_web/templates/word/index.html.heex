@@ -1,0 +1,28 @@
+<h1>Listing Words</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Part of speech</th>
+      <th>Word</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for word <- @words do %>
+    <tr>
+      <td><%= word.part_of_speech %></td>
+      <td><%= word.word %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.word_path(@conn, :show, word) %></span>
+        <span><%= link "Edit", to: Routes.word_path(@conn, :edit, word) %></span>
+        <span><%= link "Delete", to: Routes.word_path(@conn, :delete, word), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Word", to: Routes.word_path(@conn, :new) %></span>
