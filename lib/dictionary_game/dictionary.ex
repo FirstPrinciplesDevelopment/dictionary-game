@@ -135,6 +135,19 @@ defmodule DictionaryGame.Dictionary do
   alias DictionaryGame.Dictionary.Definition
 
   @doc """
+  Returns the list of definitions.
+
+  ## Examples
+
+      iex> list_definitions()
+      [%Definition{}, ...]
+
+  """
+  def list_definitions do
+    Repo.all(Definition)
+  end
+
+  @doc """
   Returns the list of definitions for a room and word,
   comprising the real definition of the word and the player submitted definitions.
 
@@ -187,6 +200,24 @@ defmodule DictionaryGame.Dictionary do
   """
   def get_definition(player_id, word_id) do
     Repo.get_by(Definition, player_id: player_id, word_id: word_id)
+  end
+
+  @doc """
+  Creates a definition.
+
+  ## Examples
+
+      iex> create_definition(%{field: value})
+      {:ok, %Definition{}}
+
+      iex> create_definition(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_definition(attrs \\ %{}) do
+    %Definition{}
+    |> Definition.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """

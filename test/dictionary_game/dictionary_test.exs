@@ -58,4 +58,60 @@ defmodule DictionaryGame.DictionaryTest do
       assert %Ecto.Changeset{} = Dictionary.change_word(word)
     end
   end
+
+  describe "definitions" do
+    alias DictionaryGame.Dictionary.Definition
+
+    import DictionaryGame.DictionaryFixtures
+
+    @invalid_attrs %{definition: nil, is_real: nil}
+
+    test "list_definitions/0 returns all definitions" do
+      definition = definition_fixture()
+      assert Dictionary.list_definitions() == [definition]
+    end
+
+    test "get_definition!/1 returns the definition with given id" do
+      definition = definition_fixture()
+      assert Dictionary.get_definition!(definition.id) == definition
+    end
+
+    test "create_definition/1 with valid data creates a definition" do
+      valid_attrs = %{definition: "some definition", is_real: true}
+
+      assert {:ok, %Definition{} = definition} = Dictionary.create_definition(valid_attrs)
+      assert definition.definition == "some definition"
+      assert definition.is_real == true
+    end
+
+    test "create_definition/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Dictionary.create_definition(@invalid_attrs)
+    end
+
+    test "update_definition/2 with valid data updates the definition" do
+      definition = definition_fixture()
+      update_attrs = %{definition: "some updated definition", is_real: false}
+
+      assert {:ok, %Definition{} = definition} = Dictionary.update_definition(definition, update_attrs)
+      assert definition.definition == "some updated definition"
+      assert definition.is_real == false
+    end
+
+    test "update_definition/2 with invalid data returns error changeset" do
+      definition = definition_fixture()
+      assert {:error, %Ecto.Changeset{}} = Dictionary.update_definition(definition, @invalid_attrs)
+      assert definition == Dictionary.get_definition!(definition.id)
+    end
+
+    test "delete_definition/1 deletes the definition" do
+      definition = definition_fixture()
+      assert {:ok, %Definition{}} = Dictionary.delete_definition(definition)
+      assert_raise Ecto.NoResultsError, fn -> Dictionary.get_definition!(definition.id) end
+    end
+
+    test "change_definition/1 returns a definition changeset" do
+      definition = definition_fixture()
+      assert %Ecto.Changeset{} = Dictionary.change_definition(definition)
+    end
+  end
 end

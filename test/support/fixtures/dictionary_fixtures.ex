@@ -23,4 +23,24 @@ defmodule DictionaryGame.DictionaryFixtures do
 
     word
   end
+
+  @doc """
+  Generate a unique definition definition.
+  """
+  def unique_definition_definition, do: "some definition#{System.unique_integer([:positive])}"
+
+  @doc """
+  Generate a definition.
+  """
+  def definition_fixture(attrs \\ %{}) do
+    {:ok, definition} =
+      attrs
+      |> Enum.into(%{
+        definition: unique_definition_definition(),
+        is_real: true
+      })
+      |> DictionaryGame.Dictionary.create_definition()
+
+    definition
+  end
 end

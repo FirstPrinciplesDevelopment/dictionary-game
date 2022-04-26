@@ -20,5 +20,6 @@ defmodule DictionaryGame.Dictionary.Definition do
     |> cast(attrs, [:definition, :is_real])
     |> validate_required([:definition, :is_real])
     |> unique_constraint([:player_id, :word_id, :is_real])
+    |> unique_constraint(:definition)
   end
 end

@@ -1,0 +1,28 @@
+<h1>Listing Definitions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Definition</th>
+      <th>Is real</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for definition <- @definitions do %>
+    <tr>
+      <td><%= definition.definition %></td>
+      <td><%= definition.is_real %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.definition_path(@conn, :show, definition) %></span>
+        <span><%= link "Edit", to: Routes.definition_path(@conn, :edit, definition) %></span>
+        <span><%= link "Delete", to: Routes.definition_path(@conn, :delete, definition), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Definition", to: Routes.definition_path(@conn, :new) %></span>

@@ -1,0 +1,18 @@
+<h1>Show Definition</h1>
+
+<ul>
+
+  <li>
+    <strong>Definition:</strong>
+    <%= @definition.definition %>
+  </li>
+
+  <li>
+    <strong>Is real:</strong>
+    <%= @definition.is_real %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.definition_path(@conn, :edit, @definition) %></span> |
+<span><%= link "Back", to: Routes.definition_path(@conn, :index) %></span>
