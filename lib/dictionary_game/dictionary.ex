@@ -6,7 +6,7 @@ defmodule DictionaryGame.Dictionary do
   import Ecto.Query, warn: false
   alias DictionaryGame.Repo
 
-  alias DictionaryGame.Dictionary.Word
+  alias DictionaryGame.Dictionary.{Word, Definition}
   alias DictionaryGame.Games.{KnownWord, PlayedWord}
   alias DictionaryGame.Rooms.Player
 
@@ -86,6 +86,39 @@ defmodule DictionaryGame.Dictionary do
   end
 
   @doc """
+  Creates a word along with its real definition.
+
+  ## Examples
+
+      iex> create_real_word_and_definition(%{field: value})
+      {:ok, %Word{}}
+
+      iex> create_real_word_and_definition(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_real_word_and_definition(%{
+        "word" => word,
+        "part_of_speech" => part_of_speech,
+        "definition" => definition
+      }) do
+    case %Word{word: word, part_of_speech: part_of_speech}
+         |> Word.changeset(%{})
+         |> Repo.insert() do
+      {:ok, word} ->
+        %Definition{definition: definition, is_real: true}
+        |> Definition.changeset(%{})
+        |> Ecto.Changeset.put_assoc(:word, word)
+        |> Repo.insert()
+
+        {:ok, word}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
   Updates a word.
 
   ## Examples
@@ -131,8 +164,6 @@ defmodule DictionaryGame.Dictionary do
   def change_word(%Word{} = word, attrs \\ %{}) do
     Word.changeset(word, attrs)
   end
-
-  alias DictionaryGame.Dictionary.Definition
 
   @doc """
   Returns the list of definitions.

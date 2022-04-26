@@ -15,7 +15,7 @@ defmodule DictionaryGameWeb.WordController do
   end
 
   def create(conn, %{"word" => word_params}) do
-    case Dictionary.create_word(word_params) do
+    case Dictionary.create_real_word_and_definition(word_params) do
       {:ok, word} ->
         conn
         |> put_flash(:info, "Word created successfully.")
