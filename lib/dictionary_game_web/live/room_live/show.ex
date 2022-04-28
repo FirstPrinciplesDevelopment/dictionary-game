@@ -77,7 +77,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
        round: round,
        word_approvals: word_approvals,
        definition: definition,
-       definitions: Enum.shuffle(definitions),
+       definitions: Enum.sort(definitions),
        definition_votes: definition_votes,
        topic: topic,
        # TODO: load initial user list?
@@ -167,7 +167,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           {:ok, socket.assigns.round}
       end
 
-    {:noreply, socket |> assign(definitions: Enum.shuffle(definitions), round: round)}
+    {:noreply, socket |> assign(definitions: Enum.sort(definitions), round: round)}
   end
 
   @impl true
@@ -454,5 +454,13 @@ defmodule DictionaryGameWeb.RoomLive.Show do
       Enum.any?(votes, fn x -> x.player_id == p.id && x.round_id == round.id end) &&
         acc
     end)
+  end
+
+  defp to_integer(string) do
+    char_list = string
+    |> String.normalize(:nfc)
+    |> String.to_charlist()
+
+    Enum.reduce(char_list, fn x, acc -> x + acc end)
   end
 end

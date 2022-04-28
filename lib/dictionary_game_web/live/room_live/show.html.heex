@@ -29,30 +29,36 @@
         <%= for p <- @players do %>
           <div class="shrink-0">
             <%= if p.name == @player.name do %>
-              <div id={p.name} class="py-2 mx-1 w-24 border-2 border-blue-500 rounded-lg">
-                <div class="rounded-full bg-blue-100 border-blue-500 border-2 h-14 w-14 mx-auto text-center flex flex-col">
-                  <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
-                </div>
-                <div class="text-sm font-bold mx-auto text-center">Me</div>
-                  <div class="text-2xl font-bold mx-auto text-center"><%= p.display_score %></div>
-              </div>
+              <.live_component
+                module={DictionaryGameWeb.RoomLive.PlayerComponent}
+                id={p.id}
+                player={p}
+                border_color={"border-blue-500"}
+                text_color={"text-blue-900"}
+                bg_color={"bg-blue-100"}
+                online={true}
+              />
             <% else %>
               <%= if p.name in @player_names do %>
-                <div id={p.name} class="py-2 mx-1 w-24 border-2 border-teal-500 text-teal-900 rounded-lg">
-                  <div class="rounded-full bg-teal-100 border-teal-600 border-2  h-14 w-14 mx-auto text-center flex flex-col">
-                    <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
-                  </div>
-                  <div class="text-sm font-bold mx-auto text-center"><%= p.name %></div>
-                  <div class="text-2xl font-bold mx-auto text-center"><%= p.display_score %></div>
-                </div>
+                <.live_component
+                  module={DictionaryGameWeb.RoomLive.PlayerComponent}
+                  id={p.id}
+                  player={p}
+                  border_color={"border-teal-500"}
+                  text_color={"text-teal-900"}
+                  bg_color={"bg-teal-100"}
+                  online={true}
+                />
               <% else %>
-                <div id={p.name} class="py-2 mx-1 w-24 border-2 border-gray-200 text-gray-600 bg-gray-200 rounded-lg">
-                  <div class="rounded-full bg-gray-100 border-gray-400 border-2  h-14 w-14 mx-auto text-center flex flex-col">
-                    <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(p.name)) %></span>
-                  </div>
-                  <div class="text-sm font-bold mx-auto text-center"><%= p.name %></div>
-                  <div class="text-xl pb-1 italic mx-auto text-center">Offline</div>
-                </div>
+                <.live_component
+                  module={DictionaryGameWeb.RoomLive.PlayerComponent}
+                  id={p.id}
+                  player={p}
+                  border_color={"border-gray-500"}
+                  text_color={"text-gray-900"}
+                  bg_color={"bg-gray-100"}
+                  online={false}
+                />
               <% end %>
 
             <% end %>
@@ -93,12 +99,12 @@
                     <%= for d <- @definitions do %>
                         <%= if d.is_real do %>
                           <div class="shadow-lg rounded-lg border-2 border-green-600 bg-green-100 my-4">
-                            <p class="p-4 font-bold">The Real Definition:</p>
-                            <p class="p-4 font-bold text-2xl"><%= d.definition %></p>
+                            <p class="px-4 py-2 font-bold">The Real Definition:</p>
+                            <p class="px-4 py-2 font-bold text-2xl"><%= d.definition %></p>
                             <div class="flex">
-                              <p class="p-4">Votes:</p>
+                              <p class="px-4 py-2">Votes:</p>
                                 <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
-                                  <span class="p-4 font-bold">
+                                  <span class="px-4 py-2 font-bold">
                                     <%= Enum.find(@players, &(&1.id == v.player_id)).name %>
                                   </span>
                                 <% end %>
@@ -106,14 +112,17 @@
                           </div>
                         <% else %>
                           <div class="shadow-lg rounded-lg border-2 border-blue-600 bg-blue-100 my-4">
-                            <p class="p-4 font-bold">
-                              submitted by <%= Enum.find(@players, fn x -> (x.id == d.player_id) end).name %>
-                            </p>
-                            <p class="p-4 font-bold text-2xl"><%= d.definition %></p>
+                            <div class="px-4 py-2 font-bold">
+                              <div class="rounded-full bg-blue-100 border-blue-500 border-2 h-10 w-10 flex flex-col">
+                                <span class="my-auto mx-auto text-2xl"><%= String.upcase(String.first(Enum.find(@players, fn x -> (x.id == d.player_id) end).name)) %></span>
+                              </div>
+                              <%= Enum.find(@players, fn x -> (x.id == d.player_id) end).name %> wrote:
+                            </div>
+                            <p class="px-4 py-2 font-bold text-2xl"><%= d.definition %></p>
                             <div class="flex">
-                              <p class="p-4">Votes:</p>
+                              <p class="px-4 py-2">Votes:</p>
                               <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
-                                <span class="p-4 font-bold">
+                                <span class="px-4 py-2 font-bold">
                                   <%= Enum.find(@players, &(&1.id == v.player_id)).name %>
                                 </span>
                               <% end %>
