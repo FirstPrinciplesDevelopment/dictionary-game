@@ -81,8 +81,8 @@
                         <% else %>
                           <div class="shadow-lg rounded-lg border-2 border-blue-600 bg-blue-100 my-4">
                             <div class="px-4 py-2 font-bold">
-                              <div class="rounded-full bg-blue-100 border-blue-500 border-2 h-10 w-10 flex flex-col">
-                                <span class="my-auto mx-auto text-2xl"><%= String.upcase(String.first(Enum.find(@players, fn x -> (x.id == d.player_id) end).name)) %></span>
+                              <div class="rounded-full bg-blue-100 border-blue-500 border-2 h-8 w-8 flex flex-col">
+                                <span class="my-auto mx-auto text-xl"><%= String.upcase(String.first(Enum.find(@players, fn x -> (x.id == d.player_id) end).name)) %></span>
                               </div>
                               <%= Enum.find(@players, fn x -> (x.id == d.player_id) end).name %> wrote:
                             </div>
@@ -97,9 +97,6 @@
                             </div>
                           </div>
                         <% end %>
-                    <% end %>
-                    <%= for p <- @players do %>
-                      <div class="m-4"><%= "#{p.name}: #{p.score} points" %></div>
                     <% end %>
                     <%= if @round.round_number < @game.number_of_rounds do %>
                       <div class="flex justify-center sm:justify-start">
