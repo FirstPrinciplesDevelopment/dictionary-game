@@ -27,46 +27,14 @@
       </h3>
       <div class="flex overflow-auto md:mx-4">
         <%= for p <- @players do %>
-          <div class="shrink-0">
-            <%= if p.name == @player.name do %>
-              <.live_component
-                module={DictionaryGameWeb.RoomLive.PlayerComponent}
-                id={p.id}
-                player={p}
-                border_color={"border-blue-500"}
-                text_color={"text-blue-900"}
-                bg_color={"bg-blue-100"}
-                online={true}
-              />
-            <% else %>
-              <%= if p.name in @player_names do %>
-                <.live_component
-                  module={DictionaryGameWeb.RoomLive.PlayerComponent}
-                  id={p.id}
-                  player={p}
-                  border_color={"border-teal-500"}
-                  text_color={"text-teal-900"}
-                  bg_color={"bg-teal-100"}
-                  online={true}
-                />
-              <% else %>
-                <.live_component
-                  module={DictionaryGameWeb.RoomLive.PlayerComponent}
-                  id={p.id}
-                  player={p}
-                  border_color={"border-gray-500"}
-                  text_color={"text-gray-900"}
-                  bg_color={"bg-gray-100"}
-                  online={false}
-                />
-              <% end %>
-
-            <% end %>
-            <%# hackyMcHackFace %>
-            <%= if @round && @round.are_votes_submitted && @round.round_number >= @game.number_of_rounds && p.score == Enum.max_by(@players, &(&1.score)).score do %>
-              <div class="text-xl font-bold text-green-600 animate-bounce m-2 mx-auto text-center">Winner!</div>
-            <% end %>
-          </div>
+            <.live_component
+              module={DictionaryGameWeb.RoomLive.PlayerComponent}
+              id={p.id}
+              player={p}
+              is_current_player={p.name == @player.name}
+              online={p.name in @player_names}
+              is_winner={@round && @round.are_votes_submitted && @round.round_number >= @game.number_of_rounds && p.score == Enum.max_by(@players, &(&1.score)).score}
+            />
         <% end %>
       </div>
     </div>

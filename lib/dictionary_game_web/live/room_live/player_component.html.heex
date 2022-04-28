@@ -1,11 +1,16 @@
-<div id={"#{@player.name}-icon"} class={"py-2 mx-1 w-24 border-2 #{@border_color} #{@text_color} rounded-lg"}>
-    <div class={"rounded-full #{@bg_color} #{@border_color} border-2 h-14 w-14 mx-auto text-center flex flex-col"}>
-        <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(@player.name)) %></span>
+<div class="shrink-0">
+    <div id={"#{@player.name}-icon-wrapper"} class={"py-2 mx-1 w-24 border-2 #{@border_color} #{@text_color} rounded-lg"}>
+        <div class={"rounded-full #{@bg_color} #{@border_color} border-2 h-14 w-14 mx-auto text-center flex flex-col"}>
+            <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(@player.name)) %></span>
+        </div>
+        <div class="text-sm font-bold mx-auto text-center"><%= @player.name %></div>
+        <%= if @online do %>
+            <div class="text-2xl font-bold mx-auto text-center"><%= @player.display_score %></div>
+        <% else %>
+            <div class="text-xl pb-1 italic mx-auto text-center">Offline</div>
+        <% end %>
     </div>
-    <div class="text-sm font-bold mx-auto text-center"><%= @player.name %></div>
-    <%= if @online do %>
-        <div class="text-2xl font-bold mx-auto text-center"><%= @player.display_score %></div>
-    <% else %>
-        <div class="text-xl pb-1 italic mx-auto text-center">Offline</div>
+    <%= if @is_winner do %>
+        <div class="text-xl font-bold text-green-600 animate-bounce m-2 mx-auto text-center">Winner!</div>
     <% end %>
 </div>
