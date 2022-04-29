@@ -95,42 +95,40 @@
               <% else %>
                 <%= if @round.are_definitions_submitted do %>
                   <%= if @round.are_votes_submitted do %>
-                    <%= for d <- @definitions do %>
-                        <%= unless d.is_real do %>
-                          <div class="shadow-lg rounded-lg border-2 border-blue-600 bg-blue-100 mt-6">
-                            <div class="relative -top-4 mx-auto">
-                             <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
-                              id={"#{d.player_id}-definition-icon"}
-                              player={Enum.find(@players, fn x -> (x.id == d.player_id) end)}
-                              is_current_player={Enum.find(@players, fn x -> (x.id == d.player_id) end).name == @player.name}
-                              online={Enum.find(@players, fn x -> (x.id == d.player_id) end).name in @player_names}
-                              mx_class="mx-auto"
-                              size_class="h-10 w-10"
-                              text_class="text-lg"
-                              name_classes="text-xs font-bold mx-auto text-center" />
-                              <div class="font-extrabold text-lg text-center">+<%= length(Enum.filter(@definition_votes, &(&1.definition_id == d.id))) * 5 %></div>
-                            </div>
-                            <p class="px-4 py-2 text-2xl"><%= d.definition %></p>
-                            <div class="flex pb-2">
-                              <%= if Enum.any?(@definition_votes, &(&1.definition_id == d.id)) do %>
-                                <p class="px-4 text-sm my-auto">Votes:</p>
-                                <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
-                                  <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
-                                    id={"#{d.player_id}-vote-icon"}
-                                    player={Enum.find(@players, &(&1.id == v.player_id))}
-                                    is_current_player={Enum.find(@players, &(&1.id == v.player_id)).name == @player.name}
-                                    online={Enum.find(@players, &(&1.id == v.player_id)).name in @player_names}
-                                    mx_class=""
-                                    size_class="h-8 w-8"
-                                    text_class="text-lg"
-                                    name_classes="text-xs font-bold mx-auto text-center" />
-                                <% end %>
-                              <% else %>
-                                <p class="px-4 text-sm my-auto">No Votes 😢</p>
-                              <% end %>
-                            </div>
-                          </div>
-                        <% end %>
+                    <%= for d <- Enum.filter(@definitions, &(!&1.is_real)) do %>
+                      <div class="shadow-lg rounded-lg border-2 border-blue-600 mt-6">
+                        <div class="relative -top-4 mx-auto">
+                          <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
+                          id={"#{d.player_id}-definition-icon"}
+                          player={Enum.find(@players, fn x -> (x.id == d.player_id) end)}
+                          is_current_player={Enum.find(@players, fn x -> (x.id == d.player_id) end).name == @player.name}
+                          online={Enum.find(@players, fn x -> (x.id == d.player_id) end).name in @player_names}
+                          mx_class="mx-auto"
+                          size_class="h-10 w-10"
+                          text_class="text-lg"
+                          name_classes="text-xs font-bold mx-auto text-center" />
+                          <div class="font-extrabold text-lg text-center">+<%= length(Enum.filter(@definition_votes, &(&1.definition_id == d.id))) * 5 %></div>
+                        </div>
+                        <p class="px-4 py-2 text-2xl"><%= d.definition %></p>
+                        <div class="flex pb-2">
+                          <%= if Enum.any?(@definition_votes, &(&1.definition_id == d.id)) do %>
+                            <p class="px-4 text-sm my-auto">Votes:</p>
+                            <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
+                              <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
+                                id={"#{d.player_id}-vote-icon"}
+                                player={Enum.find(@players, &(&1.id == v.player_id))}
+                                is_current_player={Enum.find(@players, &(&1.id == v.player_id)).name == @player.name}
+                                online={Enum.find(@players, &(&1.id == v.player_id)).name in @player_names}
+                                mx_class=""
+                                size_class="h-8 w-8"
+                                text_class="text-lg"
+                                name_classes="text-xs font-bold mx-auto text-center" />
+                            <% end %>
+                          <% else %>
+                            <p class="px-4 text-sm my-auto">No Votes 😢</p>
+                          <% end %>
+                        </div>
+                      </div>
                     <% end %>
                     <%= if @round.round_number < @game.number_of_rounds do %>
                       <div class="flex justify-center sm:justify-start">
@@ -159,7 +157,7 @@
                       <div class="mx-4 my-8">Vote for the definition you think is real!</div>
                       <%= for d <- @definitions do %>
                         <div class="shadow-lg rounded-lg border-2 border-blue-600 my-6">
-                          <p class="p-4 font-bold text-2xl"><%= d.definition %></p>
+                          <p class="p-4 text-2xl"><%= d.definition %></p>
                           <button class="text-white border-2 border-blue-500 active:border-blue-600 text-xl font-bold bg-blue-500 active:bg-blue-600 py-2 px-4 m-4 rounded-full" 
                                   phx-click="vote_for_definition"
                                   phx-value-definition_id={d.id}>
