@@ -1,3 +1,6 @@
-<div class={"#{@bg_color} #{@border_color} #{@mx_class} #{@size_class} rounded-full border-2 text-center flex flex-col cursor-pointer"} title={@player.name}>
-    <span class={"my-auto mx-auto #{@text_class}"}><%= String.upcase(String.first(@player.name)) %></span>
+<div>
+    <div class={"#{@bg_color} #{@border_color} #{@mx_class} #{@size_class} rounded-full border-2 text-center flex flex-col cursor-pointer"} title={@player.name}>
+        <span class={"my-auto mx-auto #{@text_class}"}><%= String.upcase(String.first(@player.name)) %></span>
+    </div>
+    <div class={@name_classes}><%= @player.name %></div>
 </div>

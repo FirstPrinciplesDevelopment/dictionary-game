@@ -80,7 +80,7 @@
                           </div>
                         <% else %>
                           <div class="shadow-lg rounded-lg border-2 border-blue-600 bg-blue-100 my-4">
-                            <div class="px-4 py-2">
+                            <div class="px-2 py-2">
                              <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
                               id={"#{d.player_id}-definition-icon"}
                               player={Enum.find(@players, fn x -> (x.id == d.player_id) end)}
@@ -88,18 +88,22 @@
                               online={Enum.find(@players, fn x -> (x.id == d.player_id) end).name in @player_names}
                               mx_class=""
                               size_class="h-8 w-8"
-                              text_class="text-lg" />
-                              <p class="text-xs mx-auto">
-                                <span class="font-bold"><%= Enum.find(@players, fn x -> (x.id == d.player_id) end).name %></span> wrote:
-                              </p>
+                              text_class="text-lg"
+                              name_classes="text-xs font-bold" />
                             </div>
                             <p class="px-4 py-2 font-bold text-2xl"><%= d.definition %></p>
                             <div class="flex">
-                              <p class="px-4 py-2">Votes:</p>
+                              <p class="px-2 py-2">Votes:</p>
                               <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
-                                <span class="px-4 py-2 font-bold">
-                                  <%= Enum.find(@players, &(&1.id == v.player_id)).name %>
-                                </span>
+                                <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
+                                  id={"#{d.player_id}-vote-icon"}
+                                  player={Enum.find(@players, &(&1.id == v.player_id))}
+                                  is_current_player={Enum.find(@players, &(&1.id == v.player_id)).name == @player.name}
+                                  online={Enum.find(@players, &(&1.id == v.player_id)).name in @player_names}
+                                  mx_class=""
+                                  size_class="h-8 w-8"
+                                  text_class="text-lg"
+                                  name_classes="hidden" />
                               <% end %>
                             </div>
                           </div>

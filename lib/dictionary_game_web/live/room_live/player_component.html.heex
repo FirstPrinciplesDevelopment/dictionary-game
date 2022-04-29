@@ -7,8 +7,8 @@
             online={@online}
             mx_class="mx-auto"
             size_class="h-14 w-14"
-            text_class="text-3xl" />
-        <div class="text-sm font-bold mx-auto text-center"><%= @player.name %></div>
+            text_class="text-3xl"
+            name_classes="text-sm font-bold mx-auto text-center" />
         <%= if @online do %>
             <div class="text-2xl font-bold mx-auto text-center"><%= @player.display_score %></div>
         <% else %>
