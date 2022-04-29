@@ -1,6 +1,5 @@
-defmodule DictionaryGameWeb.RoomLive.PlayerComponent do
+defmodule DictionaryGameWeb.RoomLive.PlayerIcon do
   use DictionaryGameWeb, :live_component
-
   alias DictionaryGameWeb.RoomLive.RoomHelpers
 
   @impl true

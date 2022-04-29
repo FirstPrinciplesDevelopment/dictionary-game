@@ -1,8 +1,11 @@
 <div class="shrink-0">
     <div id={"#{@player.name}-icon-wrapper"} class={"py-2 mx-1 w-24 border-2 #{@border_color} #{@text_color} rounded-lg"}>
-        <div class={"rounded-full #{@bg_color} #{@border_color} border-2 h-14 w-14 mx-auto text-center flex flex-col"}>
-            <span class="my-auto mx-auto text-3xl"><%= String.upcase(String.first(@player.name)) %></span>
-        </div>
+        <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon} 
+            id={"#{@player.name}-icon"}
+            player={@player}
+            is_current_player={@is_current_player}
+            online={@online}
+            mx_class="mx-auto" />
         <div class="text-sm font-bold mx-auto text-center"><%= @player.name %></div>
         <%= if @online do %>
             <div class="text-2xl font-bold mx-auto text-center"><%= @player.display_score %></div>
