@@ -44,7 +44,29 @@
         <%= if @round do %>
           <p class="text-gray-600">Round <span class="font-bold"><%= @round.round_number %></span> of <%= @game.number_of_rounds %></p>
           <%= if @round.word do %>
-            <div class="my-8"><span class="text-4xl font-semibold"><%= @round.word.word %></span>&nbsp;&nbsp;<em class="text-lg"><%= @round.word.part_of_speech %></em></div>
+            <%= if @round.are_votes_submitted do %>
+              <div class="shadow-lg rounded-lg border-2 border-green-600 bg-green-100 my-4">
+                <div class="relative -top-4 mx-auto">
+                  <div class="rounded-full h-10 w-14 border-2 border-green-600 text-center mx-auto bg-green-100 text-lg py-1">Real</div>
+                </div>
+                <div class="m-4">
+                  <span class="text-4xl font-semibold"><%= @round.word.word %></span>
+                  &nbsp;&nbsp;
+                  <em class="text-lg"><%= @round.word.part_of_speech %></em>
+                </div>
+                <p class="px-4 py-2 text-2xl"><%= Enum.find(@definitions, &(&1.is_real)).definition %></p>
+                <div class="flex">
+                  <p class="px-4 py-2">Votes:</p>
+                    <%= for v <- Enum.filter(@definition_votes, fn x -> (x.definition_id == Enum.find(@definitions, &(&1.is_real)).id) end) do %>
+                      <span class="px-4 py-2 font-bold">
+                        <%= Enum.find(@players, &(&1.id == v.player_id)).name %>
+                      </span>
+                    <% end %>
+                </div>
+              </div>
+            <% else %>
+                <div class="my-8"><span class="text-4xl font-semibold"><%= @round.word.word %></span>&nbsp;&nbsp;<em class="text-lg"><%= @round.word.part_of_speech %></em></div>
+            <% end %>
             <%= if @round.is_approved do %>
               <%= unless @definition.definition do %>
                 <p class="m-4">Write a convincing definition for <span class="font-semibold"><%= @round.word.word %></span>.</p>
@@ -65,33 +87,20 @@
                 <%= if @round.are_definitions_submitted do %>
                   <%= if @round.are_votes_submitted do %>
                     <%= for d <- @definitions do %>
-                        <%= if d.is_real do %>
-                          <div class="shadow-lg rounded-lg border-2 border-green-600 bg-green-100 my-4">
-                            <p class="px-4 py-2 font-bold">The Real Definition:</p>
-                            <p class="px-4 py-2 font-bold text-2xl"><%= d.definition %></p>
-                            <div class="flex">
-                              <p class="px-4 py-2">Votes:</p>
-                                <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
-                                  <span class="px-4 py-2 font-bold">
-                                    <%= Enum.find(@players, &(&1.id == v.player_id)).name %>
-                                  </span>
-                                <% end %>
-                            </div>
-                          </div>
-                        <% else %>
-                          <div class="shadow-lg rounded-lg border-2 border-blue-600 bg-blue-100 my-4">
-                            <div class="px-2 py-2">
+                        <%= unless d.is_real do %>
+                          <div class="shadow-lg rounded-lg border-2 border-blue-600 bg-blue-100 mt-6">
+                            <div class="relative -top-4 mx-auto">
                              <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
                               id={"#{d.player_id}-definition-icon"}
                               player={Enum.find(@players, fn x -> (x.id == d.player_id) end)}
                               is_current_player={Enum.find(@players, fn x -> (x.id == d.player_id) end).name == @player.name}
                               online={Enum.find(@players, fn x -> (x.id == d.player_id) end).name in @player_names}
-                              mx_class=""
-                              size_class="h-8 w-8"
+                              mx_class="mx-auto"
+                              size_class="h-10 w-10"
                               text_class="text-lg"
-                              name_classes="text-xs font-bold" />
+                              name_classes="text-xs font-bold mx-auto text-center" />
                             </div>
-                            <p class="px-4 py-2 font-bold text-2xl"><%= d.definition %></p>
+                            <p class="px-4 py-2 text-2xl"><%= d.definition %></p>
                             <div class="flex">
                               <p class="px-2 py-2">Votes:</p>
                               <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
@@ -135,7 +144,7 @@
                     <% else %>
                       <div class="mx-4 my-8 text-2xl">Vote for the definition you think is real!</div>
                       <%= for d <- @definitions do %>
-                        <div class="shadow-lg rounded-lg border-2 border-blue-600 bg-blue-100 my-4">
+                        <div class="shadow-lg rounded-lg border-2 border-blue-600 bg-blue-100 my-6">
                           <p class="p-4 font-bold text-2xl"><%= d.definition %></p>
                           <button class="shadow-lg text-blue-500 hover:text-white active:text-white border-2 border-blue-500 text-xl font-bold bg-slate-50 hover:bg-blue-500 active:bg-blue-600 py-2 px-4 m-4 rounded-full" 
                                   phx-click="vote_for_definition"
