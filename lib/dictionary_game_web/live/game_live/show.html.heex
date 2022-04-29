@@ -5,8 +5,8 @@
 <div class="md:mx-auto max-w-4xl py-4 bg-slate-50 rounded-lg shadow-md text-blue-900 min-h-screen">
 
 <div class="flex my-8">
-  <div class="text-blue-800 underline mx-8 pt-1"><%= live_redirect "Back", to: Routes.room_index_path(@socket, :index) %></div>
-  <div class="text-2xl font-bold text-blue-700 mx-auto pr-8 sm:pr-20"><%= @room.name %></div>
+  <div class="text-blue-800 underline mx-8 pt-1"><%= live_redirect "Back", to: Routes.game_index_path(@socket, :index) %></div>
+  <div class="text-2xl font-bold text-blue-700 mx-auto pr-8 sm:pr-20"><%= @game.name %></div>
 </div>
 
   <%= unless @player.name do%>
@@ -15,9 +15,9 @@
       id={:new}
       action={:new}
       player={@player}
-      room_id={@room.id}
+      game_id={@game.id}
       user_id={@user_id}
-      return_to={Routes.room_show_path(@socket, :show, @room.id)}
+      return_to={Routes.game_show_path(@socket, :show, @game.id)}
     />
   <% else %>
 
@@ -28,7 +28,7 @@
       <div class="flex overflow-auto md:mx-4">
         <%= for p <- @players do %>
             <.live_component
-              module={DictionaryGameWeb.RoomLive.PlayerComponent}
+              module={DictionaryGameWeb.GameLive.PlayerComponent}
               id={p.id}
               player={p}
               is_current_player={p.name == @player.name}
@@ -59,7 +59,7 @@
                   <p class="px-4 text-sm my-auto">Votes:</p>
                     <%= for v <- Enum.filter(@definition_votes, fn x -> (x.definition_id == Enum.find(@definitions, &(&1.is_real)).id) end) do %>
                       <div class="mx-2">
-                        <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
+                        <.live_component module={DictionaryGameWeb.GameLive.PlayerIcon}
                           id={"#{v.player_id}-real-vote-icon"}
                           player={Enum.find(@players, &(&1.id == v.player_id))}
                           is_current_player={Enum.find(@players, &(&1.id == v.player_id)).name == @player.name}
@@ -88,9 +88,9 @@
                   definition={@definition}
                   player={@player}
                   round={@round}
-                  room_id={@room.id}
+                  game_id={@game.id}
                   user_id={@user_id}
-                  return_to={Routes.room_show_path(@socket, :show, @room.id)}
+                  return_to={Routes.game_show_path(@socket, :show, @game.id)}
                 />
               <% else %>
                 <%= if @round.are_definitions_submitted do %>
@@ -98,7 +98,7 @@
                     <%= for d <- Enum.filter(@definitions, &(!&1.is_real)) do %>
                       <div class="shadow-lg rounded-lg border-2 border-blue-600 mt-6">
                         <div class="relative -top-4 mx-auto">
-                          <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
+                          <.live_component module={DictionaryGameWeb.GameLive.PlayerIcon}
                           id={"#{d.player_id}-definition-icon"}
                           player={Enum.find(@players, fn x -> (x.id == d.player_id) end)}
                           is_current_player={Enum.find(@players, fn x -> (x.id == d.player_id) end).name == @player.name}
@@ -114,7 +114,7 @@
                           <%= if Enum.any?(@definition_votes, &(&1.definition_id == d.id)) do %>
                             <p class="px-4 text-sm my-auto">Votes:</p>
                             <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
-                              <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
+                              <.live_component module={DictionaryGameWeb.GameLive.PlayerIcon}
                                 id={"#{d.player_id}-vote-icon"}
                                 player={Enum.find(@players, &(&1.id == v.player_id))}
                                 is_current_player={Enum.find(@players, &(&1.id == v.player_id)).name == @player.name}
@@ -195,7 +195,7 @@
           <% end %>
         <% end %>
         <button class="underline py-4 m-4 rounded-full block" phx-click={show_modal()}>End Game</button>
-          <.modal return_to={Routes.room_show_path(@socket, :show, @room)}>
+          <.modal return_to={Routes.game_show_path(@socket, :show, @game)}>
               <div class="m-4 p-4">
                 <h4 class="text-2xl font-bold">End Game</h4>
                 <p>Are you sure you want to end the game? This will end the game for everyone, not only you.</p>
@@ -216,9 +216,9 @@
           <em>You're the only one here. At least 2 players are required to play.</em>
         </p>
         <div class="m-4 md:mx-8">
-          <p class="font-bold">Share the link to this room with friends!</p>
+          <p class="font-bold">Share the link to this game with friends!</p>
           <button class="text-blue-500 hover:text-white active:text-white border-2 border-blue-500 text-xl font-bold hover:bg-blue-500 active:bg-blue-600 py-2 px-4 my-4 rounded-full"
-                  onclick={"copyAndNotify(`#{@url}`, 'room link');"}>
+                  onclick={"copyAndNotify(`#{@url}`, 'game link');"}>
             Copy&nbsp;Link
           </button>
           <div id="alert-info" class="rounded-full bg-green-200 px-3 max-w-fit md:inline-flex md:ml-4"></div>

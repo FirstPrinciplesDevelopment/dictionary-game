@@ -1,0 +1,35 @@
+<h1 class="text-3xl md:text-5xl font-bold md:mx-auto my-4 md:my-8 text-center text-blue-900">The Dictionary Game</h1>
+
+<div class="mx-auto md:my-8">
+  <div class="mx-auto">
+    <.live_component
+      module={DictionaryGameWeb.GameLive.FormComponent}
+      id={:new}
+      action={:new}
+      game={@game}
+      topic={@topic}
+    />
+  </div>
+  <div class="mx-auto">
+    <div class="shadow-md rounded-lg bg-slate-50 border-t-8 border-blue-500 max-w-md mx-auto md:my-8">
+      <div class="bg-blue-100 text-lg font-semibold p-4 text-blue-900">Join&nbsp;A&nbsp;Public&nbsp;Game</div>
+      <%= if Enum.any?(@games) do %>
+        <%= for game <- @games do %>
+          <div id={"game-#{game.id}"} class="group p-8 border-t-2 hover:bg-blue-100 cursor-pointer" phx-click={JS.dispatch("click", to: "#join-#{game.id}")}>
+            <div class="flex">
+              <span class="flex-grow text-2xl font-bold align-baseline text-blue-900"><%= live_redirect "#{game.name}", id: "join-#{game.id}", to: Routes.game_show_path(@socket, :show, game.id) %></span>
+              <%= unless game.is_censored do %>
+                <span class="flex-grow-0 bg-red-100 border border-red-300 rounded-full px-4 py-0.5 mx-4 text-red-700 align-baseline max-h-8">Explicit</span>
+              <% end %>
+            </div>
+            <div class="block text-blue-800 font-light"><%= game.description %></div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="p-8">
+          <p class="text-blue-900 italic font-light">No public games.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

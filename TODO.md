@@ -1,15 +1,7 @@
-- Show Definitions, Votes, and Scores after each round
-- Hide scores until end of round
-- Make known words room-wide instead of scoped to a game
-- "Play Again" button to start a new game in the same room
-- Add chat to room (persist across games)
-- Expand size of dictionary
-- Randomize get_unkown_word function
+- "Play Again" button to start a new game with the same players
+- Add chat
 - Allow number of rounds to be set during game creation (with a default)
-- Set up deployment
 - Add icons to design
-- Show realtime number of online players in public rooms
-- Allow filter/sort on room index/list view
-- Maybe smush Room and Game into one entity to simplify things? Make rooms/games ephemeral
-- Remove Score schema, add `score` and `display_score` to Player schema
-- Deal with player joining room/game after it has started
+- Show realtime number of online players in public games
+- Allow filter/sort on game index/list view
+- Deal with player joining game after it has started

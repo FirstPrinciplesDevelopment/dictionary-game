@@ -1,13 +1,13 @@
-defmodule DictionaryGameWeb.RoomLive.Index do
+defmodule DictionaryGameWeb.GameLive.Index do
   use DictionaryGameWeb, :live_view
   require Logger
 
-  alias DictionaryGame.Rooms
+  alias DictionaryGame.Games
   alias Phoenix.LiveView.JS
 
   @impl true
   def mount(_params, session, socket) do
-    topic = "rooms"
+    topic = "games"
 
     if connected?(socket) do
       DictionaryGameWeb.Endpoint.subscribe(topic)
@@ -16,7 +16,7 @@ defmodule DictionaryGameWeb.RoomLive.Index do
     # TODO: remove :topic if unused
     {:ok,
      socket
-     |> assign(rooms: list_rooms(), user_id: session["user_id"], topic: topic)}
+     |> assign(games: list_games(), user_id: session["user_id"], topic: topic)}
   end
 
   @impl true
@@ -25,19 +25,19 @@ defmodule DictionaryGameWeb.RoomLive.Index do
   end
 
   @impl true
-  def handle_info(%{event: "room_created", payload: room}, socket) do
-    Logger.info(payload: room)
-    # Add new room to room list.
-    {:noreply, assign(socket, rooms: socket.assigns.rooms ++ [room])}
+  def handle_info(%{event: "game_created", payload: game}, socket) do
+    Logger.info(payload: game)
+    # Add new game to game list.
+    {:noreply, assign(socket, games: socket.assigns.games ++ [game])}
   end
 
   defp apply_action(socket, _action, _params) do
     socket
-    |> assign(:page_title, "Create Or Join A Room")
-    |> assign(:room, %Rooms.Room{})
+    |> assign(:page_title, "Create Or Join A Game")
+    |> assign(:game, %Games.Game{})
   end
 
-  defp list_rooms do
-    Rooms.list_public_rooms()
+  defp list_games do
+    Games.list_public_games()
   end
 end

@@ -12,14 +12,14 @@ defmodule DictionaryGameWeb.LiveHelpers do
 
   ## Examples
 
-      <.modal return_to={Routes.room_index_path(@socket, :index)}>
+      <.modal return_to={Routes.game_index_path(@socket, :index)}>
         <.live_component
-          module={DictionaryGameWeb.RoomLive.FormComponent}
-          id={@room.id || :new}
+          module={DictionaryGameWeb.GameLive.FormComponent}
+          id={@game.id || :new}
           title={@page_title}
           action={@live_action}
-          return_to={Routes.room_index_path(@socket, :index)}
-          room: @room
+          return_to={Routes.game_index_path(@socket, :index)}
+          game: @game
         />
       </.modal>
   """

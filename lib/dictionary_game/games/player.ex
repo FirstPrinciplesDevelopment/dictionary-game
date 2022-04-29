@@ -1,4 +1,4 @@
-defmodule DictionaryGame.Rooms.Player do
+defmodule DictionaryGame.Games.Player do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -10,8 +10,8 @@ defmodule DictionaryGame.Rooms.Player do
     field :display_score, :integer, default: 0
 
     # replaced by belongs_to call below
-    # field :room_id, :id
-    belongs_to :room, DictionaryGame.Rooms.Room
+    # field :game_id, :id
+    belongs_to :game, DictionaryGame.Games.Game
 
     timestamps()
   end
@@ -20,8 +20,8 @@ defmodule DictionaryGame.Rooms.Player do
   def changeset(player, attrs) do
     player
     |> cast(attrs, [:name, :is_host, :score, :display_score])
-    |> validate_required([:name, :is_host, :room_id, :user_id])
+    |> validate_required([:name, :is_host, :game_id, :user_id])
     |> validate_length(:name, min: 3, max: 12)
-    |> unique_constraint([:name, :room_id])
+    |> unique_constraint([:name, :game_id])
   end
 end

@@ -1,6 +1,6 @@
 <div class="shrink-0">
     <div id={"#{@player.name}-icon-wrapper"} class={"py-2 mx-1 w-24 border-2 #{@border_color} #{@text_color} rounded-lg"}>
-        <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon} 
+        <.live_component module={DictionaryGameWeb.GameLive.PlayerIcon} 
             id={"#{@player.name}-icon"}
             player={@player}
             is_current_player={@is_current_player}

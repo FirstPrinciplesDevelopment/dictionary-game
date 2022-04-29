@@ -1,23 +1,20 @@
-defmodule DictionaryGameWeb.RoomLive.Show do
+defmodule DictionaryGameWeb.GameLive.Show do
   use DictionaryGameWeb, :live_view
 
-  alias DictionaryGame.{Rooms, Games, Dictionary}
-  alias DictionaryGame.Games.{Round}
-  alias DictionaryGame.Rooms.Player
+  alias DictionaryGame.{Games, Dictionary}
+  alias DictionaryGame.Games.{Round, Player}
   alias DictionaryGame.Dictionary.{Definition}
 
   require Logger
 
   @impl true
-  def mount(%{"id" => room_id}, session, socket) do
-    # Get the room by room id.
-    room = Rooms.get_room!(room_id)
-    # Get a player by room id and user_id.
-    player = Rooms.get_player(room_id, session["user_id"]) || %Player{}
+  def mount(%{"id" => game_id}, session, socket) do
+    # Get the game by game id.
+    game = Games.get_game!(game_id)
+    # Get a player by game id and user_id.
+    player = Games.get_player(game_id, session["user_id"]) || %Player{}
     # Get the list of players.
-    players = Rooms.list_players(room_id)
-    # Get the game if it exists.
-    game = Games.get_game(room_id)
+    players = Games.list_players(game_id)
 
     # Get the round only if the game exists (may be `nil`).
     round =
@@ -46,7 +43,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     # Get the list of definitions for the current word if round exists (may be `[]`).
     definitions =
       cond do
-        round -> Dictionary.list_definitions(room_id, round.word_id)
+        round -> Dictionary.list_definitions(game_id, round.word_id)
         true -> []
       end
 
@@ -57,7 +54,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
         true -> []
       end
 
-    topic = "room:" <> room_id
+    topic = "game:" <> game_id
 
     if connected?(socket) do
       DictionaryGameWeb.Endpoint.subscribe(topic)
@@ -72,7 +69,6 @@ defmodule DictionaryGameWeb.RoomLive.Show do
      |> assign(
        user_id: session["user_id"],
        player: player,
-       room: room,
        game: game,
        round: round,
        word_approvals: word_approvals,
@@ -87,13 +83,13 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   @impl true
-  def handle_params(%{"id" => room_id}, uri, socket) do
+  def handle_params(%{"id" => game_id}, uri, socket) do
     {:noreply,
      socket
      |> assign(
-       page_title: page_title(socket.assigns.live_action, room_id),
+       page_title: page_title(socket.assigns.live_action, game_id),
        url: uri,
-       room: Rooms.get_room!(room_id)
+       game: Games.get_game!(game_id)
      )}
   end
 
@@ -117,7 +113,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
 
   @impl true
   def handle_info(%{event: "game_deleted", payload: delete_by}, socket) do
-    # TODO: potentially set player: nil (if room/game are consolidated).
+    # TODO: potentially set player: nil (if game/game are consolidated).
     {:noreply,
      socket
      |> assign(game: nil, round: nil, word_approvals: [])
@@ -153,7 +149,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   def handle_info(%{event: "definition_created", payload: definition}, socket) do
     definitions = socket.assigns.definitions ++ [definition]
 
-    players = Rooms.list_players(socket.assigns.room.id)
+    players = Games.list_players(socket.assigns.game.id)
 
     # Update round.are_definitions_submitted if necessary.
     {:ok, round} =
@@ -183,7 +179,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
         socket
       ) do
     # Fetch an updated players list from the database.
-    players = Rooms.list_players(socket.assigns.room.id)
+    players = Games.list_players(socket.assigns.game.id)
 
     # This players score may have been updated by another players vote.
     player = Enum.find(players, &(&1.id == socket.assigns.player.id))
@@ -207,7 +203,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     Logger.info(player_names: player_names)
 
     # Update players list.
-    players = Rooms.list_players(socket.assigns.room.id)
+    players = Games.list_players(socket.assigns.game.id)
 
     # Update joins.
     for {name, _} <- Map.keys(joins) do
@@ -222,15 +218,16 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     end
 
     # Update players list.
-    players = Rooms.list_players(socket.assigns.room.id)
+    players = Games.list_players(socket.assigns.game.id)
 
     {:noreply, socket |> assign(player_names: player_names, players: players)}
   end
 
+  # TODO: remove/change this method and event
   @impl true
   def handle_event("start_game", _value, socket) do
     # Create game if one doesn't already exist.
-    case Games.get_or_create_game(socket.assigns.room.id) do
+    case Games.get_or_create_game(socket.assigns.game.id) do
       {:ok, game} ->
         # Create round.
         {:ok, round} = create_next_round(game)
@@ -241,7 +238,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           round: round
         })
 
-        players = Rooms.list_players(socket.assigns.room.id)
+        players = Games.list_players(socket.assigns.game.id)
 
         {:noreply, assign(socket, players: players)}
 
@@ -259,7 +256,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
       {:ok, approval} ->
         word_approvals = socket.assigns.word_approvals ++ [approval]
 
-        players = Rooms.list_players(socket.assigns.room.id)
+        players = Games.list_players(socket.assigns.game.id)
         Logger.info(players: players)
 
         # Update round.is_approved and create PlayedWord if word is approved by all players.
@@ -357,17 +354,17 @@ defmodule DictionaryGameWeb.RoomLive.Show do
           case Enum.find(socket.assigns.definitions, &(&1.id == definition_id)) do
             %Definition{is_real: true} ->
               # The voting player receives 10 points for guessing the correct definition.
-              Rooms.increment_player_score(socket.assigns.player, 10)
+              Games.increment_player_score(socket.assigns.player, 10)
 
             %Definition{is_real: false, player_id: player_id} ->
               # The player whose definition was voted for gets 5 points for fooling the voting player.
               player_to_increment = Enum.find(socket.assigns.players, &(&1.id == player_id))
-              Rooms.increment_player_score(player_to_increment, 5)
+              Games.increment_player_score(player_to_increment, 5)
               {:ok, socket.assigns.player}
           end
 
         # Fetch an updated players list from the database.
-        players = Rooms.list_players(socket.assigns.room.id)
+        players = Games.list_players(socket.assigns.game.id)
 
         # Concatenate existing votes with new vote.
         definition_votes = socket.assigns.definition_votes ++ [vote]
@@ -378,7 +375,7 @@ defmodule DictionaryGameWeb.RoomLive.Show do
             are_votes_submitted?(socket.assigns.round, players, definition_votes) ->
               # Update player.display_score to be the same as player.score.
               for p <- players do
-                Rooms.update_player(p, %{display_score: p.score})
+                Games.update_player(p, %{display_score: p.score})
               end
 
               Games.update_round(socket.assigns.round, socket.assigns.round.word, %{
@@ -414,8 +411,8 @@ defmodule DictionaryGameWeb.RoomLive.Show do
     {:noreply, socket}
   end
 
-  # TODO: make room name?
-  defp page_title(:show, room_id), do: "Room: #{room_id}"
+  # TODO: make game name?
+  defp page_title(:show, game_id), do: "Game: #{game_id}"
 
   defp create_next_round(game) do
     word = fetch_new_word(game)
@@ -457,9 +454,10 @@ defmodule DictionaryGameWeb.RoomLive.Show do
   end
 
   defp to_integer(string) do
-    char_list = string
-    |> String.normalize(:nfc)
-    |> String.to_charlist()
+    char_list =
+      string
+      |> String.normalize(:nfc)
+      |> String.to_charlist()
 
     Enum.reduce(char_list, fn x, acc -> x + acc end)
   end

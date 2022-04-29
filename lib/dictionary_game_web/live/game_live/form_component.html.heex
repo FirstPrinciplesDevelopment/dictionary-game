@@ -1,23 +1,23 @@
 <div class="bg-slate-50 rounded-lg mx-auto md:my-8 text-blue-900 shadow-md border-t-8 border-blue-500 max-w-md">
-  <div class="bg-blue-100 text-lg font-semibold p-4">Create A New Room</div>
+  <div class="bg-blue-100 text-lg font-semibold p-4">Create A New Game</div>
 
   <div class="m-8">
     <.form
       let={f}
       for={@changeset}
-      id="room-form"
+      id="game-form"
       phx-target={@myself}
       phx-change="validate"
-      phx-submit="create_room">
+      phx-submit="create_game">
     
       <div class="mb-8">
-        <%= label f, :name, "Room Name", class: "block font-medium" %>
+        <%= label f, :name, "Game Name", class: "block font-medium" %>
         <%= text_input f, :name, placeholder: "Name", class: "rounded-full block mb-4" %>
         <%= error_tag f, :name %>
       </div>
 
       <div class="mb-8">
-        <%= label f, :description, "Room Description", class: "block font-medium" %>
+        <%= label f, :description, "Game Description", class: "block font-medium" %>
         <%= text_input f, :description, placeholder: "Description", class: "rounded-full block mb-4" %>
         <%= error_tag f, :description %>
       </div>
@@ -39,7 +39,7 @@
       </div>
 
       <div class="pb-8 flex justify-center sm:justify-start">
-        <%= submit ~H"Create&nbsp;Room", phx_disable_with: "Creating...", class: "text-blue-500 hover:text-white active:text-white border-2 border-blue-500 text-xl font-bold hover:bg-blue-500 active:bg-blue-600 py-2 px-4 rounded-full" %>
+        <%= submit ~H"Create&nbsp;Game", phx_disable_with: "Creating...", class: "text-blue-500 hover:text-white active:text-white border-2 border-blue-500 text-xl font-bold hover:bg-blue-500 active:bg-blue-600 py-2 px-4 rounded-full" %>
       </div>
     </.form>
   </div>

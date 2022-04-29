@@ -8,7 +8,7 @@ defmodule DictionaryGame.Dictionary.Definition do
     # field :player_id, :id
     # field :word_id, :id
 
-    belongs_to :player, DictionaryGame.Rooms.Player
+    belongs_to :player, DictionaryGame.Games.Player
     belongs_to :word, DictionaryGame.Dictionary.Word
 
     timestamps()

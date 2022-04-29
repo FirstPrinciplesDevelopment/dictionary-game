@@ -1,8 +1,9 @@
-defmodule DictionaryGame.Repo.Migrations.CreateRooms do
+defmodule DictionaryGame.Repo.Migrations.CreateGames do
   use Ecto.Migration
 
   def change do
-    create table(:rooms) do
+    create table(:games) do
+      add :number_of_rounds, :integer, default: 3
       add :description, :string
       add :is_public, :boolean, default: false, null: false
       add :is_censored, :boolean, default: false, null: false
@@ -11,6 +12,6 @@ defmodule DictionaryGame.Repo.Migrations.CreateRooms do
       timestamps()
     end
 
-    create unique_index(:rooms, [:name])
+    create unique_index(:games, [:name])
   end
 end

@@ -7,7 +7,7 @@ defmodule DictionaryGame.Games.PlayerDefinitionVote do
     # field :definition_id, :id
     # field :round_id, :id
 
-    belongs_to :player, DictionaryGame.Rooms.Player
+    belongs_to :player, DictionaryGame.Games.Player
     belongs_to :definition, DictionaryGame.Dictionary.Definition
     belongs_to :round, DictionaryGame.Games.Round
 

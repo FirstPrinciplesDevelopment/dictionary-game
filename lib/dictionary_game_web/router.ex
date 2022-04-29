@@ -18,25 +18,16 @@ defmodule DictionaryGameWeb.Router do
   scope "/", DictionaryGameWeb do
     pipe_through :browser
 
-    live "/", RoomLive.Index, :index
-    # live "/rooms/new", RoomLive.Index, :new
-    # live "/rooms/:id/edit", RoomLive.Index, :edit
-    live "/:id", RoomLive.Show, :show
-    # live "/rooms/:id/show/edit", RoomLive.Show, :edit
-
-    # live "/players", PlayerLive.Index, :index
-    # live "/players/new", PlayerLive.Index, :new
-    # live "/players/:id/edit", PlayerLive.Index, :edit
-    # live "/players/:id", PlayerLive.Show, :show
-    # live "/players/:id/show/edit", PlayerLive.Show, :edit
+    live "/", GameLive.Index, :index
+    live "/:id", GameLive.Show, :show
 
     resources "admin/words", WordController
     resources "admin/definitions", DefinitionController
 
+    # TODO: remove these definitions routes
     live "/definitions", DefinitionLive.Index, :index
     live "/definitions/new", DefinitionLive.Index, :new
     live "/definitions/:id/edit", DefinitionLive.Index, :edit
-
     live "/definitions/:id", DefinitionLive.Show, :show
     live "/definitions/:id/show/edit", DefinitionLive.Show, :edit
   end

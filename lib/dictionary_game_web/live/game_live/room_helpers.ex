@@ -1,4 +1,4 @@
-defmodule DictionaryGameWeb.RoomLive.RoomHelpers do
+defmodule DictionaryGameWeb.GameLive.GameHelpers do
   import Phoenix.LiveView
   import Phoenix.LiveView.Helpers
 

@@ -7,7 +7,7 @@ defmodule DictionaryGame.Games.PlayerWordApproval do
     # field :word_id, :id
     # field :round_id, :id
 
-    belongs_to :player, DictionaryGame.Rooms.Player
+    belongs_to :player, DictionaryGame.Games.Player
     belongs_to :word, DictionaryGame.Dictionary.Word
     belongs_to :round, DictionaryGame.Games.Round
 
