@@ -1,6 +1,6 @@
 <h1 class="text-3xl md:text-5xl font-bold md:mx-auto my-4 md:my-8 text-center text-blue-900">The Dictionary Game</h1>
 
-<div class="md:mx-auto md:my-8">
+<div class="mx-auto md:my-8">
   <div class="mx-auto">
     <.live_component
       module={DictionaryGameWeb.RoomLive.FormComponent}
@@ -11,7 +11,7 @@
     />
   </div>
   <div class="mx-auto">
-    <div class="shadow-md rounded-lg bg-slate-50 border-t-8 border-blue-500 max-w-md md:mx-auto md:my-8">
+    <div class="shadow-md rounded-lg bg-slate-50 border-t-8 border-blue-500 max-w-md mx-auto md:my-8">
       <div class="bg-blue-100 text-lg font-semibold p-4 text-blue-900">Join&nbsp;A&nbsp;Public&nbsp;Room</div>
       <%= if Enum.any?(@rooms) do %>
         <%= for room <- @rooms do %>
