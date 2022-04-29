@@ -6,9 +6,8 @@ defmodule DictionaryGame.Games do
   import Ecto.Query, warn: false
   alias DictionaryGame.Repo
 
-  alias DictionaryGame.Games.{Player}
   alias DictionaryGame.Dictionary.{Word, Definition}
-  alias DictionaryGame.Games.{Game, Round}
+  alias DictionaryGame.Games.{Game, Round, Player}
 
   @doc """
   Returns the list of games.
