@@ -47,7 +47,7 @@
             <%= if @round.are_votes_submitted do %>
               <div class="shadow-lg rounded-lg border-2 border-green-600 bg-green-100 my-4">
                 <div class="relative -top-4 mx-auto">
-                  <div class="rounded-full h-10 w-14 border-2 border-green-600 text-center mx-auto bg-green-100 text-lg py-1">Real</div>
+                  <div class="rounded-full h-10 w-14 border-2 border-green-600 text-center mx-auto bg-green-100 text-lg py-1" title="The real definition.">Real</div>
                 </div>
                 <div class="m-4">
                   <span class="text-4xl font-semibold"><%= @round.word.word %></span>
@@ -55,12 +55,21 @@
                   <em class="text-lg"><%= @round.word.part_of_speech %></em>
                 </div>
                 <p class="px-4 py-2 text-2xl"><%= Enum.find(@definitions, &(&1.is_real)).definition %></p>
-                <div class="flex">
-                  <p class="px-4 py-2">Votes:</p>
+                <div class="flex pb-2">
+                  <p class="px-4 text-sm my-auto">Votes:</p>
                     <%= for v <- Enum.filter(@definition_votes, fn x -> (x.definition_id == Enum.find(@definitions, &(&1.is_real)).id) end) do %>
-                      <span class="px-4 py-2 font-bold">
-                        <%= Enum.find(@players, &(&1.id == v.player_id)).name %>
-                      </span>
+                      <div class="mx-2">
+                        <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
+                          id={"#{v.player_id}-real-vote-icon"}
+                          player={Enum.find(@players, &(&1.id == v.player_id))}
+                          is_current_player={Enum.find(@players, &(&1.id == v.player_id)).name == @player.name}
+                          online={Enum.find(@players, &(&1.id == v.player_id)).name in @player_names}
+                          mx_class="mx-auto"
+                          size_class="h-10 w-10"
+                          text_class="text-lg"
+                          name_classes="text-xs font-bold mx-auto text-center" />
+                        <div class="font-extrabold text-lg text-center">+10</div>
+                      </div>
                     <% end %>
                 </div>
               </div>
@@ -99,20 +108,25 @@
                               size_class="h-10 w-10"
                               text_class="text-lg"
                               name_classes="text-xs font-bold mx-auto text-center" />
+                              <div class="font-extrabold text-lg text-center">+<%= length(Enum.filter(@definition_votes, &(&1.definition_id == d.id))) * 5 %></div>
                             </div>
                             <p class="px-4 py-2 text-2xl"><%= d.definition %></p>
-                            <div class="flex">
-                              <p class="px-2 py-2">Votes:</p>
-                              <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
-                                <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
-                                  id={"#{d.player_id}-vote-icon"}
-                                  player={Enum.find(@players, &(&1.id == v.player_id))}
-                                  is_current_player={Enum.find(@players, &(&1.id == v.player_id)).name == @player.name}
-                                  online={Enum.find(@players, &(&1.id == v.player_id)).name in @player_names}
-                                  mx_class=""
-                                  size_class="h-8 w-8"
-                                  text_class="text-lg"
-                                  name_classes="hidden" />
+                            <div class="flex pb-2">
+                              <%= if Enum.any?(@definition_votes, &(&1.definition_id == d.id)) do %>
+                                <p class="px-4 text-sm my-auto">Votes:</p>
+                                <%= for v <- Enum.filter(@definition_votes, &(&1.definition_id == d.id)) do %>
+                                  <.live_component module={DictionaryGameWeb.RoomLive.PlayerIcon}
+                                    id={"#{d.player_id}-vote-icon"}
+                                    player={Enum.find(@players, &(&1.id == v.player_id))}
+                                    is_current_player={Enum.find(@players, &(&1.id == v.player_id)).name == @player.name}
+                                    online={Enum.find(@players, &(&1.id == v.player_id)).name in @player_names}
+                                    mx_class=""
+                                    size_class="h-8 w-8"
+                                    text_class="text-lg"
+                                    name_classes="text-xs font-bold mx-auto text-center" />
+                                <% end %>
+                              <% else %>
+                                <p class="px-4 text-sm my-auto">No Votes 😢</p>
                               <% end %>
                             </div>
                           </div>
@@ -142,11 +156,11 @@
                       <p class="m-4">Vote Submitted!</p>
                       <p class="m-4"><em>Waiting for other players.</em></p>
                     <% else %>
-                      <div class="mx-4 my-8 text-2xl">Vote for the definition you think is real!</div>
+                      <div class="mx-4 my-8">Vote for the definition you think is real!</div>
                       <%= for d <- @definitions do %>
-                        <div class="shadow-lg rounded-lg border-2 border-blue-600 bg-blue-100 my-6">
+                        <div class="shadow-lg rounded-lg border-2 border-blue-600 my-6">
                           <p class="p-4 font-bold text-2xl"><%= d.definition %></p>
-                          <button class="shadow-lg text-blue-500 hover:text-white active:text-white border-2 border-blue-500 text-xl font-bold bg-slate-50 hover:bg-blue-500 active:bg-blue-600 py-2 px-4 m-4 rounded-full" 
+                          <button class="text-white border-2 border-blue-500 active:border-blue-600 text-xl font-bold bg-blue-500 active:bg-blue-600 py-2 px-4 m-4 rounded-full" 
                                   phx-click="vote_for_definition"
                                   phx-value-definition_id={d.id}>
                             Vote&nbsp;For&nbsp;This&nbsp;Definition
