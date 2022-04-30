@@ -171,6 +171,7 @@ defmodule DictionaryGameWeb.GameLive.Show do
           {:ok, socket.assigns.round}
       end
 
+    Logger.info(round: round)
     # Fetch our dear players updated definition.
     player_definition =
       Dictionary.get_definition(socket.assigns.player.id, round.word_id) || %Definition{}
@@ -397,6 +398,8 @@ defmodule DictionaryGameWeb.GameLive.Show do
             true ->
               {:ok, socket.assigns.round}
           end
+
+        Logger.info(round: round)
 
         # Broadcast definition_vote_created event to every player (including the player who triggered the event).
         DictionaryGameWeb.Endpoint.broadcast(

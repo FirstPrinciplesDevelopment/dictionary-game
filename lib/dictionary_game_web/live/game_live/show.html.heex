@@ -163,6 +163,7 @@
                       </button>
                     <% end %>
                   <% else %>
+                    <%# TODO: something is going wrong here! %>
                     <%= if Enum.any?(@definition_votes, &(&1.player_id == @player.id)) do %>
                       <p class="m-4">Vote Submitted!</p>
                       <p class="m-4"><em>Waiting for other players.</em></p>
