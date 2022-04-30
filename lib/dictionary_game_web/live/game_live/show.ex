@@ -94,16 +94,6 @@ defmodule DictionaryGameWeb.GameLive.Show do
   end
 
   @impl true
-  def handle_info(%{event: "game_created", payload: %{game: game, round: round}}, socket) do
-    Logger.info(payload: game)
-
-    {:noreply,
-     socket
-     |> assign(game: game, round: round)
-     |> put_flash(:info, "Game started.")}
-  end
-
-  @impl true
   def handle_info(%{event: "round_created", payload: round}, socket) do
     {:noreply,
      socket
@@ -113,11 +103,29 @@ defmodule DictionaryGameWeb.GameLive.Show do
 
   @impl true
   def handle_info(%{event: "game_deleted", payload: delete_by}, socket) do
-    # TODO: potentially set player: nil (if game/game are consolidated).
     {:noreply,
      socket
-     |> assign(game: nil, round: nil, word_approvals: [])
-     |> put_flash(:info, "Game ended by #{delete_by.name}.")}
+     |> put_flash(:info, "Game ended by #{delete_by.name}")
+     |> push_redirect(to: Routes.game_index_path(socket, :index))}
+  end
+
+  @impl true
+  def handle_info(
+        %{event: "game_reset", payload: %{round: round, players: players, reset_by: reset_by}},
+        socket
+      ) do
+    {:noreply,
+     socket
+     |> put_flash(:info, "Game reset by #{reset_by.name}")
+     |> assign(
+       round: round,
+       players: players,
+       player: Enum.find(players, &(&1.id == socket.assigns.player.id)),
+       word_approvals: [],
+       definition: %Definition{},
+       definitions: [],
+       definition_votes: []
+     )}
   end
 
   @impl true
@@ -163,7 +171,13 @@ defmodule DictionaryGameWeb.GameLive.Show do
           {:ok, socket.assigns.round}
       end
 
-    {:noreply, socket |> assign(definitions: Enum.sort(definitions), round: round)}
+    # Fetch our dear players updated definition.
+    player_definition =
+      Dictionary.get_definition(socket.assigns.player.id, round.word_id) || %Definition{}
+
+    {:noreply,
+     socket
+     |> assign(definitions: Enum.sort(definitions), round: round, definition: player_definition)}
   end
 
   @impl true
@@ -223,30 +237,6 @@ defmodule DictionaryGameWeb.GameLive.Show do
     {:noreply, socket |> assign(player_names: player_names, players: players)}
   end
 
-  # TODO: remove/change this method and event
-  @impl true
-  def handle_event("start_game", _value, socket) do
-    # Create game if one doesn't already exist.
-    case Games.get_or_create_game(socket.assigns.game.id) do
-      {:ok, game} ->
-        # Create round.
-        {:ok, round} = create_next_round(game)
-        # TODO: Should this move to the data access (Context) layer?
-        # Broadcast game_created event to every player (including the player who triggered the event).
-        DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "game_created", %{
-          game: game,
-          round: round
-        })
-
-        players = Games.list_players(socket.assigns.game.id)
-
-        {:noreply, assign(socket, players: players)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
-  end
-
   @impl true
   def handle_event("approve_word", _value, socket) do
     round = socket.assigns.round
@@ -297,10 +287,10 @@ defmodule DictionaryGameWeb.GameLive.Show do
     case Games.create_known_word(socket.assigns.game, socket.assigns.round.word) do
       {:ok, known_word} ->
         # Get a new word for the round.
-        word = fetch_new_word(socket.assigns.game)
+        word = Dictionary.get_unknown_word!(socket.assigns.game.id)
         {:ok, round} = Games.update_round(socket.assigns.round, word)
         # TODO: Should this move to the data access (Context) layer?
-        # Broadcast game_created event to every player (including the player who triggered the event).
+        # Broadcast known_word_created event to every player (including the player who triggered the event).
         DictionaryGameWeb.Endpoint.broadcast(
           socket.assigns.topic,
           "known_word_created",
@@ -323,8 +313,6 @@ defmodule DictionaryGameWeb.GameLive.Show do
     # Delete game.
     case Games.delete_game(socket.assigns.game) do
       {:ok, _game} ->
-        # TODO: Make sure delete cascades properly.
-        # TODO: Should this move to the data access (Context) layer?
         # Broadcast game_deleted event to every player (including the player who triggered the event).
         DictionaryGameWeb.Endpoint.broadcast(
           socket.assigns.topic,
@@ -337,6 +325,30 @@ defmodule DictionaryGameWeb.GameLive.Show do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  @impl true
+  def handle_event("play_again", _value, socket) do
+    # Reset game state.
+    game = socket.assigns.game
+    # Delete all rounds.
+    Games.delete_rounds(game.id)
+    # Get a new word.
+    word = Dictionary.get_unknown_word!(game.id)
+    # Create a new initial round.
+    {:ok, round} = Games.create_round(game, word, %{round_number: 1})
+    # Reset players.
+    Games.reset_player_scores(game.id)
+    # Fetch players.
+    players = Games.list_players(game.id)
+    # Broadcast game_reset event to every player (including the player who triggered the event).
+    DictionaryGameWeb.Endpoint.broadcast(
+      socket.assigns.topic,
+      "game_reset",
+      %{round: round, players: players, reset_by: socket.assigns.player}
+    )
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -415,16 +427,12 @@ defmodule DictionaryGameWeb.GameLive.Show do
   defp page_title(:show, game_id), do: "Game: #{game_id}"
 
   defp create_next_round(game) do
-    word = fetch_new_word(game)
+    word = Dictionary.get_unknown_word!(game.id)
 
     case Games.get_current_round(game.id) do
       %Round{} = round -> Games.create_round(game, word, %{round_number: round.round_number + 1})
       nil -> Games.create_round(game, word, %{round_number: 1})
     end
-  end
-
-  defp fetch_new_word(game) do
-    Dictionary.get_unknown_word!(game.id)
   end
 
   defp is_word_approved?(round, players, approvals) do

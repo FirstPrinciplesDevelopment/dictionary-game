@@ -42,8 +42,7 @@ defmodule DictionaryGameWeb.DefinitionLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Definition created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> put_flash(:info, "Definition created successfully")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

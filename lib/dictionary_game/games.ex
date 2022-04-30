@@ -237,6 +237,20 @@ defmodule DictionaryGame.Games do
   end
 
   @doc """
+  Resets `score` and `display_score` for all players in a game.
+
+  ## Examples
+
+      iex> reset_player_scores(player, %{field: new_value})
+      {3, nil}
+
+  """
+  def reset_player_scores(game_id) do
+    query = from p in Player, where: p.game_id == ^game_id
+    Repo.update_all(query, set: [score: 0, display_score: 0])
+  end
+
+  @doc """
   Deletes a player.
 
   ## Examples
@@ -400,6 +414,22 @@ defmodule DictionaryGame.Games do
   """
   def delete_round(%Round{} = round) do
     Repo.delete(round)
+  end
+
+  @doc """
+  Deletes all rounds for a game.
+
+  ## Examples
+
+      iex> delete_rounds(game_id)
+      {3, nil}
+  """
+  def delete_rounds(game_id) do
+    query =
+      from r in Round,
+        where: r.game_id == ^game_id
+
+    Repo.delete_all(query)
   end
 
   @doc """
