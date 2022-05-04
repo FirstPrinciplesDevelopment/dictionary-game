@@ -368,9 +368,7 @@ defmodule DictionaryGameWeb.GameLive.Show do
   end
 
   @impl true
-  def handle_event("vote_for_definition", %{"definition_id" => id_string}, socket) do
-    {definition_id, _} = Integer.parse(id_string)
-
+  def handle_event("vote_for_definition", %{"definition_id" => definition_id}, socket) do
     # Create PlayerDefinitionVote.
     case Games.create_player_definition_vote(
            socket.assigns.player,
