@@ -14,7 +14,7 @@ config :dictionary_game, DictionaryGameWeb.Endpoint,
   check_origin: [
     "https://dictionarygame.principlesdev.com",
     "https://dictionarygame.firstprinciplesdevelopment.com",
-    "https://hidden-leaf-1625.fly.dev/"
+    "https://dictionarygame-001.fly.dev/"
   ]
 
 # Do not print debug messages in production
