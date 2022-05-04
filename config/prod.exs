@@ -12,6 +12,7 @@ import Config
 config :dictionary_game, DictionaryGameWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   check_origin: [
+    "https://dictionarygame.xyz",
     "https://dictionarygame.principlesdev.com",
     "https://dictionarygame.firstprinciplesdevelopment.com",
     "https://dictionarygame-001.fly.dev/"
