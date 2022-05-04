@@ -2,12 +2,14 @@ defmodule DictionaryGame.Games.Round do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
   schema "rounds" do
     field :round_number, :integer
     field :is_approved, :boolean, default: false
     field :are_definitions_submitted, :boolean, default: false
     field :are_votes_submitted, :boolean, default: false
-    # field :word_id, :id
+    # field :word_id, :binary_id
 
     # Read about :on_replace https://hexdocs.pm/ecto/Ecto.Changeset.html#module-the-on_replace-option
     belongs_to :word, DictionaryGame.Dictionary.Word, on_replace: :nilify

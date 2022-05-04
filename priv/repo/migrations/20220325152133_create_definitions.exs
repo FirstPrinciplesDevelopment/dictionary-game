@@ -2,11 +2,12 @@ defmodule DictionaryGame.Repo.Migrations.CreateDefinitions do
   use Ecto.Migration
 
   def change do
-    create table(:definitions) do
+    create table(:definitions, primary_key: false) do
+      add :id, :binary_id, primary_key: true
       add :definition, :string
       add :is_real, :boolean, default: false, null: false
-      add :player_id, references(:players, on_delete: :nilify_all)
-      add :word_id, references(:words, on_delete: :delete_all)
+      add :player_id, references(:players, on_delete: :nilify_all, type: :binary_id)
+      add :word_id, references(:words, on_delete: :delete_all, type: :binary_id)
 
       timestamps()
     end

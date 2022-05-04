@@ -2,6 +2,8 @@ defmodule DictionaryGame.Dictionary.Word do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
   schema "words" do
     field :part_of_speech, :string
     field :word, :string

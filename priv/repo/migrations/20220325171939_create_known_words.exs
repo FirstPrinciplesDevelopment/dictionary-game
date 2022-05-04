@@ -2,9 +2,10 @@ defmodule DictionaryGame.Repo.Migrations.CreateKnownWord do
   use Ecto.Migration
 
   def change do
-    create table(:known_words) do
-      add :game_id, references(:games, on_delete: :delete_all)
-      add :word_id, references(:words, on_delete: :delete_all)
+    create table(:known_words, primary_key: false) do
+      add :id, :binary_id, primary_key: true
+      add :game_id, references(:games, on_delete: :delete_all, type: :binary_id)
+      add :word_id, references(:words, on_delete: :delete_all, type: :binary_id)
 
       timestamps()
     end

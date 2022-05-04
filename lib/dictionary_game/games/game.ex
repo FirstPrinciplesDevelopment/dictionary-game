@@ -2,6 +2,8 @@ defmodule DictionaryGame.Games.Game do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
   schema "games" do
     field :number_of_rounds, :integer, default: 3
     field :description, :string
