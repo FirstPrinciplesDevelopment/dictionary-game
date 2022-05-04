@@ -94,10 +94,13 @@ defmodule DictionaryGameWeb.GameLive.Show do
   end
 
   @impl true
-  def handle_info(%{event: "round_created", payload: round}, socket) do
+  def handle_info(
+        %{event: "round_created", payload: %{round: round, definitions: definitions}},
+        socket
+      ) do
     {:noreply,
      socket
-     |> assign(round: round, definition: %Definition{})
+     |> assign(round: round, definition: %Definition{}, definitions: definitions)
      |> put_flash(:info, "Round #{round.round_number} started.")}
   end
 
@@ -111,7 +114,10 @@ defmodule DictionaryGameWeb.GameLive.Show do
 
   @impl true
   def handle_info(
-        %{event: "game_reset", payload: %{round: round, players: players, reset_by: reset_by}},
+        %{
+          event: "game_reset",
+          payload: %{round: round, players: players, definitions: definitions, reset_by: reset_by}
+        },
         socket
       ) do
     {:noreply,
@@ -123,7 +129,7 @@ defmodule DictionaryGameWeb.GameLive.Show do
        player: Enum.find(players, &(&1.id == socket.assigns.player.id)),
        word_approvals: [],
        definition: %Definition{},
-       definitions: [],
+       definitions: definitions,
        definition_votes: []
      )}
   end
@@ -171,14 +177,21 @@ defmodule DictionaryGameWeb.GameLive.Show do
           {:ok, socket.assigns.round}
       end
 
-    Logger.info(round: round)
     # Fetch our dear players updated definition.
     player_definition =
       Dictionary.get_definition(socket.assigns.player.id, round.word_id) || %Definition{}
 
+    # Get an updated definition_votes list.
+    definition_votes = Games.list_player_definition_votes(round.id)
+
     {:noreply,
      socket
-     |> assign(definitions: Enum.sort(definitions), round: round, definition: player_definition)}
+     |> assign(
+       definitions: Enum.sort(definitions),
+       round: round,
+       definition: player_definition,
+       definition_votes: definition_votes
+     )}
   end
 
   @impl true
@@ -342,11 +355,13 @@ defmodule DictionaryGameWeb.GameLive.Show do
     Games.reset_player_scores(game.id)
     # Fetch players.
     players = Games.list_players(game.id)
+    # Get the definitions for the round word (will only contain the real definition).
+    definitions = Dictionary.list_definitions(game.id, word.id)
     # Broadcast game_reset event to every player (including the player who triggered the event).
     DictionaryGameWeb.Endpoint.broadcast(
       socket.assigns.topic,
       "game_reset",
-      %{round: round, players: players, reset_by: socket.assigns.player}
+      %{round: round, players: players, definitions: definitions, reset_by: socket.assigns.player}
     )
 
     {:noreply, socket}
@@ -419,9 +434,14 @@ defmodule DictionaryGameWeb.GameLive.Show do
   def handle_event("next_round", _value, socket) do
     # Create next round.
     {:ok, round} = create_next_round(socket.assigns.game)
+    # Fetch the definition list for the round word (will only contain the real definition).
+    definitions = Dictionary.list_definitions(socket.assigns.game.id, round.word_id)
 
     # Broadcast round_created event to every player (including the player who triggered the event).
-    DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "round_created", round)
+    DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "round_created", %{
+      round: round,
+      definitions: definitions
+    })
 
     {:noreply, socket}
   end
