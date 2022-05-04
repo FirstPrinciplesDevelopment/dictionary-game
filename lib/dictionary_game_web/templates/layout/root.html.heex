@@ -20,6 +20,9 @@
     }
   </script>
   <body class="bg-slate-200">
+    <nav>
+      <%= render "_user_menu.html", assigns %>
+    </nav>
     <%= @inner_content %>
   </body>
 </html>
