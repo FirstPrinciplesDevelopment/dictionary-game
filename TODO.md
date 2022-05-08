@@ -1,4 +1,3 @@
-- "Play Again" button to start a new game with the same players
 - Add chat
 - Allow number of rounds to be set during game creation (with a default)
 - Add icons to design
