@@ -26,13 +26,6 @@ defmodule DictionaryGameWeb.Router do
 
     resources "admin/words", WordController
     resources "admin/definitions", DefinitionController
-
-    # TODO: remove these definitions routes
-    live "/definitions", DefinitionLive.Index, :index
-    live "/definitions/new", DefinitionLive.Index, :new
-    live "/definitions/:id/edit", DefinitionLive.Index, :edit
-    live "/definitions/:id", DefinitionLive.Show, :show
-    live "/definitions/:id/show/edit", DefinitionLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
