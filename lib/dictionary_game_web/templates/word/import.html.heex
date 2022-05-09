@@ -1,0 +1,5 @@
+<h1>Import Words</h1>
+
+<%= render "import_form.html", Map.put(assigns, :action, Routes.word_path(@conn, :import)) %>
+
+<span><%= link "Back", to: Routes.word_path(@conn, :index) %></span>

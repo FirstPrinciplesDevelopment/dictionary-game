@@ -1,6 +1,8 @@
 defmodule DictionaryGameWeb.Router do
   use DictionaryGameWeb, :router
 
+  import DictionaryGameWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule DictionaryGameWeb.Router do
     plug :put_root_layout, {DictionaryGameWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
     plug DictionaryGame.UserPlug
   end
 
@@ -20,16 +23,23 @@ defmodule DictionaryGameWeb.Router do
 
     live "/", GameLive.Index, :index
     live "/:id", GameLive.Show, :show
+  end
 
-    resources "admin/words", WordController
+  scope "/", DictionaryGameWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    get "/admin/words", WordController, :index
+    get "/admin/words/import", WordController, :import
+    post "/admin/words/import", WordController, :import
+    get "/admin/words/:id/edit", WordController, :edit
+    get "/admin/words/new", WordController, :new
+    get "/admin/words/:id", WordController, :show
+    post "/admin/words", WordController, :create
+    patch "/admin/words/:id", WordController, :update
+    put "/admin/words/:id", WordController, :update
+    delete "/admin/words/:id", WordController, :delete
+
     resources "admin/definitions", DefinitionController
-
-    # TODO: remove these definitions routes
-    live "/definitions", DefinitionLive.Index, :index
-    live "/definitions/new", DefinitionLive.Index, :new
-    live "/definitions/:id/edit", DefinitionLive.Index, :edit
-    live "/definitions/:id", DefinitionLive.Show, :show
-    live "/definitions/:id/show/edit", DefinitionLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
@@ -64,5 +74,38 @@ defmodule DictionaryGameWeb.Router do
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  ## Authentication routes
+
+  scope "/", DictionaryGameWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    # get "/users/register", UserRegistrationController, :new
+    # post "/users/register", UserRegistrationController, :create
+    get "/users/log_in", UserSessionController, :new
+    post "/users/log_in", UserSessionController, :create
+    get "/users/reset_password", UserResetPasswordController, :new
+    post "/users/reset_password", UserResetPasswordController, :create
+    get "/users/reset_password/:token", UserResetPasswordController, :edit
+    put "/users/reset_password/:token", UserResetPasswordController, :update
+  end
+
+  scope "/", DictionaryGameWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    get "/users/settings", UserSettingsController, :edit
+    put "/users/settings", UserSettingsController, :update
+    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+  end
+
+  scope "/", DictionaryGameWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
+    get "/users/confirm", UserConfirmationController, :new
+    post "/users/confirm", UserConfirmationController, :create
+    get "/users/confirm/:token", UserConfirmationController, :edit
+    post "/users/confirm/:token", UserConfirmationController, :update
   end
 end

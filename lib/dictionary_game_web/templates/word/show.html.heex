@@ -12,6 +12,11 @@
     <%= @word.word %>
   </li>
 
+  <li>
+    <strong>Definition:</strong>
+    <%= @definition.definition %>
+  </li>
+
 </ul>
 
 <span><%= link "Edit", to: Routes.word_path(@conn, :edit, @word) %></span> |

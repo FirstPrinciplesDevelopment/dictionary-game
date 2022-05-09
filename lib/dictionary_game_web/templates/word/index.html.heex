@@ -14,7 +14,6 @@
     <tr>
       <td><%= word.part_of_speech %></td>
       <td><%= word.word %></td>
-
       <td>
         <span><%= link "Show", to: Routes.word_path(@conn, :show, word) %></span>
         <span><%= link "Edit", to: Routes.word_path(@conn, :edit, word) %></span>

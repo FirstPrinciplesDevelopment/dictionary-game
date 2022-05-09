@@ -39,7 +39,7 @@ defmodule DictionaryGame.Dictionary do
   def get_word!(id), do: Repo.get!(Word, id)
 
   @doc """
-  Gets a single random unknown word for a game, i.e. a word that no one in game has marked as "known".
+  Gets a single random unknown real word for a game, i.e. a word that no one in game has marked as "known".
 
   Raises `Ecto.NoResultsError` if the Word does not exist.
 
@@ -61,7 +61,8 @@ defmodule DictionaryGame.Dictionary do
         on: w.id == pw.word_id,
         where:
           (is_nil(kw.game_id) or kw.game_id != ^game_id) and
-            (is_nil(pw.game_id) or pw.game_id != ^game_id)
+            (is_nil(pw.game_id) or pw.game_id != ^game_id) and
+            w.is_real
 
     hd(Enum.shuffle(Repo.all(query)))
   end
@@ -101,7 +102,7 @@ defmodule DictionaryGame.Dictionary do
         "part_of_speech" => part_of_speech,
         "definition" => definition
       }) do
-    case %Word{word: word, part_of_speech: part_of_speech}
+    case %Word{word: word, part_of_speech: part_of_speech, is_real: true}
          |> Word.changeset(%{})
          |> Repo.insert() do
       {:ok, word} ->
@@ -213,6 +214,24 @@ defmodule DictionaryGame.Dictionary do
 
   """
   def get_definition!(id), do: Repo.get!(Definition, id)
+
+  @doc """
+  Gets a real definition for a word_id.
+
+  Raises `Ecto.NoResultsError` if the Definition does not exist.
+
+  ## Examples
+
+      iex> get_real_definition!(word_id)
+      %Definition{}
+
+      iex> get_real_definition!(word_id)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_real_definition!(word_id) do
+    Repo.get_by!(Definition, word_id: word_id, is_real: true)
+  end
 
   @doc """
   Gets a single definition by player_id and word_id.

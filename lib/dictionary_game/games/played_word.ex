@@ -2,9 +2,11 @@ defmodule DictionaryGame.Games.PlayedWord do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
   schema "played_words" do
-    # field :game_id, :id
-    # field :word_id, :id
+    # field :game_id, :binary_id
+    # field :word_id, :binary_id
 
     belongs_to :game, DictionaryGame.Games.Game
     belongs_to :word, DictionaryGame.Dictionary.Word

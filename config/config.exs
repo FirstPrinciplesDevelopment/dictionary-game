@@ -8,7 +8,8 @@
 import Config
 
 config :dictionary_game,
-  ecto_repos: [DictionaryGame.Repo]
+  ecto_repos: [DictionaryGame.Repo],
+  generators: [binary_id: true]
 
 # Configures the endpoint
 config :dictionary_game, DictionaryGameWeb.Endpoint,

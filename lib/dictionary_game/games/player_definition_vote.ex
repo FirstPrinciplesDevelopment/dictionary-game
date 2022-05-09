@@ -2,10 +2,12 @@ defmodule DictionaryGame.Games.PlayerDefinitionVote do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
   schema "player_definition_votes" do
-    # field :player_id, :id
-    # field :definition_id, :id
-    # field :round_id, :id
+    # field :player_id, :binary_id
+    # field :definition_id, :binary_id
+    # field :round_id, :binary_id
 
     belongs_to :player, DictionaryGame.Games.Player
     belongs_to :definition, DictionaryGame.Dictionary.Definition

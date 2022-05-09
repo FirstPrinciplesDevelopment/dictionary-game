@@ -1,5 +1,6 @@
 defmodule DictionaryGameWeb.WordController do
   use DictionaryGameWeb, :controller
+  import CSV
 
   alias DictionaryGame.Dictionary
   alias DictionaryGame.Dictionary.Word
@@ -28,7 +29,8 @@ defmodule DictionaryGameWeb.WordController do
 
   def show(conn, %{"id" => id}) do
     word = Dictionary.get_word!(id)
-    render(conn, "show.html", word: word)
+    definition = Dictionary.get_real_definition!(id)
+    render(conn, "show.html", word: word, definition: definition)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -58,5 +60,39 @@ defmodule DictionaryGameWeb.WordController do
     conn
     |> put_flash(:info, "Word deleted successfully.")
     |> redirect(to: Routes.word_path(conn, :index))
+  end
+
+  def import(conn, %{"words" => words_file}) do
+    words_file.path
+    |> File.stream!()
+    |> CSV.decode()
+    |> Enum.map(fn {:ok, word} ->
+      %{
+        "word" => Enum.at(word, 0),
+        "definition" => Enum.at(word, 1),
+        "part_of_speech" => Enum.at(word, 2)
+      }
+      |> Dictionary.create_real_word_and_definition()
+    end)
+    |> Enum.filter(fn
+      {:error, _changeset} -> true
+      _ -> false
+    end)
+    |> case do
+      [] ->
+        conn
+        |> put_flash(:info, "Imported")
+        |> redirect(to: Routes.word_path(conn, :index))
+
+      errors ->
+        conn
+        |> put_flash(:error, errors)
+        |> render("import.html")
+    end
+  end
+
+  def import(conn, _params) do
+    changeset = %{}
+    render(conn, "import.html", changeset: changeset)
   end
 end

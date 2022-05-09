@@ -15,7 +15,7 @@ config :dictionary_game, DictionaryGameWeb.Endpoint,
     "https://dictionarygame.xyz",
     "https://dictionarygame.principlesdev.com",
     "https://dictionarygame.firstprinciplesdevelopment.com",
-    "https://dictionarygame-001.fly.dev/"
+    "https://dictionarygame-v1.fly.dev/"
   ]
 
 # Do not print debug messages in production
