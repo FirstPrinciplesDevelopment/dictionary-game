@@ -14,7 +14,9 @@ alias DictionaryGame.Dictionary.{Definition, Word}
 {:ok, word} =
   DictionaryGame.Repo.insert(%Word{
     word: "retroflexion",
-    part_of_speech: "noun"
+    part_of_speech: "noun",
+    is_real: true,
+    player_id: nil
   })
 
 DictionaryGame.Repo.insert!(%Definition{
@@ -27,7 +29,9 @@ DictionaryGame.Repo.insert!(%Definition{
 {:ok, word} =
   DictionaryGame.Repo.insert(%Word{
     word: "polychromatic",
-    part_of_speech: "adjective"
+    part_of_speech: "adjective",
+    is_real: true,
+    player_id: nil
   })
 
 DictionaryGame.Repo.insert!(%Definition{
@@ -40,7 +44,9 @@ DictionaryGame.Repo.insert!(%Definition{
 {:ok, word} =
   DictionaryGame.Repo.insert(%Word{
     word: "gremmie",
-    part_of_speech: "noun"
+    part_of_speech: "noun",
+    is_real: true,
+    player_id: nil
   })
 
 DictionaryGame.Repo.insert!(%Definition{
@@ -53,7 +59,9 @@ DictionaryGame.Repo.insert!(%Definition{
 {:ok, word} =
   DictionaryGame.Repo.insert(%Word{
     word: "enteron",
-    part_of_speech: "noun"
+    part_of_speech: "noun",
+    is_real: true,
+    player_id: nil
   })
 
 DictionaryGame.Repo.insert!(%Definition{
@@ -66,7 +74,9 @@ DictionaryGame.Repo.insert!(%Definition{
 {:ok, word} =
   DictionaryGame.Repo.insert(%Word{
     word: "tensegrity",
-    part_of_speech: "noun"
+    part_of_speech: "noun",
+    is_real: true,
+    player_id: nil
   })
 
 DictionaryGame.Repo.insert!(%Definition{
@@ -80,7 +90,9 @@ DictionaryGame.Repo.insert!(%Definition{
 {:ok, word} =
   DictionaryGame.Repo.insert(%Word{
     word: "tartrazine",
-    part_of_speech: "noun"
+    part_of_speech: "noun",
+    is_real: true,
+    player_id: nil
   })
 
 DictionaryGame.Repo.insert!(%Definition{
