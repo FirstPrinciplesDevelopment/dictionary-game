@@ -215,6 +215,24 @@ defmodule DictionaryGame.Dictionary do
   def get_definition!(id), do: Repo.get!(Definition, id)
 
   @doc """
+  Gets a real definition for a word_id.
+
+  Raises `Ecto.NoResultsError` if the Definition does not exist.
+
+  ## Examples
+
+      iex> get_real_definition!(word_id)
+      %Definition{}
+
+      iex> get_real_definition!(word_id)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_real_definition!(word_id) do
+    Repo.get_by!(Definition, word_id: word_id, is_real: true)
+  end
+
+  @doc """
   Gets a single definition by player_id and word_id.
 
   Returns `nil` if the Definition does not exist.

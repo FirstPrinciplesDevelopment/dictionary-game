@@ -1,0 +1,10 @@
+<.form let={f} for={@conn} action={@action} multipart={true}>
+
+  <%= label f, :words %>
+  <%= file_input f, :words %>
+  <%= error_tag f, :words %>
+
+  <div>
+    <%= submit "Import" %>
+  </div>
+</.form>

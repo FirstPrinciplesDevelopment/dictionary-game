@@ -28,7 +28,17 @@ defmodule DictionaryGameWeb.Router do
   scope "/", DictionaryGameWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    resources "admin/words", WordController
+    get "/admin/words", WordController, :index
+    get "/admin/words/import", WordController, :import
+    post "/admin/words/import", WordController, :import
+    get "/admin/words/:id/edit", WordController, :edit
+    get "/admin/words/new", WordController, :new
+    get "/admin/words/:id", WordController, :show
+    post "/admin/words", WordController, :create
+    patch "/admin/words/:id", WordController, :update
+    put "/admin/words/:id", WordController, :update
+    delete "/admin/words/:id", WordController, :delete
+
     resources "admin/definitions", DefinitionController
   end
 
