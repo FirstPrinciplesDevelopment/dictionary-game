@@ -8,12 +8,9 @@ defmodule DictionaryGame.Dictionary.Definition do
     field :definition, :string
     field :is_real, :boolean, default: false
     # field :player_id, :binary_id
-    # field :word_id, :binary_id
+    field :word_id, :binary_id
 
     belongs_to :player, DictionaryGame.Games.Player
-    belongs_to :word, DictionaryGame.Dictionary.Word
-
-    timestamps()
   end
 
   @doc false
