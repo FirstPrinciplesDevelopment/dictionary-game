@@ -20,9 +20,11 @@
     }
   </script>
   <body class="bg-slate-200">
-    <nav>
-      <%= render "_user_menu.html", assigns %>
-    </nav>
+    <%= if @current_user do %>
+      <nav>
+        <%= render "_user_menu.html", assigns %>
+      </nav>
+    <% end %>
     <%= @inner_content %>
   </body>
 </html>
