@@ -138,13 +138,18 @@ defmodule DictionaryGameWeb.GameLive.Show do
   def handle_info(
         %{
           event: "known_word_created",
-          payload: %{known_word: known_word, round: round, player: player}
+          payload: %{
+            known_word: known_word,
+            round: round,
+            player: player,
+            definitions: definitions
+          }
         },
         socket
       ) do
     {:noreply,
      socket
-     |> assign(round: round)
+     |> assign(round: round, definitions: definitions)
      |> put_flash(:info, "#{known_word.word.word} known by #{player.name}.")}
   end
 
@@ -302,8 +307,11 @@ defmodule DictionaryGameWeb.GameLive.Show do
       {:ok, known_word} ->
         # Get a new word for the round.
         word = Dictionary.get_unknown_word!(socket.assigns.game.id)
+        # Update round.
         {:ok, round} = Games.update_round(socket.assigns.round, word)
-        # TODO: Should this move to the data access (Context) layer?
+        # Get definitions.
+        definitions = Dictionary.list_definitions(socket.assigns.game.id, word.id)
+
         # Broadcast known_word_created event to every player (including the player who triggered the event).
         DictionaryGameWeb.Endpoint.broadcast(
           socket.assigns.topic,
@@ -311,7 +319,8 @@ defmodule DictionaryGameWeb.GameLive.Show do
           %{
             known_word: known_word,
             round: round,
-            player: socket.assigns.player
+            player: socket.assigns.player,
+            definitions: definitions
           }
         )
 
