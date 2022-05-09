@@ -1,6 +1,6 @@
-# fly.toml file generated for dictionarygame-001 on 2022-05-04T10:51:54-04:00
+# fly.toml file generated for dictionarygame-v1 on 2022-05-09T14:39:47-04:00
 
-app = "dictionarygame-001"
+app = "dictionarygame-v1"
 
 kill_signal = "SIGTERM"
 kill_timeout = 5
