@@ -23,6 +23,10 @@ defmodule DictionaryGameWeb.Router do
 
     live "/", GameLive.Index, :index
     live "/:id", GameLive.Show, :show
+  end
+
+  scope "/", DictionaryGameWeb do
+    pipe_through [:browser, :require_authenticated_user]
 
     resources "admin/words", WordController
     resources "admin/definitions", DefinitionController
