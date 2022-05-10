@@ -2,17 +2,24 @@
 
 <div class="mx-auto md:my-8">
   <div class="mx-auto">
-    <.live_component
-      module={DictionaryGameWeb.GameLive.FormComponent}
-      id={:new}
-      action={:new}
-      game={@game}
-      topic={@topic}
-    />
+    <.modal return_to={Routes.game_index_path(@socket, :index)}>
+      <.live_component
+        module={DictionaryGameWeb.GameLive.FormComponent}
+        id={:new}
+        action={:new}
+        game={@game}
+        topic={@topic}
+      />
+    </.modal>
   </div>
   <div class="mx-auto">
     <div class="shadow-md rounded-lg bg-slate-50 border-t-8 border-blue-500 max-w-md mx-auto md:my-8">
-      <div class="bg-blue-100 text-lg font-semibold p-4 text-blue-900">Join&nbsp;A&nbsp;Public&nbsp;Game</div>
+      <div class="flex justify-between bg-blue-100 text-lg md:text-xl font-semibold p-4 text-blue-900">
+        <div class="my-auto text-2xl font-bold">Public&nbsp;Games</div>
+        <button class="text-blue-500 hover:text-white active:text-white border-2 border-blue-500 text-lg md:text-xl font-bold hover:bg-blue-500 active:bg-blue-600 py-1 md:py-2 px-4 rounded-full" phx-click={show_modal()}>
+          New&nbsp;Game
+        </button>
+      </div>
       <%= if Enum.any?(@games) do %>
         <%= for game <- @games do %>
           <div id={"game-#{game.id}"} class="group p-8 border-t-2 hover:bg-blue-100 cursor-pointer" phx-click={JS.dispatch("click", to: "#join-#{game.id}")}>
@@ -27,7 +34,9 @@
         <% end %>
       <% else %>
         <div class="p-8">
-          <p class="text-blue-900 italic font-light">No public games.</p>
+          <p class="flex text-blue-900 italic font-light">
+            No&nbsp;public&nbsp;games,&nbsp;<span class="underline rounded-full block cursor-pointer" phx-click={show_modal()}>create&nbsp;a&nbsp;new&nbsp;game.</span>
+          </p>       
         </div>
       <% end %>
     </div>

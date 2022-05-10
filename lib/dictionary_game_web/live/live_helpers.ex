@@ -27,26 +27,28 @@ defmodule DictionaryGameWeb.LiveHelpers do
     assigns = assign_new(assigns, :return_to, fn -> nil end)
 
     ~H"""
-    <div id="modal" class="fade-in opacity-10 fixed left-0 top-0 min-w-full min-h-full overflow-auto bg-[rgba(0,0,0,0.4)] hidden" phx-remove={hide_modal()}>
-      <div
-        id="modal-content"
-        class="bg-white fade-in-scale m-64 max-w-md mx-auto rounded-lg shadow-lg"
-        phx-click-away={JS.dispatch("click", to: "#close")}
-        phx-window-keydown={JS.dispatch("click", to: "#close")}
-        phx-key="escape"
-      >
-        <%= if @return_to do %>
-          <%= live_patch "✖",
-            to: @return_to,
-            id: "close",
-            class: "float-right text-2xl font-bold text-gray-500 cursor-pointer hover:text-gray-900 m-2",
-            phx_click: hide_modal()
-          %>
-        <% else %>
-         <a id="close" href="#" class="float-right text-2xl font-bold text-gray-500 cursor-pointer hover:text-gray-900 m-2" phx-click={hide_modal()}>✖</a>
-        <% end %>
+    <div id="modal" class="fixed top-0 left-0 fade-in opacity-10 min-w-full min-h-full bg-[rgba(0,0,0,0.6)] hidden" phx-remove={hide_modal()}>
+      <div class="flex min-h-screen flex-col justify-center overflow-hidden">
+        <div
+          id="modal-content"
+          class="relative justify-center bg-white fade-in-scale max-w-md w-full mx-auto rounded-lg shadow-lg"
+          phx-click-away={JS.dispatch("click", to: "#close")}
+          phx-window-keydown={JS.dispatch("click", to: "#close")}
+          phx-key="escape"
+        >
+          <%= if @return_to do %>
+            <%= live_patch "✖",
+              to: @return_to,
+              id: "close",
+              class: "float-right text-2xl font-bold text-gray-500 cursor-pointer hover:text-gray-900 m-2",
+              phx_click: hide_modal()
+            %>
+          <% else %>
+          <a id="close" href="#" class="float-right text-2xl font-bold text-gray-500 cursor-pointer hover:text-gray-900 m-2" phx-click={hide_modal()}>✖</a>
+          <% end %>
 
-        <%= render_slot(@inner_block) %>
+          <%= render_slot(@inner_block) %>
+        </div>
       </div>
     </div>
     """
