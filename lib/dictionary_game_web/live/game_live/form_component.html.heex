@@ -17,31 +17,19 @@
         </div>
 
         <div class="mb-8">
-          <%= label f, :description, "Game Description", class: "block font-medium" %>
+          <%= label f, :description, "Game Description (optional)", class: "block font-medium" %>
           <%= text_input f, :description, placeholder: "Description", class: "rounded-full block mb-4" %>
           <%= error_tag f, :description %>
         </div>
 
         <div class="mb-8">
           <div class="flex mb-4">
-            <%= label f, :is_public, "Public", class: "order-last font-medium" %>
+            <%= label f, :is_public, "Public (visible in list)", class: "order-last font-medium" %>
             <%= checkbox f, :is_public, class: "rounded-lg w-6 h-6 order-first border-gray-500 focus:ring-3 focus:ring-blue-600 mr-4" %>
           </div>
           <%= error_tag f, :is_public %>
         </div>
 
-        <div class="mb-8">
-          <div class="flex mb-4">
-            <%= label f, :is_censored, "Censor Explicit Language", class: "order-last font-medium" %>
-            <%= checkbox f, :is_censored, class: "rounded-lg w-6 h-6 order-first border-gray-500 focus:ring-3 focus:ring-blue-600 mr-4" %>
-          </div>
-          <%= error_tag f, :is_censored %>
-        </div>
-
-        <%# <div class="m-4 p-4">
-          <h4 class="text-2xl font-bold">End Game</h4>
-          <p>Are you sure you want to end the game? This will end the game for everyone, not only you.</p>
-        </div> %>
       </div>
       <div class="flex flex-row-reverse bg-slate-200 rounded-b-lg">
         <%= submit ~H"Create&nbsp;Game", phx_disable_with: "Creating...", class: "text-white active:text-white border-2 border-blue-500 text-xl font-bold bg-blue-500 active:bg-blue-600 py-2 px-4 m-4 rounded-full" %>

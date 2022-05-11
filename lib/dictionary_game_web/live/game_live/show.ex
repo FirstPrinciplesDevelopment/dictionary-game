@@ -229,26 +229,19 @@ defmodule DictionaryGameWeb.GameLive.Show do
 
   @impl true
   def handle_info(%{event: "presence_diff", payload: %{joins: joins, leaves: leaves}}, socket) do
-    Logger.info(joins: joins, leaves: leaves)
-
     player_names = DictionaryGameWeb.Presence.list(socket.assigns.topic) |> Map.keys()
 
-    Logger.info(player_names: player_names)
+    # # Update joins.
+    # for {name, _} <- Map.keys(joins) do
+    #   Logger.info(join: name)
+    #   Logger.info(Enum.find(players, &(&1.name == name)))
+    # end
 
-    # Update players list.
-    players = Games.list_players(socket.assigns.game.id)
-
-    # Update joins.
-    for {name, _} <- Map.keys(joins) do
-      Logger.info(join: name)
-      Logger.info(Enum.find(players, &(&1.name == name)))
-    end
-
-    # Update leaves.
-    for {name, _} <- leaves do
-      Logger.info(leave: name)
-      Logger.info(Enum.find(players, &(&1.name == name)))
-    end
+    # # Update leaves.
+    # for {name, _} <- leaves do
+    #   Logger.info(leave: name)
+    #   Logger.info(Enum.find(players, &(&1.name == name)))
+    # end
 
     # Update players list.
     players = Games.list_players(socket.assigns.game.id)
