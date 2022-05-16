@@ -1,8 +1,26 @@
-defmodule DictionaryGameWeb.LiveHelpers do
-  import Phoenix.LiveView
-  import Phoenix.LiveView.Helpers
-
+defmodule DictionaryGameWeb.Components do
+  use Phoenix.Component
   alias Phoenix.LiveView.JS
+
+  @doc """
+  Renders a tutorial.
+
+  ## Examples
+
+      <.how_to_play />
+  """
+  def how_to_play(assigns) do
+    ~H"""
+      <div class="m-8">
+          <ol class="list-decimal">
+          <li>Create or join a game.</li>
+          <li>Make up a name for yourself.</li>
+          <li>Get some friends to join your game.</li>
+          <li>Follow the instructions.</li>
+        </ol>
+      </div>
+    """
+  end
 
   @doc """
   Renders a live component inside a modal.
