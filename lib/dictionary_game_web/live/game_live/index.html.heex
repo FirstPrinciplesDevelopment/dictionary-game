@@ -1,6 +1,13 @@
 <h1 class="text-3xl md:text-5xl font-bold md:mx-auto my-4 md:my-8 text-center text-blue-900">The Dictionary Game</h1>
-
-<div class="mx-auto md:my-8">
+<button title="how to play" 
+        class="flex mx-auto text-blue-600 hover:text-white active:text-white border-2 border-blue-600 text-lg md:text-xl font-bold hover:bg-blue-600 active:bg-blue-700 active:border-blue-700 py-1 md:py-2 px-4 rounded-full"
+        phx-click={show_modal('how-to-play')}>
+  How&nbsp;To&nbsp;Play?
+</button>
+<.modal id="how-to-play">
+  <.live_component module={DictionaryGameWeb.GameLive.HowToPlay} id={:how_to_play} />
+</.modal>
+<div class="mx-auto my-4 md:my-8">
   <div class="mx-auto">
     <.modal id="new-game" return_to={Routes.game_index_path(@socket, :index)}>
       <.live_component
