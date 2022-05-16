@@ -33,7 +33,7 @@
       </div>
       <div class="flex flex-row-reverse bg-slate-200 rounded-b-lg">
         <%= submit ~H"Create&nbsp;Game", phx_disable_with: "Creating...", class: "text-white active:text-white border-2 border-blue-500 text-xl font-bold bg-blue-500 active:bg-blue-600 py-2 px-4 m-4 rounded-full" %>
-        <button class="m-4" phx-click={hide_modal()}>Cancel</button>
+        <button class="m-4" phx-click={hide_modal('new-game')}>Cancel</button>
       </div>
     </div>
   </.form>
