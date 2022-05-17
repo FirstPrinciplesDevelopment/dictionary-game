@@ -11,12 +11,57 @@ defmodule DictionaryGameWeb.Components do
   """
   def how_to_play(assigns) do
     ~H"""
-      <div class="m-8">
-          <ol class="list-decimal">
-          <li>Create or join a game.</li>
-          <li>Make up a name for yourself.</li>
-          <li>Get some friends to join your game.</li>
-          <li>Follow the instructions.</li>
+      <div class="m-8 text-blue-900">
+        <ol class="list-decimal">
+          <li>
+            <details>
+              <summary class="cursor-pointer text-lg">Create or join a game.</summary>
+              <div class="my-8">
+                <div class="text-lg">Look for these buttons:</div>
+                <div class="ml-4">
+                  <button class="text-green-600 border-2 border-green-600 text-lg md:text-xl font-bold py-1 md:py-2 px-4 rounded-full">
+                    New&nbsp;Game
+                  </button>
+                  <div class="pt-2 text-lg md:text-xl font-bold text-blue-500 cursor-pointer">Join-></div>
+                </div>
+              </div>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary class="cursor-pointer text-lg">Make up a name for yourself.</summary>
+              <div class="my-8">
+                <span class="text-lg">Example:</span>
+                <div class="ml-4">
+                  <label class="block font-medium">Player Name</label>
+                  <input type="text" class="rounded-full block mb-4 border-2 border-blue-500" placeholder="Player Name" value="Bear Claw" disabled>
+                </div>
+              </div>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary class="cursor-pointer text-lg">Get some friends to join your game.</summary>
+              <div class="my-8">
+                <div class="text-lg">Look for this button:</div>
+                <div class="ml-4">
+                  <button class="text-blue-500 border-2 border-blue-500 text-xl font-bold py-2 px-4 my-4 rounded-full">
+                    Copy&nbsp;Link
+                  </button>
+                  <div id="alert-info" class="rounded-full bg-green-200 px-3 max-w-fit md:inline-flex md:ml-4"></div>
+                </div>
+              </div>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary class="cursor-pointer text-lg">Follow the instructions.</summary>
+              <div class="my-8">
+                <span class="text-lg">Example:</span>
+                <p class="m-4 italic">Write a convincing definition for <span class="font-semibold">numbat</span>.</p>
+              </div>
+            </details>
+          </li>
         </ol>
       </div>
     """
