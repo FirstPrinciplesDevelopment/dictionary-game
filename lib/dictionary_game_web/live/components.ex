@@ -12,7 +12,7 @@ defmodule DictionaryGameWeb.Components do
   def how_to_play(assigns) do
     ~H"""
     <div class="text-blue-900">
-        <h3 class="text-xl inline-block font-bold m-4 text-blue-600 text-center rounded-full bg-blue-100 px-4">How To Play
+        <h3 class="text-xl inline-block font-bold m-4 text-blue-600 text-center rounded-full bg-sky-100 px-4">How To Play
         </h3>
         <div class="block">
             <div class="h-80 overflow-hidden align-center relative p-0 list-none rounded-lg my-4">
