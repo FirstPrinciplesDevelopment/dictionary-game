@@ -11,96 +11,158 @@ defmodule DictionaryGameWeb.Components do
   """
   def how_to_play(assigns) do
     ~H"""
-      <div class="text-blue-900">
-        <h3 class="text-xl font-bold m-4">How To Play</h3>
+    <div class="text-blue-900">
+        <h3 class="text-xl inline-block font-bold m-4 text-blue-600 text-center rounded-full bg-blue-100 px-4">How To Play
+        </h3>
         <div class="block">
-          <div class="h-80 border-2 border-blue-600 overflow-hidden align-center relative p-0 list-none rounded-lg my-4 sm:mx-4">
-              <input class="carousel__activator hidden" type="radio" name="carousel" id="F" checked="checked" />
-              <input class="carousel__activator hidden" type="radio" name="carousel" id="G" />
-              <input class="carousel__activator hidden" type="radio" name="carousel" id="H" />
-              <input class="carousel__activator hidden" type="radio" name="carousel" id="I" />
-              <input class="carousel__activator hidden" type="radio" name="carousel" id="J" />
-              <div class="carousel__controls hidden">
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4" for="J"></label>
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4" for="G"></label>
-              </div>
-              <div class="carousel__controls hidden">
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4" for="F"></label>
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4" for="H"></label>
-              </div>
-              <div class="carousel__controls hidden">
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4" for="G"></label>
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4" for="I"></label>
-              </div>
-              <div class="carousel__controls hidden">
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4" for="H"></label>
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4" for="J"></label>
-              </div>
-              <div class="carousel__controls hidden">
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4" for="I"></label>
-                  <label class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4" for="F"></label>
-              </div>
-              <div class="carousel__track transition ease-in-out duration-500 absolute inset-0 opacity-1">
-                  <li class="carousel__slide inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
-                      <h3 class="cursor-pointer text-lg">Create or join a game.</h3>
-                      <div class="my-8">
-                        <div class="text-lg">Look for these buttons:</div>
-                        <div class="ml-4">
-                          <button class="text-green-600 border-t-4 border-r-4 border-green-600 text-lg md:text-xl font-bold py-1 md:py-2 px-4 rounded-full">
-                            New&nbsp;Game
-                          </button>
-                          <div class="pt-2 text-lg md:text-xl font-bold text-blue-500 cursor-pointer">Join-></div>
+            <div class="h-80 overflow-hidden align-center relative p-0 list-none rounded-lg my-4">
+                <input class="carousel__activator hidden" type="radio" name="carousel" id="1" checked="checked" />
+                <input class="carousel__activator hidden" type="radio" name="carousel" id="2" />
+                <input class="carousel__activator hidden" type="radio" name="carousel" id="3" />
+                <input class="carousel__activator hidden" type="radio" name="carousel" id="4" />
+                <input class="carousel__activator hidden" type="radio" name="carousel" id="5" />
+                <div class="carousel__controls hidden">
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4"
+                        for="5"></label>
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4"
+                        for="2"></label>
+                </div>
+                <div class="carousel__controls hidden">
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4"
+                        for="1"></label>
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4"
+                        for="3"></label>
+                </div>
+                <div class="carousel__controls hidden">
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4"
+                        for="2"></label>
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4"
+                        for="4"></label>
+                </div>
+                <div class="carousel__controls hidden">
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4"
+                        for="3"></label>
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4"
+                        for="5"></label>
+                </div>
+                <div class="carousel__controls hidden">
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-l-4 border-slate-700 origin-center -rotate-45 left-4"
+                        for="4"></label>
+                    <label
+                        class="z-10 block absolute top-36 -mt-4 h-7 w-7 cursor-pointer opacity-30 hover:opacity-100 border-t-4 border-r-4 border-slate-700 origin-center rotate-45 right-4"
+                        for="1"></label>
+                </div>
+                <div class="carousel__track transition ease-in-out duration-500 absolute inset-0 opacity-1">
+                    <li
+                        class="carousel__slide text-center px-8 inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
+                        <h3 class="text-xl font-bold">Create or join a game.</h3>
+                        <div class="my-8">
+                            <div class="mx-4">
+                                <p>
+                                    Click <a
+                                        class="inline text-lg md:text-xl font-bold text-blue-500 hover:text-blue-600 active:text-blue-700 hover:underline cursor-pointer">Join-></a>
+                                    to join an existing game,
+                                </p>
+                                <p class="underline my-4">or</p>
+                                <p>
+                                    click <button
+                                        class="text-green-600 hover:text-white active:text-white border-2 border-green-600 text-lg md:text-xl font-bold hover:bg-green-600 active:bg-green-700 active:border-green-700 py-1 md:py-2 px-4 rounded-full">
+                                        New&nbsp;Game
+                                    </button> to create a new game.
+                                </p>
+                            </div>
                         </div>
-                      </div>
 
-                  </li>
-                  <li class="carousel__slide translate-x-full inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
-                      <h3 class="cursor-pointer text-lg">Make up a name for yourself.</h3>
-                      <div class="my-8">
-                        <span class="text-lg">Example:</span>
-                        <div class="ml-4">
-                          <label class="block font-medium">Player Name</label>
-                          <input type="text" class="rounded-full block mb-4 border-2 border-blue-500" placeholder="Player Name" value="Bear Claw" disabled>
+                    </li>
+                    <li
+                        class="carousel__slide text-center px-8 translate-x-full inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
+                        <h3 class="text-xl font-bold">Make up a name for yourself.</h3>
+                        <div class="my-8">
+                            <div class="mx-4">
+                                <p>
+                                    Enter a name for everyone in the game to see, then click
+                                    <button
+                                        class="text-blue-500 hover:text-white active:text-white border-2 border-blue-500 text-xl font-bold hover:bg-blue-500 active:bg-blue-600 active:border-blue-600 py-2 px-4 rounded-full">
+                                        Join&nbsp;Game
+                                    </button> when you're ready.
+                                </p>
+                            </div>
                         </div>
-                      </div>
-                  </li>
-                  <li class="carousel__slide translate-x-[200%] inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
-                      <h3 class="cursor-pointer text-lg">Get some friends to join your game.</h3>
-                      <div class="my-8">
-                        <div class="text-lg">Look for this button:</div>
-                        <div class="ml-4">
-                          <button class="text-blue-500 border-2 border-blue-500 text-xl font-bold py-2 px-4 my-4 rounded-full">
-                            Copy&nbsp;Link
-                          </button>
-                          <div id="alert-info" class="rounded-full bg-green-200 px-3 max-w-fit md:inline-flex md:ml-4"></div>
+                    </li>
+                    <li
+                        class="carousel__slide text-center px-8 translate-x-[200%] inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
+                        <h3 class="text-xl font-bold">Get some friends to join your game.</h3>
+                        <div class="my-8">
+                            <div class="mx-4">
+                                <p>You need at least 2 players, so use
+                                    <button
+                                        class="text-blue-500 hover:text-white active:text-white border-2 border-blue-500 text-xl font-bold hover:bg-blue-500 active:bg-blue-600 py-2 px-4 my-4 rounded-full">
+                                        Copy&nbsp;Link
+                                    </button> to share the game with friends.
+                                </p>
+                            </div>
                         </div>
-                      </div>
-                  </li>
-                  <li class="carousel__slide translate-x-[300%] inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
-                      <h3 class="cursor-pointer text-lg">Follow the instructions.</h3>
-                      <div class="my-8">
-                        <span class="text-lg">Example:</span>
-                        <p class="m-4 italic">Write a convincing definition for <span class="font-semibold">numbat</span>.</p>
-                      </div>
-                  </li>
-                  <li class="carousel__slide translate-x-[400%] inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
-                    <h3 class="cursor-pointer text-lg">Example.</h3>
-                    <div class="my-8">
-                      <span class="text-lg">Example:</span>
-                      <p class="m-4 italic">Lorem Ipsum Dolar Sit Amet.</p>
-                    </div>
-                  </li>
-              </div>
-              <div class="carousel__indicators absolute w-full text-center bottom-4">
-                  <label class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600" for="F"></label>
-                  <label class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600" for="G"></label>
-                  <label class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600" for="H"></label>
-                  <label class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600" for="I"></label>
-                  <label class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600" for="J"></label>
-              </div>
-          </div>
+                    </li>
+                    <li
+                        class="carousel__slide text-center px-8 translate-x-[300%] inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
+                        <h3 class="text-xl font-bold">Follow the instructions.</h3>
+                        <div class="my-8">
+                            <div class="mx-4">
+
+                                <span class="text-lg">Instructions have a yellow background, here's an example:</span>
+                                <p class="mt-8 text-lg bg-amber-100 rounded-lg px-2 py-1 inline-block">Write a convincing
+                                    definition for <span
+                                        class="font-semibold inline sm:hidden">incomprehensibilities</span><span
+                                        class="font-semibold hidden sm:inline">supercalifragilisticexpialidocious</span>.
+                                </p>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li
+                        class="carousel__slide text-center px-8 translate-x-[400%] inset-0 absolute opacity-1 h-full overflow-y-auto overflow-hidden">
+                        <h3 class="text-xl font-bold">Winning the game.</h3>
+                        <div class="my-8">
+                            <div class="mx-4">
+                                <p>Write covincing definitions to bamboozle your friends while guessing the real
+                                    definitions. The player with the most points after 3 rounds wins!</p>
+                                <p>
+                                <div class="text-xl font-bold text-green-600 animate-bounce mt-8 mx-auto text-center">
+                                    Winner!</div>
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                </div>
+                <div class="carousel__indicators absolute w-full text-center bottom-4">
+                    <label
+                        class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600"
+                        for="1"></label>
+                    <label
+                        class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600"
+                        for="2"></label>
+                    <label
+                        class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600"
+                        for="3"></label>
+                    <label
+                        class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600"
+                        for="4"></label>
+                    <label
+                        class="carousel__indicator h-4 w-4 rounded-full inline-block mx-px z-10 cursor-pointer opacity-30 hover:opacity-75 bg-sky-600"
+                        for="5"></label>
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
     """
   end
 
