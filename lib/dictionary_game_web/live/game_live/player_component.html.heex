@@ -1,5 +1,10 @@
 <div class="shrink-0">
     <div id={"#{@player.name}-icon-wrapper"} class={"py-2 mx-1 w-24 border-2 #{@border_color} #{@text_color} rounded-lg"}>
+        <%= if @player.is_host do %>
+            <div class="relative">
+                <div class="absolute right-1 -top-1 text-center mx-auto text-xs font-bold rounded-full px-1 border-2 border-rose-500/75 bg-rose-100 text-rose-600">Host</div>
+            </div>
+        <% end %>
         <.live_component module={DictionaryGameWeb.GameLive.PlayerIcon} 
             id={"#{@player.name}-icon"}
             player={@player}
