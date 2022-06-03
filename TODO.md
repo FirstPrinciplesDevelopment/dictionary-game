@@ -4,3 +4,8 @@
 - Show realtime number of online players in public games
 - Allow filter/sort on game index/list view
 - Deal with player joining game after it has started
+- When a non-host player joins a game with no host: show "host is offline" message
+- Maybe only list public games with the host in game
+- Show "Join->" link for games that haven't begun, and "Watch->" for games that have started
+- Indicate host and audience status on players
+- Show number of players and state of play in the index view for each game :)

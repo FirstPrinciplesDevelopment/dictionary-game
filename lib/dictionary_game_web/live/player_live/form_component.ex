@@ -28,6 +28,14 @@ defmodule DictionaryGameWeb.PlayerLive.FormComponent do
   end
 
   defp save_player(socket, :new, player_params) do
+    # set is_host in player_params map
+    player_params =
+      Map.put(
+        player_params,
+        "is_host",
+        socket.assigns.user_id == socket.assigns.game_host_user_id
+      )
+
     case Games.create_player(socket.assigns.game_id, socket.assigns.user_id, player_params) do
       {:ok, _player} ->
         {:noreply,

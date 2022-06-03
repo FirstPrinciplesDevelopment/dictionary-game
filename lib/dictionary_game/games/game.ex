@@ -10,6 +10,7 @@ defmodule DictionaryGame.Games.Game do
     field :is_censored, :boolean, default: false
     field :is_public, :boolean, default: false
     field :name, :string
+    field :host_user_id, :string
 
     timestamps()
   end
@@ -17,7 +18,14 @@ defmodule DictionaryGame.Games.Game do
   @doc false
   def changeset(game, attrs) do
     game
-    |> cast(attrs, [:number_of_rounds, :description, :is_censored, :is_public, :name])
+    |> cast(attrs, [
+      :number_of_rounds,
+      :description,
+      :is_censored,
+      :is_public,
+      :name,
+      :host_user_id
+    ])
     |> validate_required([:is_censored, :is_public, :name])
     |> validate_length(:name, min: 3, max: 20)
     |> validate_length(:description, max: 50)
