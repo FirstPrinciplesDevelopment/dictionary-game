@@ -15,7 +15,7 @@ defmodule DictionaryGame.Repo.Migrations.CreatePlayers do
     end
 
     create index(:players, [:game_id])
-    # player names inside a game must be unique
+    # Player names inside a game must be unique.
     create unique_index(:players, [:name, :game_id])
   end
 end

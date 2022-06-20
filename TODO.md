@@ -8,3 +8,5 @@
 - Maybe only list public games with the host in game
 - Show "Join->" link for games that haven't begun, and "Watch->" for games that have started
 - Show number of players and state of play in the index view for each game :)
+- Improve visibility of flash messages!
+- Make flash messages disappear after a few seconds
