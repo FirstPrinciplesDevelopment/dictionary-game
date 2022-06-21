@@ -26,12 +26,8 @@ defmodule DictionaryGameWeb.GameLive.FormComponent do
 
   def handle_event("create_game", %{"game" => game_params}, socket) do
     # Create game if one doesn't already exist.
-    case Games.create_game(game_params) do
+    case Games.create_game(Map.put(game_params, "host_user_id", socket.assigns.user_id)) do
       {:ok, game} ->
-        # Fetch an initial word.
-        word = Dictionary.get_unknown_word!(game.id)
-        # Create initial round.
-        Games.create_round(game, word, %{round_number: 1})
 
         # Broadcast game_created event to every player (including the player who triggered the event).
         DictionaryGameWeb.Endpoint.broadcast(socket.assigns.topic, "game_created", game)

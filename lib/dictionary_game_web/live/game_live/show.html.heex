@@ -14,6 +14,7 @@
       action={:new}
       player={@player}
       game_id={@game.id}
+      game_host_user_id={@game.host_user_id}
       user_id={@user_id}
       return_to={Routes.game_show_path(@socket, :show, @game.id)}
     />
@@ -204,20 +205,32 @@
               </div>
             <% end %>
           <% end %>
+        <% else %>
+          <%# NO ROUND - waiting for host to start game! %>
+          <%= if @player.is_host do %>
+            <button class="text-white text-xl font-bold bg-blue-500 py-4 px-8 my-4 mb-8 rounded-full" 
+                    phx-click="next_round">
+              Start Game
+            </button>
+          <% else %>
+            <p class="m-4"><em>Waiting for the host to start the game.</em></p>
+          <% end %>
         <% end %>
       <% end %>
 
-      <button class="underline py-4 m-4 rounded-full block" phx-click={show_modal('end-game-confirmation')}>End Game</button>
-      <.modal id="end-game-confirmation" return_to={Routes.game_show_path(@socket, :show, @game)}>
-          <div class="m-4 p-4">
-            <h4 class="text-2xl font-bold">End Game</h4>
-            <p>Are you sure you want to end the game? This will end the game for everyone, not only you.</p>
-          </div>
-          <div class="flex flex-row-reverse bg-slate-200 rounded-b-lg">
-            <button class="text-white text-xl font-bold bg-red-500 py-2 w-32 m-4 rounded-full" phx-click="end_game">End Game</button>
-            <button class="m-4" phx-click={hide_modal('end-game-confirmation')}>Cancel</button>
-          </div>
-      </.modal>
+      <%= if @player.is_host do %>
+        <button class="underline py-4 m-4 rounded-full block" phx-click={show_modal('end-game-confirmation')}>End Game</button>
+        <.modal id="end-game-confirmation" return_to={Routes.game_show_path(@socket, :show, @game)}>
+            <div class="m-4 p-4">
+              <h4 class="text-2xl font-bold">End Game</h4>
+              <p>Are you sure you want to end the game? This will end the game for everyone, not only you.</p>
+            </div>
+            <div class="flex flex-row-reverse bg-slate-200 rounded-b-lg">
+              <button class="text-white text-xl font-bold bg-red-500 py-2 w-32 m-4 rounded-full" phx-click="end_game">End Game</button>
+              <button class="m-4" phx-click={hide_modal('end-game-confirmation')}>Cancel</button>
+            </div>
+        </.modal>
+      <% end %>
     </div>
 
   <% end %>

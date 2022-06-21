@@ -105,10 +105,13 @@ defmodule DictionaryGameWeb.GameLive.Show do
   end
 
   @impl true
-  def handle_info(%{event: "game_deleted", payload: delete_by}, socket) do
+  def handle_info(
+        %{event: "game_deleted", payload: deleted_by},
+        socket
+      ) do
     {:noreply,
      socket
-     |> put_flash(:info, "Game ended by #{delete_by.name}")
+     |> put_flash(:info, "Game ended by #{deleted_by.name}")
      |> push_redirect(to: Routes.game_index_path(socket, :index))}
   end
 
@@ -246,6 +249,9 @@ defmodule DictionaryGameWeb.GameLive.Show do
     # Update players list.
     players = Games.list_players(socket.assigns.game.id)
 
+    # Broadcast players_online event to general games topic (so index view can be updated).
+    DictionaryGameWeb.Endpoint.broadcast("games", "players_online", socket.assigns.game.id)
+    
     {:noreply, socket |> assign(player_names: player_names, players: players)}
   end
 
@@ -328,13 +334,16 @@ defmodule DictionaryGameWeb.GameLive.Show do
   def handle_event("end_game", _value, socket) do
     # Delete game.
     case Games.delete_game(socket.assigns.game) do
-      {:ok, _game} ->
+      {:ok, game} ->
         # Broadcast game_deleted event to every player (including the player who triggered the event).
         DictionaryGameWeb.Endpoint.broadcast(
           socket.assigns.topic,
           "game_deleted",
           socket.assigns.player
         )
+
+        # Broadcast the game_deleted event to the general games topic so the index page can be updated.
+        DictionaryGameWeb.Endpoint.broadcast("games", "game_deleted", game.id)
 
         {:noreply, socket}
 
