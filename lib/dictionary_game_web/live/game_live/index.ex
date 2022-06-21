@@ -16,28 +16,44 @@ defmodule DictionaryGameWeb.GameLive.Index do
     # TODO: remove :topic if unused
     {:ok,
      socket
-     |> assign(games: list_games(), user_id: session["user_id"], topic: topic)}
+     |> assign(
+       games: Games.list_public_game_info(),
+       user_id: session["user_id"],
+       topic: topic
+     )}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    {:noreply,
+     socket
+     |> assign(:page_title, "Create Or Join A Game")
+     |> assign(:game, %Games.Game{})}
   end
 
   @impl true
   def handle_info(%{event: "game_created", payload: game}, socket) do
-    Logger.info(payload: game)
     # Add new game to game list.
-    {:noreply, assign(socket, games: socket.assigns.games ++ [game])}
+    {:noreply,
+     assign(socket,
+       games: socket.assigns.games ++ [Games.get_game_info!(game.id)]
+     )}
   end
 
-  defp apply_action(socket, _action, _params) do
-    socket
-    |> assign(:page_title, "Create Or Join A Game")
-    |> assign(:game, %Games.Game{})
+  @impl true
+  def handle_info(%{event: "game_deleted", payload: game_id}, socket) do
+    {:noreply,
+     assign(socket,
+       games: Enum.reject(socket.assigns.games, &(&1.id == game_id))
+     )}
   end
 
-  defp list_games do
-    Games.list_public_games()
+  @impl true
+  def handle_info(%{event: "players_online", payload: game_id}, socket) do
+    {:noreply,
+     assign(socket,
+       games:
+         Enum.reject(socket.assigns.games, &(&1.id == game_id)) ++ [Games.get_game_info!(game_id)]
+     )}
   end
 end

@@ -10,6 +10,36 @@ defmodule DictionaryGame.Games do
   alias DictionaryGame.Games.{Game, Round, Player}
 
   @doc """
+  Returns the list of public games along with related info.
+
+  ## Examples
+
+      iex> list_public_game_info()
+      [%{}, ...]
+
+  """
+  def list_public_game_info do
+    query =
+      from g in Game,
+        left_join: p in Player,
+        on: g.id == p.game_id,
+        where: g.is_public,
+        group_by: g.id,
+        select: %{
+          id: g.id,
+          number_of_rounds: g.number_of_rounds,
+          is_public: g.is_public,
+          is_censored: g.is_censored,
+          name: g.name,
+          description: g.description,
+          host_user_id: g.host_user_id,
+          player_count: count(p.id)
+        }
+
+    Repo.all(query)
+  end
+
+  @doc """
   Returns the list of games.
 
   ## Examples
@@ -33,6 +63,43 @@ defmodule DictionaryGame.Games do
   """
   def list_public_games do
     Repo.all(from r in Game, where: r.is_public)
+  end
+
+  @doc """
+  Gets a single game info struct by id, which contains all game fields plus related info.
+
+  Raises `Ecto.NoResultsError` if the Game does not exist.
+
+  ## Examples
+
+      iex> get_game_info!(123)
+      %Game{}
+
+      iex> get_game_info!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_game_info!(id) do
+    query =
+      from g in Game,
+        left_join: p in Player,
+        on: g.id == p.game_id,
+        where: g.id == ^id,
+        group_by: g.id,
+        select: %{
+          id: g.id,
+          number_of_rounds: g.number_of_rounds,
+          is_public: g.is_public,
+          is_censored: g.is_censored,
+          name: g.name,
+          description: g.description,
+          host_user_id: g.host_user_id,
+          player_count: count(p.id)
+        }
+
+    query
+    |> first()
+    |> Repo.one!()
   end
 
   @doc """
@@ -349,7 +416,7 @@ defmodule DictionaryGame.Games do
 
   """
   def get_current_round(game_id) do
-    # TODO: make sure frist(order_by) is working - https://hexdocs.pm/ecto/Ecto.Query.html#first/2
+    # TODO: make sure first(order_by) is working - https://hexdocs.pm/ecto/Ecto.Query.html#first/2
     query =
       from r in Round,
         where: r.game_id == ^game_id,

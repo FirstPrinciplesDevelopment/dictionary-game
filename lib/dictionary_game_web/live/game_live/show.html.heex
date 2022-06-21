@@ -205,6 +205,16 @@
               </div>
             <% end %>
           <% end %>
+        <% else %>
+          <%# NO ROUND - waiting for host to start game! %>
+          <%= if @player.is_host do %>
+            <button class="text-white text-xl font-bold bg-blue-500 py-4 px-8 my-4 mb-8 rounded-full" 
+                    phx-click="next_round">
+              Start Game
+            </button>
+          <% else %>
+            <p class="m-4"><em>Waiting for the host to start the game.</em></p>
+          <% end %>
         <% end %>
       <% end %>
 
