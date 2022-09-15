@@ -10,3 +10,4 @@
 - Show number of players and state of play in the index view for each game :)
 - Improve visibility of flash messages!
 - Make flash messages disappear after a few seconds
+- Remove flash messages in favor of an action log (like in DOS2 or Witcher 3)
