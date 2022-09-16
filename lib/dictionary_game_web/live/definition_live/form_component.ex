@@ -2,6 +2,7 @@ defmodule DictionaryGameWeb.DefinitionLive.FormComponent do
   use DictionaryGameWeb, :live_component
 
   alias DictionaryGame.Dictionary
+  alias DictionaryGame.ActionLogs
 
   @impl true
   def update(%{definition: definition} = assigns, socket) do
@@ -39,6 +40,13 @@ defmodule DictionaryGameWeb.DefinitionLive.FormComponent do
           "definition_created",
           definition
         )
+
+        ActionLogs.create_action_log_item(%{
+          user_id: socket.assigns.user_id,
+          message: "Definition created successfully",
+          color: "blue",
+          type: "info"
+        })
 
         {:noreply,
          socket

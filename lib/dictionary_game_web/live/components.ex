@@ -172,7 +172,7 @@ defmodule DictionaryGameWeb.Components do
   The rendered modal receives a `:return_to` option to properly update
   the URL when the modal is closed.
 
-  The modal recieves an `:id` option to uniquely identify it
+  The modal receives an `:id` option to uniquely identify it
   and to allow multiple modals to be managed in the DOM at the same time.
 
   ## Examples

@@ -2,6 +2,7 @@ defmodule DictionaryGameWeb.PlayerLive.FormComponent do
   use DictionaryGameWeb, :live_component
 
   alias DictionaryGame.Games
+  alias DictionaryGame.ActionLogs
 
   @impl true
   def update(%{player: player} = assigns, socket) do
@@ -38,9 +39,16 @@ defmodule DictionaryGameWeb.PlayerLive.FormComponent do
 
     case Games.create_player(socket.assigns.game_id, socket.assigns.user_id, player_params) do
       {:ok, _player} ->
+        ActionLogs.create_action_log_item(%{
+          user_id: socket.assigns.user_id,
+          message: "Player created successfully.",
+          color: "yellow",
+          type: "info"
+        })
+
         {:noreply,
          socket
-         |> put_flash(:info, "Player created successfully")
+         |> put_flash(:info, "Player created successfully.")
          |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

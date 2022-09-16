@@ -8,5 +8,10 @@
     phx-click="lv:clear-flash"
     phx-value-key="error"><%= live_flash(@flash, :error) %></p>
 
+  <.live_component
+        module={DictionaryGameWeb.ActionLogItemLive.ActionLogComponent}
+        id="action-log"
+        user_id={@user_id}
+      />
   <%= @inner_content %>
 </main>

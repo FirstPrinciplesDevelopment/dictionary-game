@@ -1,0 +1,7 @@
+<div>
+    <p>Hello World</p>
+    <%= "session user_id: #{@user_id}" %>
+    <%= for item <- @action_log_items do %>
+        <span><%= item.message %></span>
+    <% end %>
+</div>

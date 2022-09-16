@@ -4,6 +4,7 @@ defmodule DictionaryGameWeb.GameLive.Show do
   alias DictionaryGame.{Games, Dictionary}
   alias DictionaryGame.Games.{Round, Player}
   alias DictionaryGame.Dictionary.{Definition}
+  alias DictionaryGame.ActionLogs
 
   require Logger
 
@@ -98,6 +99,13 @@ defmodule DictionaryGameWeb.GameLive.Show do
         %{event: "round_created", payload: %{round: round, definitions: definitions}},
         socket
       ) do
+    ActionLogs.create_action_log_item(%{
+      user_id: socket.assigns.user_id,
+      message: "Round #{round.round_number} started.",
+      color: "blue",
+      type: "info"
+    })
+
     {:noreply,
      socket
      |> assign(round: round, definition: %Definition{}, definitions: definitions)
@@ -109,6 +117,13 @@ defmodule DictionaryGameWeb.GameLive.Show do
         %{event: "game_deleted", payload: deleted_by},
         socket
       ) do
+    ActionLogs.create_action_log_item(%{
+      user_id: socket.assigns.user_id,
+      message: "Game ended by #{deleted_by.name}",
+      color: "red",
+      type: "info"
+    })
+
     {:noreply,
      socket
      |> put_flash(:info, "Game ended by #{deleted_by.name}")
@@ -123,6 +138,13 @@ defmodule DictionaryGameWeb.GameLive.Show do
         },
         socket
       ) do
+    ActionLogs.create_action_log_item(%{
+      user_id: socket.assigns.user_id,
+      message: "Game reset by #{reset_by.name}",
+      color: "yellow",
+      type: "info"
+    })
+
     {:noreply,
      socket
      |> put_flash(:info, "Game reset by #{reset_by.name}")
@@ -150,6 +172,13 @@ defmodule DictionaryGameWeb.GameLive.Show do
         },
         socket
       ) do
+    ActionLogs.create_action_log_item(%{
+      user_id: socket.assigns.user_id,
+      message: "#{known_word.word.word} known by #{player.name}.",
+      color: "yellow",
+      type: "info"
+    })
+
     {:noreply,
      socket
      |> assign(round: round, definitions: definitions)
@@ -251,7 +280,7 @@ defmodule DictionaryGameWeb.GameLive.Show do
 
     # Broadcast players_online event to general games topic (so index view can be updated).
     DictionaryGameWeb.Endpoint.broadcast("games", "players_online", socket.assigns.game.id)
-    
+
     {:noreply, socket |> assign(player_names: player_names, players: players)}
   end
 
