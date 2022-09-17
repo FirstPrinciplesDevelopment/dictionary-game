@@ -1,7 +1,17 @@
-<div>
-    <p>Hello World</p>
-    <%= "session user_id: #{@user_id}" %>
-    <%= for item <- @action_log_items do %>
-        <span><%= item.message %></span>
+<div id="action-log" class="fixed w-96 left-0 right-0 bottom-2 mx-auto z-50 shadow-2xl drop-shadow-2xl bg-blue-100/75 hover:bg-blue-200/90 rounded-lg text-blue-900">
+    <div class={"#{if @collapse, do: "rounded"} rounded-t bg-blue-700/25 pl-4 pr-2 py-2"}>
+        <h3 class="font-bold inline">Action Log</h3>
+        <%= if @collapse do %>
+                <span class="float-right text-xl pt-2 font-bold text-gray-600 cursor-pointer hover:text-gray-800 inline rotate-180" phx-click="toggle_collapse" phx-target={@myself}>&#9660;</span>
+        <% else %>
+                <span class="float-right text-xl pb-2 font-bold text-gray-600 cursor-pointer hover:text-gray-800 inline" phx-click="toggle_collapse" phx-target={@myself}>&#9660;</span>
+        <% end %>
+    </div>
+    <%= if !@collapse do %>
+        <div class="pb-4 pt-2">
+            <%= for item <- @action_log_items do %>
+                <span class={"block text-#{item.color}-700 px-4"}><%= item.message %></span>
+            <% end %>
+        </div>
     <% end %>
 </div>
