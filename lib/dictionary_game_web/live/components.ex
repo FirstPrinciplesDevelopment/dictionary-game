@@ -197,19 +197,19 @@ defmodule DictionaryGameWeb.Components do
         <div
           id={"modal-content-#{@id}"}
           class="relative justify-center bg-white fade-in-scale max-w-md w-full mx-auto rounded-lg shadow-lg"
-          phx-click-away={JS.dispatch("click", to: "#close")}
-          phx-window-keydown={JS.dispatch("click", to: "#close")}
+          phx-click-away={JS.dispatch("click", to: "#close-#{@id}")}
+          phx-window-keydown={JS.dispatch("click", to: "#close-#{@id}")}
           phx-key="escape"
         >
           <%= if @return_to do %>
             <%= live_patch "✖",
               to: @return_to,
-              id: "close",
+              id: "close-#{@id}",
               class: "float-right text-2xl font-bold text-gray-500 cursor-pointer hover:text-gray-900 m-2",
               phx_click: hide_modal(@id)
             %>
           <% else %>
-            <a id="close" href="#" class="float-right text-2xl font-bold text-gray-500 cursor-pointer hover:text-gray-900 m-2" phx-click={hide_modal(@id)}>✖</a>
+            <a id={"close-#{@id}"} href="#" class="float-right text-2xl font-bold text-gray-500 cursor-pointer hover:text-gray-900 m-2" phx-click={hide_modal(@id)}>✖</a>
           <% end %>
 
           <%= render_slot(@inner_block) %>
