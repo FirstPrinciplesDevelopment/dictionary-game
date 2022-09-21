@@ -2,15 +2,15 @@
     <div class={"#{if (@collapse || length(@action_log_items) ==0), do: "rounded"} rounded-t bg-blue-700/25 pl-4 pr-2 py-2 group"}>
         <h3 class="font-bold inline leading-8 text-blue-900/80 group-hover:text-blue-900">Action Log</h3>
         <%= if @collapse do %>
-                <span class="float-right text-xl pb-0.5 font-bold text-blue-900/80 cursor-pointer hover:text-blue-900 inline rotate-180" phx-click="toggle_collapse" phx-target={@myself}>&#9660;</span>
+                <span title="expand" class="float-right text-xl pb-0.5 font-bold text-blue-900/80 cursor-pointer hover:text-blue-900 inline rotate-180" phx-click="toggle_collapse" phx-target={@myself}>&#9660;</span>
         <% else %>
-                <span class="float-right text-xl pt-0.5 font-bold text-blue-900/80 cursor-pointer hover:text-blue-900 inline" phx-click="toggle_collapse" phx-target={@myself}>&#9660;</span>
+                <span title="collapse" class="float-right text-xl pt-0.5 font-bold text-blue-900/80 cursor-pointer hover:text-blue-900 inline" phx-click="toggle_collapse" phx-target={@myself}>&#9660;</span>
         <% end %>
     </div>
     <%= if (!@collapse && length(@action_log_items) > 0) do %>
         <div class="pb-4 pt-2">
             <%= for item <- @action_log_items do %>
-                <span class={"block text-#{item.color}-700 px-4"}><%= item.message %></span>
+                <%= raw item.message %>
             <% end %>
         </div>
     <% end %>

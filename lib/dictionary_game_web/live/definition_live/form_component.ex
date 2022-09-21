@@ -43,7 +43,14 @@ defmodule DictionaryGameWeb.DefinitionLive.FormComponent do
 
         ActionLogs.create_action_log_item(%{
           user_id: socket.assigns.user_id,
-          message: "Definition created successfully",
+          message:
+            DictionaryGameWeb.Components.action_log_message(socket.assigns, %{
+              event: "definition_created",
+              definition: definition.definition,
+              created_by: socket.assigns.player.name
+            })
+            |> Phoenix.HTML.Safe.to_iodata()
+            |> IO.iodata_to_binary(),
           color: "blue",
           type: "info"
         })

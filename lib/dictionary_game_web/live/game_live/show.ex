@@ -101,7 +101,13 @@ defmodule DictionaryGameWeb.GameLive.Show do
       ) do
     ActionLogs.create_action_log_item(%{
       user_id: socket.assigns.user_id,
-      message: "Round #{round.round_number} started.",
+      message:
+        DictionaryGameWeb.Components.action_log_message(socket.assigns, %{
+          event: "round_created",
+          round_number: round.round_number
+        })
+        |> Phoenix.HTML.Safe.to_iodata()
+        |> IO.iodata_to_binary(),
       color: "blue",
       type: "info"
     })
@@ -119,7 +125,14 @@ defmodule DictionaryGameWeb.GameLive.Show do
       ) do
     ActionLogs.create_action_log_item(%{
       user_id: socket.assigns.user_id,
-      message: "Game ended by #{deleted_by.name}",
+      message:
+        DictionaryGameWeb.Components.action_log_message(socket.assigns, %{
+          event: "game_deleted",
+          game_name: "TODO: fix this",
+          deleted_by: deleted_by.name
+        })
+        |> Phoenix.HTML.Safe.to_iodata()
+        |> IO.iodata_to_binary(),
       color: "red",
       type: "info"
     })
@@ -140,7 +153,14 @@ defmodule DictionaryGameWeb.GameLive.Show do
       ) do
     ActionLogs.create_action_log_item(%{
       user_id: socket.assigns.user_id,
-      message: "Game reset by #{reset_by.name}",
+      message:
+        DictionaryGameWeb.Components.action_log_message(socket.assigns, %{
+          event: "game_reset",
+          game_name: "TODO: fix this",
+          reset_by: reset_by.name
+        })
+        |> Phoenix.HTML.Safe.to_iodata()
+        |> IO.iodata_to_binary(),
       color: "yellow",
       type: "info"
     })
@@ -174,7 +194,14 @@ defmodule DictionaryGameWeb.GameLive.Show do
       ) do
     ActionLogs.create_action_log_item(%{
       user_id: socket.assigns.user_id,
-      message: "#{known_word.word.word} known by #{player.name}.",
+      message:
+        DictionaryGameWeb.Components.action_log_message(socket.assigns, %{
+          event: "known_word_created",
+          word: known_word.word.word,
+          known_by: player.name
+        })
+        |> Phoenix.HTML.Safe.to_iodata()
+        |> IO.iodata_to_binary(),
       color: "yellow",
       type: "info"
     })

@@ -2,6 +2,62 @@ defmodule DictionaryGameWeb.Components do
   use Phoenix.Component
   alias Phoenix.LiveView.JS
 
+  def action_log_message(assigns, %{
+        event: "definition_created",
+        definition: definition,
+        created_by: created_by
+      }) do
+    ~H"""
+    <div class="block px-4">
+        <span class="inline text-blue-700"><%= definition %></span> created by <span class="inline text-cyan-700"><%= created_by %></span>
+    </div>
+    """
+  end
+
+  def action_log_message(assigns, %{
+        event: "game_deleted",
+        game_name: game_name,
+        deleted_by: deleted_by
+      }) do
+    ~H"""
+    <div class="block px-4">
+        <span class="inline text-blue-700"><%= game_name %></span><span class="text-red-900"> deleted </span>by <span class="inline text-cyan-700"><%= deleted_by %></span>
+    </div>
+    """
+  end
+
+  def action_log_message(assigns, %{event: "round_created", round_number: round_number}) do
+    ~H"""
+    <div class="block px-4">
+        Round <span class="inline text-sky-900"><%= round_number %></span> started.
+    </div>
+    """
+  end
+
+  def action_log_message(assigns, %{event: "game_reset", game_name: game_name, reset_by: reset_by}) do
+    ~H"""
+    <div class="block px-4">
+        <span class="inline text-blue-700"><%= game_name %></span> reset by <span class="inline text-cyan-700"><%= reset_by %></span>
+    </div>
+    """
+  end
+
+  def action_log_message(assigns, %{event: "known_word_created", word: word, known_by: known_by}) do
+    ~H"""
+    <div class="block px-4">
+        <span class="inline text-blue-700"><%= word %></span> known by <span class="inline text-cyan-700"><%= known_by %></span>
+    </div>
+    """
+  end
+
+  def action_log_message(assigns, %{event: "player_created", game_name: game_name, player_name: player_name}) do
+    ~H"""
+    <div class="block px-4">
+        <span class="inline text-blue-700"><%= player_name %></span> joined <span class="inline text-cyan-700"><%= game_name %></span>
+    </div>
+    """
+  end
+
   @doc """
   Renders a tutorial.
 

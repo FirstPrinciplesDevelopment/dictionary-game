@@ -38,10 +38,17 @@ defmodule DictionaryGameWeb.PlayerLive.FormComponent do
       )
 
     case Games.create_player(socket.assigns.game_id, socket.assigns.user_id, player_params) do
-      {:ok, _player} ->
+      {:ok, player} ->
         ActionLogs.create_action_log_item(%{
           user_id: socket.assigns.user_id,
-          message: "Player created successfully.",
+          message:
+            DictionaryGameWeb.Components.action_log_message(socket.assigns, %{
+              event: "player_created",
+              game_name: "TODO: fix this",
+              player_name: player.name
+            })
+            |> Phoenix.HTML.Safe.to_iodata()
+            |> IO.iodata_to_binary(),
           color: "yellow",
           type: "info"
         })
